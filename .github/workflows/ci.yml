@@ -1,0 +1,49 @@
+name: CI
+
+# Fast checks only: type-check, lint, and the unit tests for the deterministic
+# core (the belief model, status reports, availability windows). Deliberately
+# does NOT build the app or start Metro -- an Expo build needs a simulator or
+# EAS credentials, takes minutes, and would not catch anything these three do
+# not.
+#
+# The tests need no simulator because everything they cover is pure: functions
+# over plain objects with the clock injected, and an in-memory stand-in for
+# AsyncStorage. That is what makes a mobile app testable in CI at all.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Type-check, lint and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node 24: `node --test` runs the TypeScript test files directly, with
+      # the types stripped by the runtime. That is what keeps the suite free of
+      # a test framework, a transpiler and a build step that could drift from
+      # the app's. Anything older than 22.18 needs --experimental-strip-types
+      # and the bare `npm test` would fail, so this version is load-bearing
+      # rather than incidental. See `engines` in package.json.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
