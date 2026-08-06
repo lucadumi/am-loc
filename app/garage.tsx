@@ -1,0 +1,387 @@
+import { LinearGradient } from "expo-linear-gradient";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import {
+  ArrowLeft,
+  Banknote,
+  MapPin,
+  Navigation,
+  SquareParking,
+  Star,
+} from "lucide-react-native";
+import { useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Linking,
+  Platform,
+  Pressable,
+  ScrollView,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { ScreenHeader } from "@/components/screen-header";
+import { ConfidenceBadge } from "@/components/confidence-badge";
+import { windowsFor } from "@/lib/availability-windows";
+import { isPrivate, mayDeclare, mayReport } from "@/lib/private-spots";
+import { believeAll, type BelievedSpot } from "@/lib/spot-belief";
+import { LOCAL_REPORTER_ID } from "@/lib/spot-reports";
+import type { ConfidenceLevel } from "@/lib/spot-state";
+import { OwnerOffer } from "@/components/owner-offer";
+import { StatusBadge } from "@/components/status-badge";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
+import { palette, statusColor } from "@/constants/theme";
+import { useCurrentLocation } from "@/hooks/use-current-location";
+import { getSpotById } from "@/lib/api";
+import {
+  distanceMeters,
+  formatDistance,
+  formatPrice,
+} from "@/lib/geo";
+import { haptics } from "@/lib/haptics";
+import { AvailabilityWindow, ParkingSpot } from "@/types";
+
+/** Where the hero map opens: a neighbourhood, like the list behind it. */
+const OPEN_SPAN = 0.03;
+
+/** Where it settles: close enough to see which side of the street. */
+const CLOSE_SPAN = 0.004;
+
+/** Opens the platform maps app with driving directions to the spot. */
+function openDirections(spot: ParkingSpot) {
+  haptics.selection();
+  const { latitude, longitude, title } = spot;
+  const label = encodeURIComponent(title);
+  const url = Platform.select({
+    ios: `http://maps.apple.com/?daddr=${latitude},${longitude}&q=${label}`,
+    android: `geo:${latitude},${longitude}?q=${latitude},${longitude}(${label})`,
+    default: `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`,
+  });
+  if (url) Linking.openURL(url).catch(() => {});
+}
+
+export default function GarageScreen() {
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const { height: screenH } = useWindowDimensions();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const location = useCurrentLocation();
+
+  // null = loading, undefined = not found, object = resolved.
+  const [spot, setSpot] = useState<BelievedSpot | null | undefined>(null);
+  const [confidence, setConfidence] = useState<ConfidenceLevel>("none");
+  const [windows, setWindows] = useState<AvailabilityWindow[]>([]);
+  const heroMap = useRef<MapView>(null);
+
+  /* Bumped whenever the owner opens or withdraws a window, so the screen
+     re-reads rather than patching its own copy of the truth. The offer is
+     computed from the windows by `withBelief`, and a local edit that skipped
+     that would show the owner a different answer from the one every other
+     driver sees. */
+  const [revision, setRevision] = useState(0);
+  const reload = () => setRevision((n) => n + 1);
+
+  useEffect(() => {
+    let alive = true;
+    if (!id) {
+      setSpot(undefined);
+      return;
+    }
+    Promise.all([getSpotById(id), windowsFor(id)])
+      .then(async ([found, offered]) => {
+        if (alive) setWindows(offered);
+        return found ? (await believeAll([found]))[0] : undefined;
+      })
+      .then((s) => {
+        if (!alive) return;
+        setSpot(s ?? undefined);
+        if (s) setConfidence(s.confidenceLevel);
+      })
+      // `null` is the loading state, so a rejection left here would spin
+      // forever. Resolving to "not found" at least ends the wait.
+      .catch((error) => {
+        console.error("Could not load the spot", error);
+        if (alive) setSpot(undefined);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [id, revision]);
+
+  /* The zoom-in. The list the driver came from was showing the neighbourhood,
+     so the map arrives at that scale and closes onto the kerb: the movement is
+     what says "this one", and it is the same gesture whether they came from the
+     home carousel or from the map on the see-all page. */
+  useEffect(() => {
+    if (!spot) return;
+    const timer = setTimeout(() => {
+      heroMap.current?.animateToRegion(
+        {
+          latitude: spot.latitude,
+          longitude: spot.longitude,
+          latitudeDelta: CLOSE_SPAN,
+          longitudeDelta: CLOSE_SPAN,
+        },
+        620,
+      );
+    }, 260);
+    return () => clearTimeout(timer);
+  }, [spot?.id, spot?.latitude, spot?.longitude, spot]);
+
+  if (spot === null) {
+    return (
+      <View className="flex-1 bg-background">
+        <SafeAreaView edges={["top"]}>
+          <ScreenHeader />
+        </SafeAreaView>
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator color={palette.primary} />
+        </View>
+      </View>
+    );
+  }
+
+  if (spot === undefined) {
+    return (
+      <View className="flex-1 bg-background">
+        <SafeAreaView edges={["top"]}>
+          <ScreenHeader title="Detalii" />
+        </SafeAreaView>
+        <View className="flex-1 items-center justify-center gap-3 px-8">
+          <MapPin size={40} color={palette.mutedForeground} strokeWidth={1.6} />
+          <Text className="text-center font-title text-lg text-foreground">
+            Locul nu a fost găsit
+          </Text>
+          <Button
+            variant="secondary"
+            label="Înapoi"
+            onPress={() => router.back()}
+            className="mt-2"
+          />
+        </View>
+      </View>
+    );
+  }
+
+  const displayStatus = spot.status;
+  const dist = location
+    ? distanceMeters(
+        location.latitude,
+        location.longitude,
+        spot.latitude,
+        spot.longitude,
+      )
+    : null;
+  /* Straight off the spot, and no further. How many spaces a car park holds
+     and how many are free are facts somebody counted; which particular bay is
+     free is not, so there is no floor plan here. Drawing one would mean
+     inventing the bays, and a driver would read the invention as a survey. */
+  const totalFree = spot.availableCount ?? null;
+  const totalCapacity = spot.totalCount ?? null;
+  // The interval can only run until the spot is typically full; the user
+  const HERO_H = Math.round(Math.min(Math.max(screenH * 0.44, 300), 460));
+
+  return (
+    <View className="flex-1 bg-background">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom: Math.max(insets.bottom, 16) + 24,
+        }}
+      >
+        {/* Hero map: the pin marks the spot's exact location (tap → Hărți) */}
+        <Pressable
+          onPress={() => openDirections(spot)}
+          accessibilityRole="button"
+          accessibilityLabel="Deschide traseul în Hărți"
+          style={{ height: HERO_H }}
+        >
+          <View pointerEvents="none" style={{ flex: 1 }}>
+            <MapView
+              ref={heroMap}
+              provider={PROVIDER_DEFAULT}
+              style={{ flex: 1 }}
+              /* Opens wide and closes in. `initialRegion` rather than `region`
+                 so the animation below owns the camera; with a controlled
+                 region the map snaps back to it and the zoom never plays. */
+              initialRegion={{
+                latitude: spot.latitude,
+                longitude: spot.longitude,
+                latitudeDelta: OPEN_SPAN,
+                longitudeDelta: OPEN_SPAN,
+              }}
+              userInterfaceStyle="light"
+              scrollEnabled={false}
+              zoomEnabled={false}
+              pitchEnabled={false}
+              rotateEnabled={false}
+            >
+              <Marker
+                coordinate={{
+                  latitude: spot.latitude,
+                  longitude: spot.longitude,
+                }}
+                anchor={{ x: 0.5, y: 0.5 }}
+              >
+                <View
+                  className="h-12 w-12 items-center justify-center rounded-full border-[3px] border-background"
+                  style={{
+                    backgroundColor: statusColor[displayStatus],
+                    shadowColor: "#000",
+                    shadowOpacity: 0.25,
+                    shadowRadius: 6,
+                    shadowOffset: { width: 0, height: 3 },
+                    elevation: 5,
+                  }}
+                >
+                  <Text className="font-heavy text-lg text-primary-foreground">
+                    P
+                  </Text>
+                </View>
+              </Marker>
+            </MapView>
+          </View>
+
+          {/* Scrim keeps the floating controls legible over the map */}
+          <LinearGradient
+            colors={["rgba(20,20,22,0.22)", "rgba(20,20,22,0)"]}
+            style={{ position: "absolute", top: 0, left: 0, right: 0, height: 120 }}
+            pointerEvents="none"
+          />
+
+          {/* Tap-through hint */}
+          <View
+            pointerEvents="none"
+            className="absolute bottom-4 right-4 flex-row items-center gap-1.5 rounded-full border-hairline border-border bg-card/95 px-3 py-1.5"
+          >
+            <Navigation size={13} color={palette.indigo[600]} strokeWidth={2.4} />
+            <Text className="font-semi text-xs text-foreground">
+              Deschide în Hărți
+            </Text>
+          </View>
+        </Pressable>
+
+        {/* Detail sheet */}
+        <View className="bg-background px-5 pt-5">
+          {/* Title, then the facts about it, then what it costs.
+
+              The price sits with the other facts rather than beside the title.
+              On the same row it would make the heading's width depend on how
+              long the price happens to be — and "Cu plată · tarif necunoscut"
+              is a great deal longer than "5 lei / oră", which would squeeze an
+              imported car park's street name into two cramped lines while
+              leaving a seeded one alone. */}
+          <Text className="font-heavy text-2xl leading-8 text-foreground">
+            {spot.title}
+          </Text>
+
+          <View className="mt-2 flex-row flex-wrap items-center gap-1.5">
+            <MapPin size={14} color={palette.indigo[600]} />
+            <Text className="font-mid text-sm text-muted-foreground">
+              {spot.area}
+            </Text>
+            {spot.rating != null ? (
+              <>
+                <Text className="font-mid text-sm text-muted-foreground">·</Text>
+                <Star size={13} color={palette.primary} fill={palette.primary} />
+                <Text className="font-semi text-sm text-foreground">
+                  {spot.rating.toFixed(1)}
+                </Text>
+              </>
+            ) : null}
+          </View>
+
+          {dist != null || totalCapacity != null ? (
+            <View className="mt-1.5 flex-row flex-wrap items-center gap-1.5">
+              {dist != null ? (
+                <>
+                  <Navigation
+                    size={13}
+                    color={palette.indigo[600]}
+                    strokeWidth={2.4}
+                  />
+                  <Text className="font-semi text-sm text-foreground">
+                    {formatDistance(dist)}
+                  </Text>
+                </>
+              ) : null}
+              {dist != null && totalCapacity != null ? (
+                <Text className="font-mid text-sm text-muted-foreground">·</Text>
+              ) : null}
+              {totalCapacity != null ? (
+                <>
+                  <SquareParking
+                    size={14}
+                    color={palette.free}
+                    strokeWidth={2.2}
+                  />
+                  <Text className="font-semi text-sm text-foreground">
+                    {totalFree}/{totalCapacity}{" "}
+                    <Text className="font-mid text-muted-foreground">libere</Text>
+                  </Text>
+                </>
+              ) : null}
+            </View>
+          ) : null}
+
+          {/* Price and how much to believe the status: two chips on one line,
+              both facts about the spot rather than parts of its name. */}
+          <View className="mt-3 flex-row flex-wrap items-center gap-2">
+            <View className="flex-row items-center gap-1.5 rounded-full border-hairline border-border bg-card px-3 py-1.5">
+              <Banknote size={14} color={palette.mutedForeground} />
+              <Text className="font-semi text-sm text-foreground">
+                {formatPrice(spot.pricePerHour, spot.paid)}
+              </Text>
+            </View>
+            <ConfidenceBadge level={confidence} />
+            {!mayReport(spot) ? (
+              <Text className="font-mid text-xs text-muted-foreground">
+                {spot.ownerName
+                  ? `${spot.ownerName} spune când e liber`
+                  : "Proprietarul spune când e liber"}
+              </Text>
+            ) : null}
+          </View>
+
+          {/* What the owner has actually offered, and — if this is your spot —
+              the controls to change it. */}
+          {isPrivate(spot) ? (
+            <OwnerOffer
+              spot={spot}
+              windows={windows}
+              offer={spot.offer}
+              mine={mayDeclare(spot, LOCAL_REPORTER_ID)}
+              onChanged={reload}
+            />
+          ) : null}
+        </View>
+      </ScrollView>
+
+      {/* Floating controls over the map: back (left) + live status (right) */}
+      <SafeAreaView
+        edges={["top"]}
+        className="absolute inset-x-0 top-0"
+        pointerEvents="box-none"
+      >
+        <View className="flex-row items-center justify-between px-5 py-2.5">
+          <Pressable
+            onPress={() => router.back()}
+            className="h-10 w-10 items-center justify-center rounded-full border-hairline border-border bg-card"
+            accessibilityRole="button"
+            accessibilityLabel="Înapoi"
+          >
+            <ArrowLeft size={20} color={palette.foreground} />
+          </Pressable>
+          <View className="flex-row items-center gap-2">
+            <StatusBadge
+              status={displayStatus}
+              className="border-hairline border-border bg-card"
+            />
+          </View>
+        </View>
+      </SafeAreaView>
+    </View>
+  );
+}
