@@ -1,0 +1,57 @@
+Copyright (c) 2026 Luca Dumitrescu. All rights reserved.
+
+AmLoc is a personal software product. This repository is made available so that
+the work can be read and evaluated, not so that it can be reused. No licence,
+express or implied, is granted to any part of it except as set out below.
+
+
+PERMITTED
+
+You may read this repository, study the source code, and run it locally against
+your own backend for the purpose of evaluating the author's work.
+
+
+NOT PERMITTED
+
+Without prior written permission from the copyright holder, you may not:
+
+  1. Publish, distribute, host, or deploy this application, or any substantial
+     part of it, whether modified or unmodified, including submitting it to any
+     app store.
+
+  2. Use this repository, or any derivative of it, in a commercial product or
+     service.
+
+  3. Reuse the written copy, the branding, or any image asset in this
+     repository, in any medium.
+
+  4. Present this work, in whole or in part, as your own.
+
+  5. Redistribute or sublicense this repository or any derivative of it.
+
+
+NOT CLAIMED
+
+The idea of a community-driven parking map, or of reporting obstructed
+pavements, ramps, and crossings to a local authority, is not claimed by this
+licence. Anyone is free to build their own, from their own code and their own
+content.
+
+
+THIRD-PARTY MATERIAL
+
+The asset files under `assets/`, including the Expo brand assets, and the
+third-party packages and services this project depends on, are licensed
+separately by their respective authors. Nothing in this licence grants or
+restricts any right in that material, and nothing in this licence overrides
+those terms.
+
+
+NO WARRANTY
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHOR BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
