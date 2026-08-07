@@ -13,16 +13,10 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary",
         secondary: "bg-secondary",
-        outline: "border-hairline border-border bg-transparent",
-        ghost: "bg-transparent",
-        destructive: "bg-destructive",
       },
       size: {
         default: "h-14 px-6",
         sm: "h-11 px-4",
-        lg: "h-16 px-8",
-        pill: "h-12 px-5",
-        icon: "h-12 w-12 rounded-full",
       },
       disabled: {
         true: "opacity-50",
@@ -38,9 +32,6 @@ const labelVariants = cva("font-title text-base", {
     variant: {
       default: "text-primary-foreground",
       secondary: "text-foreground",
-      outline: "text-foreground",
-      ghost: "text-foreground",
-      destructive: "text-destructive-foreground",
     },
   },
   defaultVariants: { variant: "default" },
@@ -49,19 +40,15 @@ const labelVariants = cva("font-title text-base", {
 type ButtonProps = React.ComponentProps<typeof Pressable> &
   VariantProps<typeof buttonVariants> & {
     label?: string;
-    leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
     loading?: boolean;
-    textClassName?: string;
   };
 
 export function Button({
   className,
-  textClassName,
   variant,
   size,
   label,
-  leftIcon,
   rightIcon,
   loading,
   disabled,
@@ -87,11 +74,8 @@ export function Button({
         />
       ) : (
         <>
-          {leftIcon}
           {label ? (
-            <Text className={cn(labelVariants({ variant }), textClassName)}>
-              {label}
-            </Text>
+            <Text className={cn(labelVariants({ variant }))}>{label}</Text>
           ) : (
             children
           )}

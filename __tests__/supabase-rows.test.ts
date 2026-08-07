@@ -28,7 +28,6 @@ import {
   toParkingSpot,
   toParkingSpots,
   toReportInsert,
-  toSpotInsert,
   toSpotReport,
 } from "../lib/supabase-rows.ts";
 import type {
@@ -183,47 +182,6 @@ describe("flattening a spot row", () => {
       spots.map((s) => [s.id, s.status]),
       [["a", "free"], ["b", "taken"], ["c", "taken"]]
     );
-  });
-});
-
-describe("writing rows", () => {
-  test("a new spot is written as the signed-in user", () => {
-    const insert = toSpotInsert(
-      {
-        id: "sp_1",
-        title: "Bd. Unirii",
-        access: "public" as const,
-        status: "free",
-        latitude: 44.42,
-        longitude: 26.1,
-        updatedAt: "2026-08-03T11:00:00.000Z",
-        kind: "street",
-      },
-      "33333333-3333-4333-8333-333333333333"
-    );
-    assert.equal(insert.created_by, "33333333-3333-4333-8333-333333333333");
-    assert.equal(insert.id, "sp_1");
-    assert.equal(insert.kind, "street");
-    // Absent optional fields have to be explicit nulls: leaving them off would
-    // be fine on insert but hides which columns this code knows about.
-    assert.strictEqual(insert.area, null);
-    assert.strictEqual(insert.price_per_hour, null);
-  });
-
-  test("a spot with no kind defaults to street", () => {
-    const insert = toSpotInsert(
-      {
-        id: "sp_2",
-        title: "Fără fel",
-        access: "public" as const,
-        status: "free",
-        latitude: 44.42,
-        longitude: 26.1,
-        updatedAt: "2026-08-03T11:00:00.000Z",
-      },
-      "33333333-3333-4333-8333-333333333333"
-    );
-    assert.equal(insert.kind, "street");
   });
 });
 

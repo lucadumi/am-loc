@@ -179,9 +179,9 @@ export function leavingWindow(report: SpotReport, now: Date): {
  * has to be earned from something, and with nothing yet to earn it from every
  * reporter sits at the opening prior for ever — one constant multiplying every
  * weight, which changes no ordering at all. What it does change is the
- * thresholds it is compared against, and a prior below `UNVERIFIED_BELOW`
- * would have every spot in the city permanently read "Neconfirmat", including
- * one reported five seconds ago.
+ * thresholds it is compared against, and a low enough prior would have every
+ * spot in the city permanently read as unconfirmed, including one reported five
+ * seconds ago.
  *
  * The second is that a reputation answers the wrong question. Whether a kerb is
  * free is a fact about the kerb, not about who is speaking; a claim needs

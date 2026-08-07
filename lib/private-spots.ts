@@ -2,16 +2,13 @@
  * Private spots: the ones somebody owns, and the ones only that somebody may
  * speak for.
  *
- * The app now holds three species of fact about a piece of ground, and they are
+ * The app holds two species of fact about a piece of ground, and they are
  * separated because they answer to different authorities:
  *
- *   1. RULES -- what the law and the council say about a kerb. Quasi-static,
- *      true whether or not anyone is looking, and changed rather than aged.
- *      `regimeAt` in lib/kerbs.ts.
- *   2. DECLARATIONS -- what an owner says about their own space. Authoritative
+ *   1. DECLARATIONS -- what an owner says about their own space. Authoritative
  *      for exactly one person, time-bounded, and it expires rather than decays.
  *      This module.
- *   3. OBSERVATIONS -- what a passer-by says about a public kerb. Contested,
+ *   2. OBSERVATIONS -- what a passer-by says about a public kerb. Contested,
  *      weighted by who said it, and rotting by the minute. `believe` in
  *      lib/spot-state.ts.
  *
@@ -85,9 +82,9 @@ export interface SpotOffer {
 /**
  * What the owner is saying about their space right now.
  *
- * The mirror of `regimeAt(kerb, when)` and of `believe(reports, reporters,
- * now)`: same shape, same purity, different authority. `when` is a parameter so
- * a list rendered in one pass cannot have its rows disagree about the time.
+ * The mirror of `believe(reports, now)`: same shape, same purity, different
+ * authority. `when` is a parameter so a list rendered in one pass cannot have
+ * its rows disagree about the time.
  */
 export function offeredAt(
   windows: AvailabilityWindow[],

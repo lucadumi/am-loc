@@ -5,9 +5,7 @@ import { distanceMeters, etaMinutes, type LatLng } from "@/lib/geo.ts";
 import { currentIdentity, resolveIdentity } from "@/lib/identity.ts";
 import { publish } from "@/lib/live.ts";
 import { isRemote } from "@/lib/remote.ts";
-import {
-  LOCAL_REPORTER_ID,
-} from "@/lib/spot-reports.ts";
+import { LOCAL_REPORTER_ID } from "@/lib/spot-reports.ts";
 // `import type`, not a plain import: `@/types` is types only, so a value
 // import of it survives Node's type stripping and asks for exports that do not
 // exist at runtime. That is the difference between this module being covered
@@ -25,9 +23,7 @@ import type {
  * Spots and the claims made about them come from Supabase when a project is
  * configured (see `.env.example`), and from the seeds below when one is not,
  * so a fresh clone with no credentials still opens on a working map of central
- * Bucharest. Blocker reports go the same way now that the schema models them;
- * garage layouts and the "typical day" occupancy curves are still local,
- * because nothing in the database knows a floor plan or an occupancy history.
+ * Bucharest. Blocker reports go the same way now that the schema models them.
  *
  * The seeds are never mixed into remote results. An empty `spots` table is a
  * real answer, and padding it with invented kerbs would be a map that lies.
@@ -35,7 +31,6 @@ import type {
 
 const REPORTS_KEY = "amloc.reports.v1";
 const REPORT_STATUS_KEY = "amloc.report-status.v1";
-const SPOTS_KEY = "amloc.spots.v1";
 
 const minutesAgo = (m: number) => new Date(Date.now() - m * 60000).toISOString();
 
@@ -289,22 +284,6 @@ function newId(prefix: string): string {
 }
 
 /**
- * Spots announced from this device, newest first.
- *
- * Corrupt storage reads as "no spots" rather than throwing: a half-written
- * value should cost the driver their own announcements, not the whole map.
- */
-async function loadPersonalSpots(): Promise<ParkingSpot[]> {
-  const raw = await AsyncStorage.getItem(SPOTS_KEY);
-  if (!raw) return [];
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
-
-/**
  * Blocker reports filed from this device, newest first. Corrupt reads as none.
  *
  * Two shapes from before are folded in on the way out. A report filed when a
@@ -365,35 +344,14 @@ async function loadReportProgress(): Promise<Record<string, ReportProgress>> {
   }
 }
 
-/**
- * Every spot the map should show: the ones announced here, then the seeds.
- *
- * Announced spots come first because they are the newest thing said about
- * this city, and they are in the list at all because a spot a driver publishes
- * and then cannot find is not an announcement, it is a form that discards its
- * input. They are ordinary spots once stored, so they decay, get contested and
- * are believed on exactly the terms as any other; nothing here privileges them
- * beyond order.
- */
+/** Every spot the map should show: the bundled seeds, then the imported car parks. */
 export async function getSpots(): Promise<ParkingSpot[]> {
   if (isRemote()) {
     const { fetchSpots } = await import("@/lib/supabase-data.ts");
     return [...(await fetchSpots()), ...PUBLIC_PARKING];
   }
-  return [...(await loadPersonalSpots()), ...SEED_SPOTS, ...PUBLIC_PARKING];
+  return [...SEED_SPOTS, ...PUBLIC_PARKING];
 }
-
-/**
- * Announce a spot.
- *
- * The status the driver gave rides on the spot itself here, and deliberately
- * is not also filed through `addStatusReport`. Locally a spot carries its own
- * flattened claim, which `spot-belief.reportsFor` reads back via `seedReport`;
- * filing a second copy at a slightly later instant would dodge that function's
- * duplicate check and hand the announcer two votes about one observation. The
- * remote path splits them because the schema does (see `insertSpot`), and the
- * timestamps match exactly there, so the same check collapses them again.
- */
 
 /**
  * Every blocker report the app knows about: the ones filed here, then the
@@ -537,12 +495,9 @@ export function compareForDriver(a: NearbySpot, b: NearbySpot): number {
 /**
  * Everything worth walking to from where the driver is, best first.
  *
- * Deliberately unlike `findParkingNear`, which answers "where can I park near
- * the place I am going" and drops anything it cannot promise will be free.
- * This answers "what is around me", and dropping the unpromisable would empty
- * it: the hundred car parks imported from OpenStreetMap carry no observation at
- * all, so a filter on availability hides every real car park in the city and
- * leaves a driver looking at nothing.
+ * Nothing is dropped on availability: the hundred car parks imported from
+ * OpenStreetMap carry no observation at all, so such a filter would hide every
+ * real car park in the city and leave a driver looking at nothing.
  *
  * Pure, so the ordering can be tested without a device or a fix.
  */
@@ -568,18 +523,7 @@ export function rankNearby<T extends ParkingSpot>(
     .slice(0, limit);
 }
 
-/** Baseline hourly occupancy for a central Bucharest spot (index = hour 0–23). */
-/**
- * What this kerb is usually like, hour by hour.
- *
- * Measured where the app has enough of its own evidence and estimated where it
- * does not, and `SpotAvailability.source` says which so the screen can. The
- * arithmetic lives in `lib/availability.ts`, which is pure; what happens here
- * is only the fetching, and the fetching is the part that differs between a
- * device holding its own claims and a project holding everybody's.
- */
-
-/** Resolve a single spot by id: seed spots plus any personal ones in storage. */
+/** Resolve a single spot by id, across the seeds and the imported car parks. */
 export async function getSpotById(id: string): Promise<ParkingSpot | undefined> {
   if (isRemote()) {
     const { fetchSpotById } = await import("@/lib/supabase-data.ts");
@@ -587,6 +531,5 @@ export async function getSpotById(id: string): Promise<ParkingSpot | undefined> 
     // to fetch; without this a driver tapping one on the map gets "not found".
     return (await fetchSpotById(id)) ?? PUBLIC_PARKING.find((s) => s.id === id);
   }
-  const personal = await loadPersonalSpots();
-  return [...SEED_SPOTS, ...personal, ...PUBLIC_PARKING].find((s) => s.id === id);
+  return [...SEED_SPOTS, ...PUBLIC_PARKING].find((s) => s.id === id);
 }

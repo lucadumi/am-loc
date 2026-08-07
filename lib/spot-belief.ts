@@ -42,11 +42,11 @@ export interface BelievedSpot extends ParkingSpot {
 /**
  * What a belief adds to whatever kind of spot it was attached to.
  *
- * Generic so that a spot carrying extra fields keeps them: the search flow
- * hands in `RankedSpot`s with their walk and drive estimates already worked
- * out, and losing those to a widening cast would mean computing them twice.
+ * Generic so that a spot carrying extra fields keeps them: `rankNearby` hands
+ * in spots with their distance and walk time already worked out, and losing
+ * those to a widening cast would mean computing them twice.
  */
-export type Believed<T extends ParkingSpot> = T & {
+type Believed<T extends ParkingSpot> = T & {
   belief: SpotBelief;
   confidenceLevel: ConfidenceLevel;
   /** What the owner declared. Present only for private spots. */
@@ -103,12 +103,9 @@ export function reportsFor(spot: ParkingSpot, filed: SpotReport[] = []): SpotRep
 /**
  * A private spot with its owner's declaration folded into its own fields.
  *
- * Separate from `withDeclaration` because two callers need it at different
- * moments. Screens ask through `believeAll`, which is late enough. But
- * `findParkingNear` filters on `status` *before* any belief is attached, so
- * without this a space whose owner had opened it for the afternoon would be
- * dropped from the search as taken -- the one moment the flow is supposed to pay
- * off.
+ * Separate from `withDeclaration` because the status has to be settled before
+ * any belief is attached: a space whose owner had opened it for the afternoon
+ * must not read as taken to anything filtering on `status` alone.
  */
 export function applyDeclaration<T extends ParkingSpot>(
   spot: T,
@@ -158,7 +155,6 @@ function withDeclaration<T extends ParkingSpot>(
       status: declared.status,
       confidence: 1,
       freshness: 1,
-      unverified: false,
       // One voice, and the only one entitled to speak. Corroboration is a
       // measure for claims that could be wrong; a declaration cannot be.
       corroboration: 1,

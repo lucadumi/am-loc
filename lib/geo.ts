@@ -7,7 +7,7 @@ export const BUCHAREST = {
 };
 
 /** Radius (m) around the Bucharest center that counts as "in Bucharest". */
-export const BUCHAREST_RADIUS_M = 20000;
+const BUCHAREST_RADIUS_M = 20000;
 
 /** Great-circle distance between two coordinates, in meters. */
 export function distanceMeters(
@@ -80,8 +80,8 @@ export interface LatLng {
 }
 
 /** Assumed average speeds for ETA estimates (m/s), tuned for central Bucharest. */
-export const WALK_SPEED_MPS = 1.35; // ~4.9 km/h
-export const DRIVE_SPEED_MPS = 5.2; // ~19 km/h in city traffic
+const WALK_SPEED_MPS = 1.35; // ~4.9 km/h
+const DRIVE_SPEED_MPS = 5.2; // ~19 km/h in city traffic
 
 /**
  * Estimated travel time in minutes for a straight-line distance, with a 1.3×
@@ -90,12 +90,4 @@ export const DRIVE_SPEED_MPS = 5.2; // ~19 km/h in city traffic
 export function etaMinutes(meters: number, mode: "walk" | "drive" = "drive"): number {
   const speed = mode === "walk" ? WALK_SPEED_MPS : DRIVE_SPEED_MPS;
   return Math.max(1, Math.round((meters * 1.3) / speed / 60));
-}
-
-/** Human duration label, e.g. "4 min" or "1 h 5 min". */
-export function formatDuration(min: number): string {
-  if (min < 60) return `${min} min`;
-  const h = Math.floor(min / 60);
-  const m = min % 60;
-  return m ? `${h} h ${m} min` : `${h} h`;
 }

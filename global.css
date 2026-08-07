@@ -14,22 +14,12 @@
     --background: 240 5% 93%; /* #ECECEE soft off-white canvas */
     --foreground: 240 6% 10%; /* #18181B near-black ink */
     --card: 0 0% 100%; /* #FFFFFF white surface */
-    --card-foreground: 240 6% 10%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 6% 10%;
     --primary: 47 92% 53%; /* #F5C518 vivid yellow */
     --primary-foreground: 240 5% 8%; /* #141416 ink on yellow */
     --secondary: 240 5% 90%; /* #E4E4E7 light gray chips/panels */
-    --secondary-foreground: 240 6% 10%;
-    --muted: 240 5% 91%; /* #E7E7EA */
     --muted-foreground: 240 4% 46%; /* #71717A muted labels */
-    --accent: 240 5% 90%; /* #E4E4E7 */
-    --accent-foreground: 240 6% 10%;
     --destructive: 0 84% 60%; /* #EF4444 */
-    --destructive-foreground: 0 0% 100%;
     --border: 240 6% 88%; /* #DDDDE1 hairline on light */
-    --input: 240 6% 88%;
-    --ring: 47 92% 53%;
 
     /* Parking status */
     --free: 158 64% 52%; /* #34D399 */

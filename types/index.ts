@@ -119,9 +119,8 @@ export interface ParkingSpot {
  * not less true at half four than it was at ten past nine; at one minute past
  * five it is over.
  *
- * Which is why this carries no confidence, no reporter and no decay, and why it
- * is shaped like `KerbSchedule` rather than like `SpotReport`. Both are windows
- * on a Bucharest wall clock, and both are evaluated by `windowState` in
+ * Which is why this carries no confidence, no reporter and no decay. It is a
+ * window on a Bucharest wall clock, evaluated by `windowState` in
  * lib/bucharest-time.ts.
  */
 export interface AvailabilityWindow {
@@ -159,18 +158,6 @@ export interface SpotFilters {
   priceRange: [number, number];
   /** Minimum community rating; 0 = any. */
   minRating: number;
-}
-
-/** A parking spot enriched with routing estimates for the "find parking" flow. */
-export interface RankedSpot extends ParkingSpot {
-  /** Straight-line distance from the destination, meters. */
-  distanceToDest: number;
-  /** Walk time from this spot to the destination, minutes. */
-  walkMin: number;
-  /** Drive time from the user's origin to this spot, minutes. */
-  driveMin: number;
-  /** True if the spot is (or becomes) free by the time the driver arrives. */
-  freeOnArrival: boolean;
 }
 
 export type ReportCategory =

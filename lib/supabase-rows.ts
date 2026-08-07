@@ -18,7 +18,6 @@ import type {
   ReportEventRow,
   ReportInsert,
   ReportRow,
-  SpotInsert,
   SpotRow,
   StatusReportRow,
 } from "@/types/database.ts";
@@ -28,8 +27,6 @@ import type { SpotReport } from "./spot-state.ts";
 /** Postgres says `null`; the app's optional fields say `undefined`. */
 const optional = <T>(value: T | null): T | undefined =>
   value === null ? undefined : value;
-
-
 
 /** One row of `status_reports` as the claim the belief model understands. */
 export function toSpotReport(row: StatusReportRow): SpotReport {
@@ -42,8 +39,6 @@ export function toSpotReport(row: StatusReportRow): SpotReport {
     spaces: optional(row.spaces),
   };
 }
-
-
 
 /**
  * The newest claim per spot.
@@ -136,33 +131,8 @@ export function toParkingSpots(
 }
 
 
-/** A new spot's columns, from what `addSpot` was handed. */
-export function toSpotInsert(spot: ParkingSpot, createdBy: string): SpotInsert {
-  return {
-    id: spot.id,
-    title: spot.title,
-    access: spot.access,
-    kind: spot.kind ?? "street",
-    source: spot.source ?? null,
-    /* The owner is only ever this account. A client that could name somebody
-       else as owner could list a stranger's garage and then be the only one
-       allowed to say when it is free; the insert policy in Postgres refuses it
-       too, and this is the copy that keeps the client from trying. */
-    owner_id: spot.access === "private" ? createdBy : null,
-    owner_name: spot.access === "private" ? (spot.ownerName ?? null) : null,
-    area: spot.area ?? null,
-    latitude: spot.latitude,
-    longitude: spot.longitude,
-    price_per_hour: spot.pricePerHour ?? null,
-    total_count: spot.totalCount ?? null,
-    rating: spot.rating ?? null,
-    image_url: spot.imageUrl ?? null,
-    created_by: createdBy,
-  };
-}
-
-/** An availability window as its row, and back. */
-export function toAvailabilityWindow(
+/** An availability window as its row. */
+function toAvailabilityWindow(
   row: AvailabilityWindowRow,
 ): AvailabilityWindow {
   return {

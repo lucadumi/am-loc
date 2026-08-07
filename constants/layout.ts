@@ -5,10 +5,10 @@
  */
 
 /** Visual height of the floating pill (tallest child = the center "+"). */
-export const FLOATING_TAB_BAR_PILL_HEIGHT = 68;
+const FLOATING_TAB_BAR_PILL_HEIGHT = 68;
 
 /** Transparent gap above the pill (the wrapper's `pt-3`). */
-export const FLOATING_TAB_BAR_TOP_GAP = 12;
+const FLOATING_TAB_BAR_TOP_GAP = 12;
 
 /**
  * Space the floating tab bar occupies from the bottom of the screen, including

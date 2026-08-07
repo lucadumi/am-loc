@@ -180,7 +180,6 @@ export default function GarageScreen() {
      inventing the bays, and a driver would read the invention as a survey. */
   const totalFree = spot.availableCount ?? null;
   const totalCapacity = spot.totalCount ?? null;
-  // The interval can only run until the spot is typically full; the user
   const HERO_H = Math.round(Math.min(Math.max(screenH * 0.44, 300), 460));
 
   return (

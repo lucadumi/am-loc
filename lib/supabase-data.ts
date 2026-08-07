@@ -39,7 +39,6 @@ import {
   toBlockerReports,
   toParkingSpots,
   toReportInsert,
-  toSpotInsert,
   toSpotReport,
 } from "./supabase-rows.ts";
 
@@ -73,15 +72,6 @@ import {
  * ceremony around thirty rows.
  */
 const REPORT_WINDOW_DAYS = 30;
-
-/**
- * How many of one spot's claims the detail screen reads.
- *
- * A count rather than a window, because for a single spot it is strictly
- * better: a busy kerb gives fifty recent claims, a forgotten one gives its
- * last few however old they are, and either way the query is bounded by a
- * number instead of by how popular the street happens to be.
- */
 
 function client() {
   const supabaseClient = supabase();
@@ -124,28 +114,6 @@ export async function fetchSpots(): Promise<ParkingSpot[]> {
   ]);
   if (spots.error) throw new SupabaseError("Could not read spots", spots.error);
   return toParkingSpots(spots.data ?? [], reports);
-}
-
-/**
- * Add a spot, and the claim that comes with it.
- *
- * Two inserts rather than one, because the schema splits the kerb from what is
- * being said about it. A spot inserted on its own would read as `taken` the
- * instant it was created, which is not what someone announcing a free space
- * meant, so the status they gave is filed as their first status report.
- */
-export async function insertSpot(spot: ParkingSpot): Promise<void> {
-  const reporterId = await currentReporterId();
-
-  const { error } = await client().from("spots").insert(toSpotInsert(spot, reporterId));
-  if (error) throw new SupabaseError("Could not add the spot", error);
-
-  await insertStatusReport({
-    spotId: spot.id,
-    status: spot.status,
-    reporterId,
-    leavingInMin: spot.leavingInMin,
-  });
 }
 
 /** Every claim recent enough to still be worth weighing. */

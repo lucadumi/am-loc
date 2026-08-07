@@ -80,9 +80,6 @@ export interface StatusReportRow {
   created_at: string;
 }
 
-/** Columns of `spots` a client is allowed to write. */
-export type SpotInsert = Omit<SpotRow, "created_at">;
-
 /** Columns of `availability_windows` a client is allowed to write. */
 export type AvailabilityWindowInsert = Omit<AvailabilityWindowRow, "created_at">;
 

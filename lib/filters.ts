@@ -27,7 +27,7 @@ export const DEFAULT_FILTERS: SpotFilters = {
 };
 
 /** True when the price range is narrower than the full [MIN, MAX] span. */
-export function isPriceRangeActive([lo, hi]: [number, number]): boolean {
+function isPriceRangeActive([lo, hi]: [number, number]): boolean {
   return lo > PRICE_MIN || hi < PRICE_MAX;
 }
 
