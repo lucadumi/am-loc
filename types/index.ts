@@ -32,6 +32,12 @@ export type SpotAccess = "public" | "private";
 export type SpotSource =
   /** Derived from OpenStreetMap. */
   | "osm"
+  /**
+   * Compania Municipală Parking București: the blue zone, as the municipal
+   * company that runs it publishes it. A record of a space it operates and
+   * what it charges, never of whether anybody is in it.
+   */
+  | "cmpb"
   /** From a city or sector dataset. */
   | "city"
   /** A driver dropped a pin on a public kerb. */
