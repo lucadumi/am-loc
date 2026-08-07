@@ -1,4 +1,4 @@
-import { MapPin } from "lucide-react-native";
+import { SquareParking } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 
 import { Text } from "@/components/ui/text";
@@ -16,14 +16,21 @@ function initialsOf(name: string): string {
 
 export function GreetingHeader({
   name = "Șofer",
-  location = "Universitate, București",
+  subtitle,
   onProfile,
   onPrimary = false,
 }: {
   /** The full name. The greeting uses the first word, the avatar the initials. */
   name?: string;
-  /** Current (mock) location, shown read-only; changing it is disabled. */
-  location?: string;
+  /**
+   * The one line worth reading under the greeting.
+   *
+   * This was the driver's location until it stopped earning its place: AmLoc
+   * covers Bucharest and nowhere else, so a line reading "București" told a
+   * driver standing in Bucharest something they already knew, in the most
+   * valuable strip of the screen. Whatever goes here should change.
+   */
+  subtitle?: string;
   onProfile?: () => void;
   /** Style for placement over the yellow hero (dark elements on yellow). */
   onPrimary?: boolean;
@@ -40,18 +47,25 @@ export function GreetingHeader({
         >
           Bine ai revenit, {name.trim().split(/\s+/)[0]}
         </Text>
-        <View className="mt-1 flex-row items-center gap-1">
-          <MapPin size={13} color={palette.indigo[600]} />
-          <Text
-            numberOfLines={1}
-            className={cn(
-              "font-mid text-xs",
-              onPrimary ? "text-primary-foreground/80" : "text-muted-foreground",
-            )}
-          >
-            {location}
-          </Text>
-        </View>
+        {subtitle ? (
+          <View className="mt-1 flex-row items-center gap-1">
+            <SquareParking
+              size={13}
+              color={onPrimary ? palette.primaryForeground : palette.indigo[600]}
+              strokeWidth={2.2}
+              style={{ flexShrink: 0 }}
+            />
+            <Text
+              numberOfLines={1}
+              className={cn(
+                "font-mid text-xs",
+                onPrimary ? "text-primary-foreground/80" : "text-muted-foreground",
+              )}
+            >
+              {subtitle}
+            </Text>
+          </View>
+        ) : null}
       </View>
       <View className="flex-row items-center gap-2">
         <Pressable
