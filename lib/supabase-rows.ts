@@ -116,6 +116,10 @@ export function toParkingSpot(
     ownerName: optional(row.owner_name),
     totalCount: optional(row.total_count),
     pricePerHour: optional(row.price_per_hour),
+    /* Carried rather than derived from `price_per_hour`. A car park that
+       charges an unpublished tariff is `paid: true` with no price, and reading
+       the missing price as free is what `priceRank` exists to avoid. */
+    paid: optional(row.paid),
     rating: optional(row.rating),
     imageUrl: optional(row.image_url),
   };

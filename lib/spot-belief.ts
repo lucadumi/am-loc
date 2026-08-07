@@ -58,15 +58,16 @@ type Believed<T extends ParkingSpot> = T & {
  *
  * The distinction the seed claim turns on. A driver dropping a pin is saying "I
  * am looking at this kerb and it is free"; OpenStreetMap saying a car park is
- * there is not saying anything at all about whether there is space in it.
+ * there is not saying anything at all about whether there is space in it, and
+ * neither is CMPB saying it painted 104 bays on Strada Academiei.
  *
  * Read as an observation, an imported record would arrive as a fresh claim by
- * `anon:osm_w123` made at the moment the file was generated, and a hundred car
+ * `anon:osm_w123` made at the moment the file was generated, and hundreds of car
  * parks nobody has ever looked at would show as confidently occupied, timestamped
  * this morning. `describeConfidence` already has the right word for what these
  * actually are, and it is "Fără raportări".
  */
-const RECORDS: SpotSource[] = ["osm", "city"];
+const RECORDS: SpotSource[] = ["osm", "cmpb", "city"];
 
 /**
  * Every report behind a spot: the claim its fields carry, plus anything

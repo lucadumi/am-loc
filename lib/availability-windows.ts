@@ -31,45 +31,10 @@ import { isRemote } from "./remote.ts";
 const WINDOWS_KEY = "amloc.availability-windows.v1";
 
 /**
- * Windows for the seeded private spots, so the flow is visible on a fresh
- * clone with no backend and nothing yet in storage.
+ * Only what this device has written.
  *
- * The two describe the two cases worth seeing. One is an owner lending their
- * garage for free while they are at work, which is the ordinary weekday
- * pattern. The other is somebody letting their space overnight for money, which
- * exercises the window that runs past midnight and the price that rides on the
- * window rather than on the spot.
- *
- * Not mixed into remote results, for the same reason `SEED_SPOTS` are not: with
- * a project configured these are somebody's real listings, and inventing extra
- * ones would be offering a stranger's garage that does not exist.
- */
-export const SEED_WINDOWS: AvailabilityWindow[] = [
-  {
-    id: "w_seed_workday",
-    spotId: "p_floreasca_garaj",
-    from: 9 * 60,
-    to: 17 * 60,
-    days: [1, 2, 3, 4, 5],
-    note: "Poarta e pe lateral, cod 1974.",
-  },
-  {
-    id: "w_seed_overnight",
-    spotId: "p_dorobanti_loc",
-    from: 19 * 60,
-    to: 7 * 60,
-    pricePerHour: 8,
-    note: "Doar peste noapte, plec la 7 dimineața.",
-  },
-];
-
-/**
- * Only what this device has written, without the seeds.
- *
- * Every write goes through this rather than through `loadWindows`, because
- * writing back a list that had the seeds folded into it would persist them, and
- * the next read would fold them in again on top. One duplicate per launch, and
- * the owner's screen slowly fills with copies of the same offer.
+ * Every write goes through this rather than through `loadWindows`, so that the
+ * remote branch cannot be persisted to local storage by accident.
  */
 async function loadStored(): Promise<AvailabilityWindow[]> {
   const raw = await AsyncStorage.getItem(WINDOWS_KEY);
@@ -87,26 +52,25 @@ export async function loadWindows(): Promise<AvailabilityWindow[]> {
     const { fetchAvailabilityWindows } = await import("./supabase-data.ts");
     return fetchAvailabilityWindows();
   }
-  /* Seeds are kept alongside what this device has written, minus any the owner
-     has since withdrawn. Without the tombstone check, removing a seeded window
-     would appear to work and then have it return on the next read, which is the
-     most confusing possible outcome for a control whose entire job is taking
-     the offer back. */
-  const [stored, withdrawn] = await Promise.all([loadStored(), loadWithdrawn()]);
-  return [...stored, ...SEED_WINDOWS.filter((seed) => !withdrawn.includes(seed.id))];
+  /* Only what this device has actually offered. There are no seeded windows:
+     an invented offer is a stranger's garage that does not exist, and the one
+     thing worse than an empty park-sharing list is one full of spaces a driver
+     cannot be given. An owner who lists their own spot sees it here at once. */
+  return loadStored();
 }
 
 const WITHDRAWN_KEY = "amloc.availability-withdrawn.v1";
 
-/** Ids of seeded windows the owner has removed on this device. */
-async function loadWithdrawn(): Promise<string[]> {
-  const raw = await AsyncStorage.getItem(WITHDRAWN_KEY);
-  if (!raw) return [];
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
+/**
+ * Forget the tombstones an earlier build kept for withdrawn seeded windows.
+ *
+ * There are no seeded windows any more, so the key is dead weight on a device
+ * that upgraded. Cleared rather than left alone because it is a list of ids
+ * nothing will ever consult again, and a stale key is how the next person
+ * reading this file concludes the mechanism is still live.
+ */
+async function forgetWithdrawnSeeds(): Promise<void> {
+  await AsyncStorage.removeItem(WITHDRAWN_KEY);
 }
 
 /** Windows grouped by spot, so a list can look them up in one pass. */
@@ -175,14 +139,6 @@ export async function removeWindow(id: string): Promise<void> {
     WINDOWS_KEY,
     JSON.stringify(stored.filter((window) => window.id !== id)),
   );
-  // A seeded window lives in the source, not in storage, so there is no row to
-  // delete; it is remembered as withdrawn instead.
-  if (SEED_WINDOWS.some((seed) => seed.id === id)) {
-    const withdrawn = await loadWithdrawn();
-    await AsyncStorage.setItem(
-      WITHDRAWN_KEY,
-      JSON.stringify([...new Set([...withdrawn, id])]),
-    );
-  }
+  await forgetWithdrawnSeeds();
   publish("spots");
 }
