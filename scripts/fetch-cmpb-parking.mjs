@@ -2,6 +2,12 @@
  * Builds `constants/cmpb-parking.ts` from Compania Municipală Parking București.
  *
  *     node scripts/fetch-cmpb-parking.mjs
+ *     node scripts/fetch-areas.mjs        # ← and then this, always
+ *
+ * THE SECOND LINE IS NOT OPTIONAL. This script writes the file from scratch,
+ * and the `area` of every lot is put there afterwards by `fetch-areas.mjs`.
+ * Running only the first line strips the area from all 768 of them, and does
+ * it quietly: a missing area is drawn as nothing rather than as an error.
  *
  * The paid half of Bucharest's public parking: the blue zone. CMPB is the
  * municipal company that runs it, and this is their own layer -- the one their

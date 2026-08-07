@@ -2,6 +2,15 @@
  * Builds `constants/public-parking.ts` from OpenStreetMap.
  *
  *     node scripts/fetch-parking.mjs
+ *     node scripts/fetch-areas.mjs     # ← and then this, always
+ *
+ * THE SECOND LINE IS NOT OPTIONAL. This script writes the file from scratch,
+ * and the `area` of every car park is put there afterwards by
+ * `fetch-areas.mjs`, which resolves each point against Bucharest's sector
+ * outlines. Running only the first line therefore silently strips the area
+ * from every OSM car park, and the failure is quiet: the cards simply stop
+ * drawing their location pin, because a missing area is drawn as nothing at
+ * all rather than as an error.
  *
  * The public half of the map. Where a private spot is listed by the person who
  * owns it, a public one is a place the city already knows about, and the app's
