@@ -35,6 +35,11 @@ export interface SpotRow {
   latitude: number;
   longitude: number;
   price_per_hour: number | null;
+  /**
+   * Whether the place charges at all, which is not the same question as how
+   * much. Three states, so `null` means nobody has said rather than free.
+   */
+  paid: boolean | null;
   total_count: number | null;
   rating: number | null;
   image_url: string | null;

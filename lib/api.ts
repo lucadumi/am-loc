@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { CMPB_PARKING } from "@/constants/cmpb-parking.ts";
 import { PUBLIC_PARKING } from "@/constants/public-parking.ts";
 import { distanceMeters, etaMinutes, type LatLng } from "@/lib/geo.ts";
 import { currentIdentity, resolveIdentity } from "@/lib/identity.ts";
@@ -21,253 +22,43 @@ import type {
  * The app's data layer.
  *
  * Spots and the claims made about them come from Supabase when a project is
- * configured (see `.env.example`), and from the seeds below when one is not,
- * so a fresh clone with no credentials still opens on a working map of central
+ * configured (see `.env.example`), and from the imported layers below when one
+ * is not, so a fresh clone with no credentials still opens on a real map of
  * Bucharest. Blocker reports go the same way now that the schema models them.
  *
- * The seeds are never mixed into remote results. An empty `spots` table is a
- * real answer, and padding it with invented kerbs would be a map that lies.
+ * THERE IS NO INVENTED DATA HERE, and there is not going to be. Every car park
+ * the app draws is a real one: `PUBLIC_PARKING` is OpenStreetMap, `CMPB_PARKING`
+ * is the municipal blue zone as its operator publishes it. Both carry `source`
+ * fields that mark them as records rather than observations, so nothing in
+ * either pretends anybody has looked at a space -- they read "Fără raportări"
+ * until a driver files a claim.
+ *
+ * That matters more than it sounds. A stand-in kerb is indistinguishable, on
+ * screen, from a real one somebody just checked, and the app's single promise
+ * is that what it shows is true. A map with a plausible fiction in it is worse
+ * than an empty one, because the driver cannot tell which part to trust.
  */
 
 const REPORTS_KEY = "amloc.reports.v1";
 const REPORT_STATUS_KEY = "amloc.report-status.v1";
 
-const minutesAgo = (m: number) => new Date(Date.now() - m * 60000).toISOString();
-
-/** Community-reported parking spots around central Bucharest. */
-export const SEED_SPOTS: ParkingSpot[] = [
-  {
-    id: "s_universitate",
-    title: "Bd. Nicolae Bălcescu",
-    access: "public",
-    source: "community",
-    area: "Sector 1 · Universitate",
-    rating: 4.6,
-    status: "free",
-    kind: "street",
-    latitude: 44.4357,
-    longitude: 26.1015,
-    updatedAt: minutesAgo(2),
-    availableCount: 2,
-    note: "Două locuri lângă intrarea în pasaj.",
-    reportedBy: "Andrei",
-  },
-  {
-    id: "s_lipscani",
-    title: "Strada Lipscani",
-    access: "public",
-    source: "community",
-    area: "Centrul Vechi",
-    rating: 4.4,
-    status: "leaving",
-    kind: "street",
-    latitude: 44.4319,
-    longitude: 26.1015,
-    updatedAt: minutesAgo(1),
-    leavingInMin: 5,
-    availableCount: 1,
-    reportedBy: "Maria",
-  },
-  {
-    id: "s_romana",
-    title: "Piața Romană",
-    access: "public",
-    source: "community",
-    area: "Sector 1 · ASE",
-    rating: 4.5,
-    status: "free",
-    kind: "street",
-    latitude: 44.4459,
-    longitude: 26.0972,
-    updatedAt: minutesAgo(6),
-    availableCount: 1,
-    reportedBy: "Ioana",
-  },
-  {
-    id: "s_unirii",
-    title: "Piața Unirii",
-    access: "public",
-    source: "community",
-    area: "Sector 3 · Unirii",
-    rating: 4.1,
-    status: "taken",
-    kind: "street",
-    latitude: 44.4271,
-    longitude: 26.1024,
-    updatedAt: minutesAgo(9),
-    availableCount: 0,
-    note: "Plin, dar se eliberează des dimineața.",
-  },
-  {
-    id: "s_cismigiu",
-    title: "Bd. Regina Elisabeta",
-    access: "public",
-    source: "community",
-    area: "Sector 5 · Cișmigiu",
-    rating: 4.7,
-    status: "free",
-    kind: "street",
-    latitude: 44.4362,
-    longitude: 26.0918,
-    updatedAt: minutesAgo(3),
-    availableCount: 3,
-    reportedBy: "Radu",
-  },
-  {
-    id: "s_victoriei",
-    title: "Calea Victoriei",
-    access: "public",
-    source: "community",
-    area: "Sector 1 · Victoriei",
-    rating: 4.5,
-    status: "leaving",
-    kind: "street",
-    latitude: 44.4432,
-    longitude: 26.0966,
-    updatedAt: minutesAgo(2),
-    leavingInMin: 8,
-    availableCount: 1,
-    reportedBy: "Elena",
-  },
-  {
-    id: "s_dorobanti",
-    title: "Calea Dorobanți",
-    access: "public",
-    source: "community",
-    area: "Sector 1 · Dorobanți",
-    rating: 4.3,
-    status: "free",
-    kind: "street",
-    latitude: 44.4571,
-    longitude: 26.0958,
-    updatedAt: minutesAgo(11),
-    availableCount: 2,
-  },
-  {
-    id: "s_kogalniceanu",
-    title: "Piața Mihail Kogălniceanu",
-    access: "public",
-    source: "community",
-    area: "Sector 5 · Kogălniceanu",
-    rating: 4.0,
-    status: "taken",
-    kind: "street",
-    latitude: 44.4351,
-    longitude: 26.0872,
-    updatedAt: minutesAgo(14),
-    availableCount: 0,
-  },
-  {
-    id: "g_unirii",
-    title: "Parcarea Unirii Shopping",
-    access: "public",
-    source: "community",
-    area: "Sector 3 · Unirii",
-    rating: 4.6,
-    status: "free",
-    kind: "garage",
-    latitude: 44.4278,
-    longitude: 26.1042,
-    updatedAt: minutesAgo(1),
-    availableCount: 34,
-    totalCount: 420,
-    pricePerHour: 6,
-    reportedBy: "AmLoc",
-  },
-  {
-    id: "g_universitate",
-    title: "Parcare subterană Universitate",
-    access: "public",
-    source: "community",
-    area: "Sector 1 · Centru",
-    rating: 4.8,
-    status: "free",
-    kind: "garage",
-    latitude: 44.4345,
-    longitude: 26.1002,
-    updatedAt: minutesAgo(2),
-    availableCount: 7,
-    totalCount: 300,
-    pricePerHour: 7,
-    reportedBy: "AmLoc",
-  },
-  {
-    id: "p_floreasca_garaj",
-    title: "Garaj, Str. Glinka 12",
-    access: "private",
-    source: "owner",
-    area: "Sector 1 · Floreasca",
-    rating: 4.9,
-    /* Overwritten by `withBelief` from the owner's windows. Written as `taken`
-       rather than `free` because a listing nobody has opened a window on is not
-       on offer, and the safe direction for somebody else's garage is shut. */
-    status: "taken",
-    kind: "garage",
-    latitude: 44.465,
-    longitude: 26.09,
-    updatedAt: minutesAgo(240),
-    totalCount: 1,
-    // The device itself, so the owner's controls are reachable on a fresh
-    // clone. Everything a stranger sees is on the other seed below.
-    ownerId: LOCAL_REPORTER_ID,
-    ownerName: "Tu",
-  },
-  {
-    id: "p_dorobanti_loc",
-    title: "Loc de parcare, Calea Dorobanți 168",
-    access: "private",
-    source: "owner",
-    area: "Sector 1 · Dorobanți",
-    rating: 4.7,
-    status: "taken",
-    kind: "street",
-    latitude: 44.4585,
-    longitude: 26.0971,
-    updatedAt: minutesAgo(300),
-    totalCount: 1,
-    pricePerHour: 8,
-    ownerId: "owner_mihai",
-    ownerName: "Mihai",
-  },
-];
-
-/** Seed blocker reports so the map isn't empty on first launch. */
-export const SEED_REPORTS: BlockerReport[] = [
-  {
-    id: "seed_r1",
-    reportedBy: "Andrei",
-    category: "sidewalk",
-    latitude: 44.4338,
-    longitude: 26.0995,
-    createdAt: minutesAgo(20),
-    status: "forwarded",
-    address: "Strada Academiei, Universitate",
-    note: "Blochează complet trotuarul, nu se poate trece cu căruciorul.",
-    photos: ["sample:tow"],
-  },
-  {
-    id: "seed_r2",
-    reportedBy: "Maria",
-    category: "crosswalk",
-    latitude: 44.4402,
-    longitude: 26.0999,
-    createdAt: minutesAgo(45),
-    status: "open",
-    address: "Bd. Lascăr Catargiu, Piața Romană",
-    plate: "B 217 XYZ",
-    photos: ["sample:parking", "sample:kerb"],
-  },
-  {
-    id: "seed_r3",
-    reportedBy: "Ioana",
-    category: "ramp",
-    latitude: 44.4289,
-    longitude: 26.1041,
-    createdAt: minutesAgo(90),
-    status: "open",
-    address: "Strada Sfânta Vineri, Unirii",
-  },
-];
+/**
+ * Every car park the app knows about without asking anybody: the blue zone
+ * first, then whatever OpenStreetMap has that CMPB does not.
+ *
+ * Two sources because they answer different questions. CMPB knows every space
+ * it operates, how many bays it has and what it charges, and nothing about a
+ * car park it does not run. OSM knows about the free kerbs, the mall garages
+ * and the private ones, and carries almost no tariffs. Neither alone is a map
+ * of Bucharest.
+ *
+ * They are concatenated rather than merged by position: a CMPB lot and an OSM
+ * car park at the same corner are usually the same asphalt, but the ids come
+ * from different registries and matching them by distance would be a guess. It
+ * is a real duplicate on the map and it is the honest kind -- both entries are
+ * true, from different registries, and neither invents a space.
+ */
+const IMPORTED_PARKING: ParkingSpot[] = [...CMPB_PARKING, ...PUBLIC_PARKING];
 
 /**
  * An id for something this device is about to file.
@@ -344,23 +135,47 @@ async function loadReportProgress(): Promise<Record<string, ReportProgress>> {
   }
 }
 
-/** Every spot the map should show: the bundled seeds, then the imported car parks. */
+/**
+ * Every spot the map should show: what the backend knows, then whatever of the
+ * imported layers it did not already carry.
+ *
+ * The imported car parks exist twice on purpose -- bundled in
+ * `constants/`, and as rows once `scripts/import-parking.mjs` has been run
+ * against a project. The duplication is not an accident to be tidied away.
+ * Bundled, they are what makes a fresh clone with no credentials open on a real
+ * map of Bucharest. Stored, they are what a `status_reports` foreign key points
+ * at when a driver standing in one says there is space: without the row, the
+ * whole imported layer would be read-only in the one build where reporting
+ * matters.
+ *
+ * So they are joined by id rather than concatenated, and the stored row wins.
+ * It is the one that can have been corrected since the import, and it is the
+ * one carrying the claims -- appending the bundled copy after it would put a
+ * second, observation-less version of the same car park on the map, drawn
+ * "Fără raportări" directly on top of the one somebody just reported on.
+ */
 export async function getSpots(): Promise<ParkingSpot[]> {
   if (isRemote()) {
     const { fetchSpots } = await import("@/lib/supabase-data.ts");
-    return [...(await fetchSpots()), ...PUBLIC_PARKING];
+    const stored = await fetchSpots();
+    const known = new Set(stored.map((spot) => spot.id));
+    return [...stored, ...IMPORTED_PARKING.filter((spot) => !known.has(spot.id))];
   }
-  return [...SEED_SPOTS, ...PUBLIC_PARKING];
+  return IMPORTED_PARKING;
 }
 
 /**
- * Every blocker report the app knows about: the ones filed here, then the
- * seeds, each carrying where it got to and whatever was shown for it.
+ * Every blocker report the app knows about, each carrying where it got to and
+ * whatever was shown for it.
  *
- * With a project configured there are no seeds and no local progress: reports
- * are rows other drivers can see, which is the entire point of moving them off
- * the device. The identity is resolved first because `isMine` is asked while
- * the list renders and cannot wait for an answer.
+ * Nothing is invented here either: with no project configured this is what was
+ * filed on this phone and nothing else, so an empty Sesizări tab means nobody
+ * has reported a blocked pavement yet -- which is true, and better than three
+ * fictional complaints about streets nobody photographed.
+ *
+ * With a project configured, reports are rows other drivers can see, which is
+ * the entire point of moving them off the device. The identity is resolved
+ * first because `isMine` is asked while the list renders and cannot wait.
  */
 export async function getReports(): Promise<BlockerReport[]> {
   if (isRemote()) {
@@ -374,7 +189,7 @@ export async function getReports(): Promise<BlockerReport[]> {
     loadStoredReports(),
     loadReportProgress(),
   ]);
-  return [...stored, ...SEED_REPORTS].map((report) => {
+  return stored.map((report) => {
     const moved = progress[report.id];
     return moved ? { ...report, ...moved } : report;
   });
@@ -523,13 +338,14 @@ export function rankNearby<T extends ParkingSpot>(
     .slice(0, limit);
 }
 
-/** Resolve a single spot by id, across the seeds and the imported car parks. */
+/** Resolve a single spot by id, across everything the app can see. */
 export async function getSpotById(id: string): Promise<ParkingSpot | undefined> {
   if (isRemote()) {
     const { fetchSpotById } = await import("@/lib/supabase-data.ts");
-    // Imported car parks are bundled rather than stored, so they are never rows
-    // to fetch; without this a driver tapping one on the map gets "not found".
-    return (await fetchSpotById(id)) ?? PUBLIC_PARKING.find((s) => s.id === id);
+    // An imported car park is bundled whether or not it has been imported into
+    // the project, so a driver tapping one on the map must not get "not found"
+    // merely because `scripts/import-parking.mjs` has not been run.
+    return (await fetchSpotById(id)) ?? IMPORTED_PARKING.find((s) => s.id === id);
   }
-  return [...SEED_SPOTS, ...PUBLIC_PARKING].find((s) => s.id === id);
+  return IMPORTED_PARKING.find((s) => s.id === id);
 }

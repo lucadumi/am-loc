@@ -49,19 +49,35 @@ const blocker = (over = {}) => ({
 });
 
 describe("blocker reports with no backend configured", () => {
-  test("a fresh device sees exactly the seeds", async () => {
+  /* Empty, and that is the correct answer rather than a gap to be filled.
+     There are no invented complaints anywhere in the app: a fictional blocked
+     pavement is indistinguishable on screen from one somebody photographed
+     this morning, and it would send a driver to look at a car that was never
+     there. Nobody has reported anything on a fresh device, so the tab says so. */
+  test("a fresh device has nothing to show, rather than invented complaints", async () => {
     const reports = await api.getReports();
 
-    assert.deepEqual(reports, api.SEED_REPORTS);
+    assert.deepEqual(reports, []);
   });
 
-  test("a filed report comes back, ahead of the seeds", async () => {
+  test("a filed report comes back", async () => {
     const filed = await api.addReport(blocker({ note: "Trotuar blocat" }));
 
     const reports = await api.getReports();
-    assert.equal(reports.length, api.SEED_REPORTS.length + 1);
+    assert.equal(reports.length, 1);
     assert.equal(reports[0].id, filed.id);
     assert.equal(reports[0].note, "Trotuar blocat");
+  });
+
+  test("the newest report a driver filed comes back first", async () => {
+    const first = await api.addReport(blocker({ note: "Prima" }));
+    const second = await api.addReport(blocker({ note: "A doua" }));
+
+    const reports = await api.getReports();
+    assert.deepEqual(
+      reports.map((report) => report.id),
+      [second.id, first.id],
+    );
   });
 
   test("a report is filed open, stamped with an id and a time", async () => {
@@ -75,11 +91,11 @@ describe("blocker reports with no backend configured", () => {
     assert.ok(new Date(filed.createdAt).getTime() >= before);
   });
 
-  test("corrupt storage costs the driver their own reports, not the seeds", async () => {
+  test("corrupt storage reads as no reports rather than throwing", async () => {
     fake.default.__store.set(REPORTS_KEY, "{ not json");
     fake.default.__store.set(REPORT_STATUS_KEY, "{ not json");
 
     const reports = await api.getReports();
-    assert.deepEqual(reports, api.SEED_REPORTS);
+    assert.deepEqual(reports, []);
   });
 });

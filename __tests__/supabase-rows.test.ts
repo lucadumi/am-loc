@@ -58,6 +58,7 @@ const spotRow = (over: Partial<SpotRow> = {}): SpotRow => ({
   latitude: 44.4319,
   longitude: 26.1015,
   price_per_hour: null,
+  paid: null,
   total_count: null,
   rating: 4.4,
   image_url: null,
