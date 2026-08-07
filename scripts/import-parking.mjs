@@ -18,11 +18,25 @@
  * entire imported layer is read-only in exactly the build where reporting is
  * the point.
  *
- * Reads `.env` for `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY`.
- * The anon key is enough: the `spots` insert policy allows any signed-in user
- * to add a public spot, so the script signs in anonymously exactly as the app
- * does. A `service_role` key is deliberately not used -- it bypasses row level
- * security, and a bulk import is the last place that should be routine.
+ * WHY THIS ONE NEEDS THE SERVICE ROLE KEY, when nothing else in the codebase
+ * does. Because an imported car park has no author, and the schema says so:
+ * `created_by` is null for these, since no driver added them -- the same
+ * reasoning that leaves `reportedBy` undefined for a spot nobody has reported
+ * on. But the insert policy for drivers requires `created_by = auth.uid()`,
+ * exactly so that a driver cannot file a spot under somebody else's name.
+ *
+ * The two cannot both hold through the same key, and the alternative is worse.
+ * Widening the policy to accept rows with no author, so long as they claim a
+ * registry `source`, would let anyone holding the anon key -- which ships
+ * inside the app -- insert invented car parks marked as the municipality's.
+ * The municipal layer would become the easiest thing in the app to forge.
+ *
+ * So this is an operator's tool and says so. It is run by hand, from a machine
+ * that has the key, and never by the app. The key is read from
+ * `SUPABASE_SERVICE_ROLE_KEY` -- deliberately without the `EXPO_PUBLIC_`
+ * prefix, because that prefix is what makes Expo inline a variable into the
+ * bundle, and a service role key in a mobile bundle would hand every user the
+ * ability to bypass row level security entirely.
  */
 
 import { readFile } from "node:fs/promises";
@@ -54,7 +68,14 @@ async function readEnv() {
   return env;
 }
 
-/** The columns `spots` actually has, from what the app carries in memory. */
+/**
+ * The columns `spots` actually has, from what the app carries in memory.
+ *
+ * `created_by` is absent rather than set to whoever ran this, and that is the
+ * point: nobody added these places, a registry recorded them. Attributing 865
+ * car parks to an operator's account would invent authorship, in the same way
+ * that crediting an imported record as an observation would invent a witness.
+ */
 function toRow(spot) {
   return {
     id: spot.id,
@@ -77,7 +98,7 @@ async function main() {
   const dryRun = process.argv.includes("--dry-run");
   const env = await readEnv();
   const url = env.EXPO_PUBLIC_SUPABASE_URL;
-  const anonKey = env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+  const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY;
 
   const spots = [...CMPB_PARKING, ...PUBLIC_PARKING];
 
@@ -110,25 +131,25 @@ async function main() {
     return;
   }
 
-  if (!url || !anonKey) {
+  if (!url) {
     throw new Error(
-      "No Supabase project configured. Set EXPO_PUBLIC_SUPABASE_URL and " +
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY in .env; see .env.example.",
+      "No Supabase project configured. Set EXPO_PUBLIC_SUPABASE_URL in .env; " +
+        "see .env.example.",
+    );
+  }
+  if (!serviceKey) {
+    throw new Error(
+      "This import needs SUPABASE_SERVICE_ROLE_KEY (Settings -> API -> " +
+        "`service_role`). Imported car parks have no author, which the driver " +
+        "insert policy rightly forbids; see the header of this file. Never " +
+        "give it an EXPO_PUBLIC_ prefix -- that would ship it in the app.",
     );
   }
 
   const { createClient } = await import("@supabase/supabase-js");
-  const client = createClient(url, anonKey, {
+  const client = createClient(url, serviceKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
-
-  const { error: authError } = await client.auth.signInAnonymously();
-  if (authError) {
-    throw new Error(
-      `Could not sign in anonymously (enable Authentication -> Sign In / ` +
-        `Providers -> Anonymous sign-ins): ${authError.message}`,
-    );
-  }
 
   for (let index = 0; index < rows.length; index += BATCH) {
     const batch = rows.slice(index, index + BATCH);
