@@ -1,6 +1,7 @@
-import { ArrowRight, Footprints, MapPin, Star } from "lucide-react-native";
+import { ArrowRight, Footprints, MapPin } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 
+import { Rating } from "@/components/rating";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
@@ -8,6 +9,8 @@ import { SpotImage } from "@/components/spot-image";
 import { StatusBadge } from "@/components/status-badge";
 import { palette } from "@/constants/theme";
 import { formatPrice } from "@/lib/geo";
+import { spotName } from "@/lib/spot-name";
+import type { ConfidenceLevel } from "@/lib/spot-state";
 import { ParkingSpot } from "@/types";
 
 /**
@@ -22,7 +25,15 @@ export function SpotCard({
   onPress,
   fullWidth,
 }: {
-  spot: ParkingSpot & { walkMin?: number };
+  /**
+   * `confidenceLevel` is optional because a bare `ParkingSpot` has none, but
+   * every screen that draws this card runs its spots through `believeAll`
+   * first, so in practice it is always there. It has to reach the dot: a spot
+   * nobody has reported on is flattened to `taken`, and drawn as a solid red
+   * dot that becomes a claim the app cannot support -- 838 of the 851 imported
+   * car parks are in exactly that position.
+   */
+  spot: ParkingSpot & { walkMin?: number; confidenceLevel?: ConfidenceLevel };
   onPress?: () => void;
   fullWidth?: boolean;
 }) {
@@ -32,31 +43,50 @@ export function SpotCard({
         <View className="relative">
           <SpotImage kind={spot.kind} className="h-32 w-full" />
           <View className="absolute left-2 top-2">
-            <StatusBadge status={spot.status} dotOnly />
+            <StatusBadge
+              status={spot.status}
+              unknown={spot.confidenceLevel === "none"}
+              dotOnly
+            />
           </View>
-          <View className="absolute right-2 top-2 rounded-full bg-foreground/85 px-2.5 py-1">
-            <Text className="font-heavy text-xs text-primary">
+          {/* The price, over the placeholder panel rather than in the body, so
+              a driver comparing cards reads what each one costs without
+              looking down.
+
+              The text darkens as the background lightens, and the pair has to
+              move together. `SpotImage` always draws the same light grey panel
+              (#E4E4E7 — no car park in either registry carries a photograph),
+              so a 15% pill lands on a pale grey where the foreground colour is
+              10.3:1 and the brand yellow would be under 1.5:1: legible only
+              because the text went dark when the fill went light. */}
+          <View className="absolute right-2 top-2 rounded-full bg-foreground/15 px-2.5 py-1">
+            <Text className="font-heavy text-xs text-foreground">
               {formatPrice(spot.pricePerHour, spot.paid)}
             </Text>
           </View>
         </View>
         <View className="gap-2 p-3">
           <Text numberOfLines={1} className="font-title text-base text-foreground">
-            {spot.title}
+            {spotName(spot)}
           </Text>
-          <View className="flex-row items-center gap-3">
-            <View className="flex-1 flex-row items-center gap-1">
-              {spot.walkMin ? (
-                <>
-                  <Footprints size={13} color={palette.indigo[600]} />
-                  <Text className="font-semi text-xs text-foreground">
-                    {spot.walkMin} min
-                  </Text>
-                  <Text className="font-mid text-xs text-muted-foreground">·</Text>
-                </>
-              ) : (
-                <MapPin size={13} color={palette.indigo[600]} />
-              )}
+
+          {/* Where it is, on its own line.
+
+              It shared a line with the walk time until the areas arrived, and
+              could not keep doing so: "Sector 1 · Piața Dorobanților" is 29
+              characters against the ~21 that were left beside a walk time and a
+              score, so the pin and the text were competing for room with two
+              other things and losing. A row of its own is also the honest
+              layout -- this is the answer to "where is it", which is a
+              different question from "how far is it". */}
+          {spot.area ? (
+            <View className="flex-row items-center gap-1">
+              <MapPin
+                size={13}
+                color={palette.coral}
+                strokeWidth={2.2}
+                style={{ flexShrink: 0 }}
+              />
               <Text
                 numberOfLines={1}
                 className="flex-1 font-mid text-xs text-muted-foreground"
@@ -64,14 +94,28 @@ export function SpotCard({
                 {spot.area}
               </Text>
             </View>
-            {spot.rating ? (
+          ) : null}
+
+          <View className="flex-row items-center justify-between gap-3">
+            {spot.walkMin ? (
               <View className="flex-row items-center gap-1">
-                <Star size={13} color={palette.primary} fill={palette.primary} />
+                {/* `flexShrink: 0` on every icon in a row, and it is not belt
+                    and braces: a flex child shrinks by default and an SVG has
+                    no content to stop it, so a squeezed row silently renders
+                    the icon at no width at all. */}
+                <Footprints
+                  size={13}
+                  color={palette.indigo[600]}
+                  style={{ flexShrink: 0 }}
+                />
                 <Text className="font-semi text-xs text-foreground">
-                  {spot.rating.toFixed(1)}
+                  {spot.walkMin} min pe jos
                 </Text>
               </View>
-            ) : null}
+            ) : (
+              <View />
+            )}
+            <Rating value={spot.rating} />
           </View>
           <Button
             size="sm"

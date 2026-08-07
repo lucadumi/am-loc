@@ -22,6 +22,7 @@ import { useCurrentLocation } from "@/hooks/use-current-location";
 import { useLive } from "@/hooks/use-live";
 import { getSpots, rankNearby } from "@/lib/api";
 import { believeAll, type BelievedSpot } from "@/lib/spot-belief";
+import { spotName } from "@/lib/spot-name";
 import { ParkingSpot } from "@/types";
 
 export default function HomeScreen() {
@@ -75,6 +76,42 @@ export default function HomeScreen() {
     () => (location && spots ? rankNearby(spots, location, { limit: 8 }) : []),
     [spots, location],
   );
+
+  /**
+   * The line under the greeting.
+   *
+   * It used to be the driver's location, which said "București" to an app that
+   * only works in București -- a sentence that is true, constant and therefore
+   * worth no space at the top of the screen.
+   *
+   * What goes there instead has to be a fact about right now, and the free
+   * count is the only one the app produces that nothing else in the city
+   * publishes. It is stated only when somebody has actually reported a space:
+   * with no reports the honest line is how much parking is around, not a
+   * confident "0 locuri libere", which would read as a full city rather than
+   * as a quiet one. The two say different things and only one of them is ever
+   * true here.
+   */
+  const headline = useMemo(() => {
+    if (!location || !spots) return "Se localizează…";
+
+    const around = rankNearby(spots, location, { limit: 500 });
+    if (!around.length) return "Nicio parcare în apropiere";
+
+    const free = around.filter(
+      (spot) => spot.status === "free" && spot.confidenceLevel !== "none",
+    ).length;
+
+    if (free) {
+      return free === 1
+        ? "1 loc liber raportat în apropiere"
+        : `${free} locuri libere raportate în apropiere`;
+    }
+    return around.length === 1
+      ? "1 parcare în apropiere"
+      : `${around.length} parcări în apropiere`;
+  }, [spots, location]);
+
   const last = spots?.find((s) => s.kind === "garage") ?? spots?.[0];
 
   return (
@@ -106,7 +143,7 @@ export default function HomeScreen() {
         >
           <GreetingHeader
             onPrimary
-            location={location?.label ?? "Se localizează…"}
+            subtitle={headline}
             onProfile={() => router.push("/profile")}
           />
           <SearchBar onPress={() => router.push("/search")} />
@@ -200,10 +237,13 @@ export default function HomeScreen() {
                         numberOfLines={1}
                         className="font-title text-base text-foreground"
                       >
-                        {last.title}
+                        {spotName(last)}
                       </Text>
+                      {/* The area is absent on every imported car park, and a
+                          bare "· Fără raportări" reads as a missing word. */}
                       <Text className="font-mid text-xs text-muted-foreground">
-                        {last.area} · {confidenceLabel[last.confidenceLevel]}
+                        {last.area ? `${last.area} · ` : ""}
+                        {confidenceLabel[last.confidenceLevel]}
                       </Text>
                     </View>
                     <ChevronRight size={20} color={palette.mutedForeground} />

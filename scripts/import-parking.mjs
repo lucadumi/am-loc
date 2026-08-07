@@ -171,6 +171,51 @@ async function main() {
     );
   }
 
+  /* Car parks the registries no longer list.
+   *
+   * Without this, an import is add-only and every run leaves ghosts: the
+   * residents' bays and the OSM duplicates dropped from the bundled layers
+   * stayed in `spots` and went on being served to the app, which reads the
+   * table rather than the constants. They are the rows that look worst, too --
+   * a duplicate marked "Gratuit" over a lot CMPB charges for.
+   *
+   * Scoped to `source in ('osm','cmpb')`, so a kerb a driver dropped a pin on
+   * and a garage somebody listed are never touched by an import: those belong
+   * to their authors, not to a registry.
+   */
+  const registryIds = new Set(rows.map((row) => row.id));
+  const { data: existing, error: readError } = await client
+    .from("spots")
+    .select("id")
+    .in("source", ["osm", "cmpb"]);
+  if (readError) throw new Error(`Could not list spots: ${readError.message}`);
+
+  const stale = (existing ?? [])
+    .map((row) => row.id)
+    .filter((id) => !registryIds.has(id));
+
+  if (stale.length) {
+    /* A deletion cascades to the claims filed about the spot, so a broken
+       import must not be allowed to take the map with it. Losing a tenth of
+       the registry in one run means the fetch failed, not that Bucharest
+       demolished eighty car parks overnight. */
+    const share = stale.length / Math.max(existing.length, 1);
+    if (share > 0.1) {
+      throw new Error(
+        `Refusing to delete ${stale.length} of ${existing.length} imported ` +
+          `car parks (${Math.round(share * 100)}%). Re-run the fetch scripts ` +
+          `and check their output before importing again.`,
+      );
+    }
+
+    for (let index = 0; index < stale.length; index += BATCH) {
+      const batch = stale.slice(index, index + BATCH);
+      const { error } = await client.from("spots").delete().in("id", batch);
+      if (error) throw new Error(`Could not remove stale spots: ${error.message}`);
+    }
+    process.stdout.write(`  removed ${stale.length} no longer listed\n`);
+  }
+
   process.stdout.write(`Done. ${rows.length} car parks in \`spots\`.\n`);
 }
 

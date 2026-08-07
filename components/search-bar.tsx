@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
  */
 export function SearchBar({
   onPress,
-  placeholder = "Caută o destinație…",
+  placeholder = "Unde vrei să mergi?",
   className,
 }: {
   onPress: () => void;

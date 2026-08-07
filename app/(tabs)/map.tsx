@@ -15,8 +15,6 @@ import { FloatingControl } from "@/components/floating-control";
 import { SearchBar } from "@/components/search-bar";
 import { SpotFilterSheet } from "@/components/spot-filter-sheet";
 import { Text } from "@/components/ui/text";
-import { CMPB_ATTRIBUTION } from "@/constants/cmpb-parking";
-import { PARKING_ATTRIBUTION } from "@/constants/public-parking";
 import { palette, statusColor, statusLabel } from "@/constants/theme";
 import { floatingTabBarInset } from "@/constants/layout";
 import { useCurrentLocation } from "@/hooks/use-current-location";
@@ -32,10 +30,20 @@ import {
 import { BUCHAREST } from "@/lib/geo";
 import { BlockerReport, SpotFilters } from "@/types";
 
-const LEGEND_ITEMS: { color: string; label: string }[] = [
+/**
+ * What the pins mean.
+ *
+ * The hollow entry is not decoration. `unreliable` draws a pin hollow whenever
+ * the claim behind it has gone stale, is contested, or was never made at all --
+ * and that last case is 838 of the 851 imported car parks, so the commonest
+ * pin on this map is a grey outline. A legend that listed only the three solid
+ * states would explain the rare pins and leave the usual one a mystery.
+ */
+const LEGEND_ITEMS: { color: string; label: string; hollow?: boolean }[] = [
   { color: statusColor.free, label: statusLabel.free },
   { color: statusColor.leaving, label: statusLabel.leaving },
   { color: statusColor.taken, label: statusLabel.taken },
+  { color: palette.mutedForeground, label: "Fără raportări", hollow: true },
   { color: palette.destructive, label: "Sesizare" },
 ];
 
@@ -47,21 +55,16 @@ function Legend() {
           <View className="w-4 items-center">
             <View
               className="h-2.5 w-2.5 rounded-full"
-              style={{ backgroundColor: item.color }}
+              style={
+                item.hollow
+                  ? { borderWidth: 1.5, borderColor: item.color }
+                  : { backgroundColor: item.color }
+              }
             />
           </View>
           <Text className="font-mid text-xs text-foreground">{item.label}</Text>
         </View>
       ))}
-      {/* Both licences require this and neither is optional: OpenStreetMap is
-          ODbL, and CMPB authorise reproduction only "cu menţionarea sursei".
-          It sits in the legend because that is the one panel on the map that
-          is always drawn, whatever is filtered out. */}
-      <Text className="mt-1 font-mid text-[10px] leading-3 text-muted-foreground">
-        {PARKING_ATTRIBUTION}
-        {"\n"}
-        {CMPB_ATTRIBUTION}
-      </Text>
     </View>
   );
 }

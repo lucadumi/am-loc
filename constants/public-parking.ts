@@ -3,8 +3,8 @@
  *
  *     node scripts/fetch-parking.mjs
  *
- * 97 car parks (32 structures, 26 with a recorded
- * capacity), fetched 2026-08-06.
+ * 83 car parks (32 structures, 23 with a recorded
+ * capacity), fetched 2026-08-07.
  *
  * WHAT THESE ARE. Places the map knows exist, at roughly the size recorded.
  * Nothing here says whether there is space in one now -- OSM has no such field,
@@ -34,7 +34,7 @@ import type { ParkingSpot } from "@/types";
 export const PARKING_AREA = [44.38, 26.02, 44.5, 26.18] as const;
 
 /** When the layer was last pulled from OpenStreetMap. */
-export const PARKING_FETCHED_AT = "2026-08-06T10:03:18.176Z";
+export const PARKING_FETCHED_AT = "2026-08-07T12:59:36.035Z";
 
 /** Required wherever the layer is drawn. */
 export const PARKING_ATTRIBUTION = "© OpenStreetMap contributors (ODbL)";
@@ -48,27 +48,6 @@ export const PARKING_ATTRIBUTION = "© OpenStreetMap contributors (ODbL)";
  */
 export const PUBLIC_PARKING: ParkingSpot[] = [
   {
-    id: "osm_n12539222095",
-    title: "A.D.P. SECTOR 2 PARCARE DE RESEDINTA",
-    access: "public",
-    source: "osm",
-    kind: "street",
-    status: "taken",
-    latitude: 44.447744,
-    longitude: 26.133496,
-    totalCount: 14,
-  },
-  {
-    id: "osm_n12539222096",
-    title: "A.D.P. SECTOR 2 PARCARE DE RESEDINTA",
-    access: "public",
-    source: "osm",
-    kind: "street",
-    status: "taken",
-    latitude: 44.447121,
-    longitude: 26.13434,
-  },
-  {
     id: "osm_n1306581986",
     title: "Fabrica de Pâine",
     access: "public",
@@ -77,6 +56,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.453833,
     longitude: 26.123458,
+    area: "Sector 2 · Piața Obor",
     totalCount: 20,
     paid: false,
   },
@@ -89,6 +69,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.430047,
     longitude: 26.173766,
+    area: "Sector 3 · Malaxa - Faur",
     totalCount: 30,
   },
   {
@@ -100,6 +81,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.389291,
     longitude: 26.111021,
+    area: "Sector 4 · Berceni",
     totalCount: 15,
   },
   {
@@ -111,6 +93,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.470545,
     longitude: 26.077225,
+    area: "Sector 1 · Domenii",
   },
   {
     id: "osm_n2866066043",
@@ -121,19 +104,9 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.482003,
     longitude: 26.050067,
+    area: "Sector 1 · Pajura",
     totalCount: 5,
     paid: false,
-  },
-  {
-    id: "osm_n2866156469",
-    title: "Parcare rezidentiala",
-    access: "public",
-    source: "osm",
-    kind: "street",
-    status: "taken",
-    latitude: 44.480525,
-    longitude: 26.045214,
-    totalCount: 6,
   },
   {
     id: "osm_n3789863358",
@@ -144,6 +117,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.44224,
     longitude: 26.15328,
+    area: "Sector 2 · Delfinului",
     paid: false,
   },
   {
@@ -155,6 +129,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.380884,
     longitude: 26.138142,
+    area: "Sector 4 · Apărătorii Patriei",
   },
   {
     id: "osm_n458746312",
@@ -165,6 +140,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.405784,
     longitude: 26.109477,
+    area: "Sector 4 · Tineretului",
   },
   {
     id: "osm_n458746341",
@@ -175,6 +151,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.404979,
     longitude: 26.110948,
+    area: "Sector 4 · Văcărești",
   },
   {
     id: "osm_n4621661072",
@@ -185,6 +162,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.478383,
     longitude: 26.103352,
+    area: "Sector 1 · Aviației",
     paid: true,
   },
   {
@@ -196,6 +174,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.482872,
     longitude: 26.051634,
+    area: "Sector 1 · Pajura",
   },
   {
     id: "osm_n5868976736",
@@ -206,6 +185,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.483854,
     longitude: 26.097031,
+    area: "Sector 1 · Aviației",
   },
   {
     id: "osm_n587668981",
@@ -216,6 +196,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.40442,
     longitude: 26.110221,
+    area: "Sector 4 · Văcărești",
   },
   {
     id: "osm_n6272992239",
@@ -226,6 +207,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.391409,
     longitude: 26.109004,
+    area: "Sector 4 · Berceni",
   },
   {
     id: "osm_n6272992240",
@@ -236,16 +218,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.390975,
     longitude: 26.109114,
-  },
-  {
-    id: "osm_n6894841867",
-    title: "Parcare de reședință",
-    access: "public",
-    source: "osm",
-    kind: "street",
-    status: "taken",
-    latitude: 44.417905,
-    longitude: 26.170119,
+    area: "Sector 4 · Berceni",
   },
   {
     id: "osm_n6952582144",
@@ -256,6 +229,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.392037,
     longitude: 26.093245,
+    area: "Sector 4 · Giurgiului",
   },
   {
     id: "osm_n6960232997",
@@ -266,6 +240,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.401957,
     longitude: 26.062538,
+    area: "Sector 5 · Rahova",
   },
   {
     id: "osm_n6974620555",
@@ -276,6 +251,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.476586,
     longitude: 26.093411,
+    area: "Sector 1 · Aviației",
     totalCount: 10,
   },
   {
@@ -287,6 +263,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.476365,
     longitude: 26.093073,
+    area: "Sector 1 · Aviației",
     totalCount: 8,
   },
   {
@@ -298,6 +275,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.390895,
     longitude: 26.085894,
+    area: "Sector 5 · Giurgiului",
   },
   {
     id: "osm_n7124470380",
@@ -308,6 +286,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.391069,
     longitude: 26.085612,
+    area: "Sector 5 · Giurgiului",
   },
   {
     id: "osm_n7124581196",
@@ -318,17 +297,8 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.391382,
     longitude: 26.085636,
+    area: "Sector 5 · Giurgiului",
     totalCount: 8,
-  },
-  {
-    id: "osm_n7556759265",
-    title: "Parcare de reședință",
-    access: "public",
-    source: "osm",
-    kind: "street",
-    status: "taken",
-    latitude: 44.417963,
-    longitude: 26.170414,
   },
   {
     id: "osm_w1054204433",
@@ -339,7 +309,9 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.42966,
     longitude: 26.134797,
+    area: "Sector 3 · Decebal",
     totalCount: 718,
+    pricePerHour: 5,
     paid: true,
   },
   {
@@ -351,6 +323,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.442228,
     longitude: 26.159577,
+    area: "Sector 2 · Delfinului",
   },
   {
     id: "osm_w1155808869",
@@ -361,6 +334,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.445143,
     longitude: 26.111193,
+    area: "Sector 2 · Piața Gemeni",
     paid: false,
   },
   {
@@ -372,6 +346,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.485612,
     longitude: 26.091945,
+    area: "Sector 1 · Aviației",
     paid: true,
   },
   {
@@ -383,19 +358,9 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.479371,
     longitude: 26.11693,
+    area: "Sector 2 · Platforma Pipera",
     totalCount: 147,
     paid: true,
-  },
-  {
-    id: "osm_w1228084042",
-    title: "Dizabilități",
-    access: "public",
-    source: "osm",
-    kind: "street",
-    status: "taken",
-    latitude: 44.470104,
-    longitude: 26.141286,
-    totalCount: 3,
   },
   {
     id: "osm_w1257787974",
@@ -406,6 +371,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.428184,
     longitude: 26.032364,
+    area: "Sector 6 · Drumul Taberei",
   },
   {
     id: "osm_w129316969",
@@ -416,6 +382,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.434976,
     longitude: 26.100897,
+    area: "Sector 3 · Colțea",
     totalCount: 425,
     paid: true,
   },
@@ -428,6 +395,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.415133,
     longitude: 26.138922,
+    area: "Sector 3 · Dristor",
   },
   {
     id: "osm_w1334758791",
@@ -449,6 +417,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.479095,
     longitude: 26.067607,
+    area: "Sector 1 · Piața Presei",
     totalCount: 175,
     paid: true,
   },
@@ -461,6 +430,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.431898,
     longitude: 26.027734,
+    area: "Sector 6 · Militari",
   },
   {
     id: "osm_w184169515",
@@ -471,6 +441,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.428573,
     longitude: 26.105445,
+    area: "Sector 3 · Sf. Vineri",
     totalCount: 350,
   },
   {
@@ -482,6 +453,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.427857,
     longitude: 26.0999,
+    area: "Sector 4 · Calicilor",
     paid: true,
   },
   {
@@ -493,6 +465,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.459475,
     longitude: 26.138648,
+    area: "Sector 2 · Doamna Ghica",
   },
   {
     id: "osm_w201015355",
@@ -503,6 +476,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.415056,
     longitude: 26.161644,
+    area: "Sector 3 · Sălăjan",
   },
   {
     id: "osm_w202691013",
@@ -513,6 +487,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.476326,
     longitude: 26.061822,
+    area: "Sector 1 · Domenii",
     totalCount: 250,
     paid: true,
   },
@@ -525,6 +500,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.477647,
     longitude: 26.061307,
+    area: "Sector 1 · Piața Presei",
     totalCount: 250,
     paid: true,
   },
@@ -537,6 +513,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.474789,
     longitude: 26.06295,
+    area: "Sector 1 · Domenii",
     totalCount: 500,
     paid: true,
   },
@@ -549,6 +526,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.476226,
     longitude: 26.068086,
+    area: "Sector 1 · Piața Presei",
     totalCount: 250,
     paid: true,
   },
@@ -561,6 +539,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.475498,
     longitude: 26.067722,
+    area: "Sector 1 · Piața Presei",
     totalCount: 300,
     paid: true,
   },
@@ -573,6 +552,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.450442,
     longitude: 26.128659,
+    area: "Sector 2 · Obor",
     paid: true,
   },
   {
@@ -584,6 +564,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.388992,
     longitude: 26.117029,
+    area: "Sector 4 · Berceni",
   },
   {
     id: "osm_w215353420",
@@ -594,6 +575,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.397232,
     longitude: 26.123535,
+    area: "Sector 4 · Piața Sudului",
   },
   {
     id: "osm_w219710325",
@@ -604,6 +586,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.427299,
     longitude: 26.091696,
+    area: "Sector 5 · Antim",
     paid: true,
   },
   {
@@ -615,6 +598,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.486347,
     longitude: 26.089714,
+    area: "Sector 1 · Herăstrău",
   },
   {
     id: "osm_w225503238",
@@ -625,6 +609,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.416248,
     longitude: 26.049686,
+    area: "Sector 6 · Tudor Vladimirescu",
   },
   {
     id: "osm_w225503246",
@@ -635,6 +620,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.416293,
     longitude: 26.049905,
+    area: "Sector 6 · Tudor Vladimirescu",
   },
   {
     id: "osm_w225503247",
@@ -645,6 +631,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.416126,
     longitude: 26.049719,
+    area: "Sector 6 · Tudor Vladimirescu",
   },
   {
     id: "osm_w225505482",
@@ -655,6 +642,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.419019,
     longitude: 26.042458,
+    area: "Sector 6 · Tudor Vladimirescu",
   },
   {
     id: "osm_w226044616",
@@ -665,6 +653,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.42157,
     longitude: 26.127909,
+    area: "Sector 3 · Dudeşti",
     paid: true,
   },
   {
@@ -676,6 +665,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.438258,
     longitude: 26.097887,
+    area: "Sector 1 · Teatrului",
     paid: true,
   },
   {
@@ -687,6 +677,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.450053,
     longitude: 26.130085,
+    area: "Sector 2 · Obor",
     paid: true,
   },
   {
@@ -698,6 +689,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.437218,
     longitude: 26.070935,
+    area: "Sector 5 · Cotroceni",
     paid: false,
   },
   {
@@ -709,6 +701,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.449444,
     longitude: 26.065565,
+    area: "Sector 1 · Belvedere",
   },
   {
     id: "osm_w294717388",
@@ -719,6 +712,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.43275,
     longitude: 26.126118,
+    area: "Sector 2 · Delea veche",
     paid: true,
   },
   {
@@ -730,6 +724,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.420212,
     longitude: 26.141225,
+    area: "Sector 3 · Dristor",
   },
   {
     id: "osm_w389242430",
@@ -740,6 +735,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.436481,
     longitude: 26.110788,
+    area: "Sector 2 · Mântuleasa",
     totalCount: 20,
     paid: false,
   },
@@ -752,6 +748,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.491369,
     longitude: 26.032863,
+    area: "Sector 1 · Bazilescu",
   },
   {
     id: "osm_w405063050",
@@ -762,6 +759,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.410305,
     longitude: 26.123752,
+    area: "Sector 3 · Vitan",
     paid: false,
   },
   {
@@ -773,6 +771,8 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.449897,
     longitude: 26.082826,
+    area: "Sector 1 · Buzești",
+    pricePerHour: 40,
     paid: true,
   },
   {
@@ -784,16 +784,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.441043,
     longitude: 26.153803,
-  },
-  {
-    id: "osm_w424484596",
-    title: "Parcare de reședință",
-    access: "public",
-    source: "osm",
-    kind: "street",
-    status: "taken",
-    latitude: 44.3867,
-    longitude: 26.115946,
+    area: "Sector 2 · Delfinului",
   },
   {
     id: "osm_w426665177",
@@ -804,6 +795,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.437503,
     longitude: 26.168744,
+    area: "Sector 2 · Pantelimon",
     paid: false,
   },
   {
@@ -815,47 +807,8 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.405796,
     longitude: 26.111325,
+    area: "Sector 4 · Văcărești",
     paid: false,
-  },
-  {
-    id: "osm_w444716727",
-    title: "Parcare de reședință",
-    access: "public",
-    source: "osm",
-    kind: "street",
-    status: "taken",
-    latitude: 44.443461,
-    longitude: 26.159383,
-  },
-  {
-    id: "osm_w461098290",
-    title: "Parcare de reședință",
-    access: "public",
-    source: "osm",
-    kind: "street",
-    status: "taken",
-    latitude: 44.386875,
-    longitude: 26.089248,
-  },
-  {
-    id: "osm_w494397431",
-    title: "Parcare de reședință",
-    access: "public",
-    source: "osm",
-    kind: "street",
-    status: "taken",
-    latitude: 44.384842,
-    longitude: 26.111138,
-  },
-  {
-    id: "osm_w494404424",
-    title: "Parcare de reședință",
-    access: "public",
-    source: "osm",
-    kind: "street",
-    status: "taken",
-    latitude: 44.386572,
-    longitude: 26.102959,
   },
   {
     id: "osm_w494656610",
@@ -866,17 +819,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.383949,
     longitude: 26.102129,
-  },
-  {
-    id: "osm_w494656946",
-    title: "Parcare de reședință",
-    access: "public",
-    source: "osm",
-    kind: "street",
-    status: "taken",
-    latitude: 44.382662,
-    longitude: 26.104115,
-    paid: false,
+    area: "Sector 4 · Giurgiului",
   },
   {
     id: "osm_w53178743",
@@ -887,6 +830,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.394714,
     longitude: 26.032551,
+    area: "Sector 5 · Odăi",
     paid: true,
   },
   {
@@ -898,6 +842,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.388412,
     longitude: 26.106189,
+    area: "Sector 4 · Berceni",
   },
   {
     id: "osm_w585021140",
@@ -908,27 +853,8 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.407861,
     longitude: 26.113038,
+    area: "Sector 4 · Tineretului",
     paid: true,
-  },
-  {
-    id: "osm_w587259834",
-    title: "residential parking",
-    access: "public",
-    source: "osm",
-    kind: "street",
-    status: "taken",
-    latitude: 44.437966,
-    longitude: 26.156714,
-  },
-  {
-    id: "osm_w587259835",
-    title: "residential parking",
-    access: "public",
-    source: "osm",
-    kind: "street",
-    status: "taken",
-    latitude: 44.438941,
-    longitude: 26.157333,
   },
   {
     id: "osm_w603740402",
@@ -939,6 +865,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.443275,
     longitude: 26.154644,
+    area: "Sector 2 · Delfinului",
     paid: true,
   },
   {
@@ -950,6 +877,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.450622,
     longitude: 26.069779,
+    area: "Sector 1 · Gara de Nord",
   },
   {
     id: "osm_w623081850",
@@ -960,6 +888,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.435027,
     longitude: 26.153952,
+    area: "Sector 2 · Vatra Luminoasă",
     paid: true,
   },
   {
@@ -971,6 +900,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.43024,
     longitude: 26.10462,
+    area: "Sector 3 · Decebal",
   },
   {
     id: "osm_w675017438",
@@ -981,6 +911,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.392209,
     longitude: 26.102205,
+    area: "Sector 4 · Giurgiului",
     totalCount: 10,
     paid: true,
   },
@@ -993,6 +924,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.392169,
     longitude: 26.10214,
+    area: "Sector 4 · Giurgiului",
     totalCount: 10,
     paid: true,
   },
@@ -1005,6 +937,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.434419,
     longitude: 26.078394,
+    area: "Sector 5 · Berzei",
     totalCount: 80,
     paid: true,
   },
@@ -1017,6 +950,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.392515,
     longitude: 26.123317,
+    area: "Sector 4 · Piața Sudului",
     totalCount: 300,
   },
   {
@@ -1028,6 +962,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.490089,
     longitude: 26.091179,
+    area: "Sector 1 · Aviației",
     paid: true,
   },
   {
@@ -1039,6 +974,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.416503,
     longitude: 26.139888,
+    area: "Sector 3 · Dristor",
     paid: false,
   },
   {
@@ -1050,6 +986,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.38626,
     longitude: 26.130454,
+    area: "Sector 4 · Berceni",
   },
   {
     id: "osm_w858843383",
@@ -1060,6 +997,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.412976,
     longitude: 26.039027,
+    area: "Sector 6 · Tudor Vladimirescu",
   },
   {
     id: "osm_w941432422",
@@ -1070,6 +1008,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.492913,
     longitude: 26.092811,
+    area: "Sector 1 · Băneasa",
   },
   {
     id: "osm_w95854777",
@@ -1080,5 +1019,6 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
     status: "taken",
     latitude: 44.401032,
     longitude: 26.099536,
+    area: "Sector 4 · Bellu - Eroii Revoluției",
   },
 ].map((spot) => ({ ...spot, updatedAt: PARKING_FETCHED_AT }) as ParkingSpot);

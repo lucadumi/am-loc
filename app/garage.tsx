@@ -6,7 +6,6 @@ import {
   MapPin,
   Navigation,
   SquareParking,
-  Star,
 } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -23,9 +22,11 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { ScreenHeader } from "@/components/screen-header";
 import { ConfidenceBadge } from "@/components/confidence-badge";
+import { Rating } from "@/components/rating";
 import { windowsFor } from "@/lib/availability-windows";
 import { isPrivate, mayDeclare, mayReport } from "@/lib/private-spots";
 import { believeAll, type BelievedSpot } from "@/lib/spot-belief";
+import { spotName } from "@/lib/spot-name";
 import { LOCAL_REPORTER_ID } from "@/lib/spot-reports";
 import type { ConfidenceLevel } from "@/lib/spot-state";
 import { OwnerOffer } from "@/components/owner-offer";
@@ -166,6 +167,20 @@ export default function GarageScreen() {
   }
 
   const displayStatus = spot.status;
+  /**
+   * The pin's colour, which is how this screen says whether the place is free.
+   *
+   * Grey when nobody has reported, rather than the red `taken` resolves to.
+   * A spot with no observation is flattened to `taken` because that is the
+   * safe default for filtering and ranking -- see `toParkingSpot` in
+   * lib/supabase-rows.ts -- but a red pin is not a default, it is a claim that
+   * somebody looked and the place was full. 838 of the 851 imported car parks
+   * carry no observation at all, so painting them red would have this screen
+   * assert that essentially every car park in Bucharest is occupied, on no
+   * evidence. Grey says the true thing: nobody has checked.
+   */
+  const pinColor =
+    confidence === "none" ? palette.mutedForeground : statusColor[displayStatus];
   const dist = location
     ? distanceMeters(
         location.latitude,
@@ -180,6 +195,19 @@ export default function GarageScreen() {
      inventing the bays, and a driver would read the invention as a survey. */
   const totalFree = spot.availableCount ?? null;
   const totalCapacity = spot.totalCount ?? null;
+  /* Two different sentences, because they are two different facts and only one
+     of them is usually known. `104 locuri` is the size of the car park, which
+     the registries do record. `3/104 libere` additionally claims somebody
+     counted the empty ones, which no source in Bucharest publishes -- so it is
+     said only when a driver actually reported a count. Before this, the free
+     number was `null` for all 865 imported car parks and the line rendered as
+     "/104 libere", which read as a survey that had come back blank. */
+  const capacityLabel =
+    totalCapacity == null
+      ? null
+      : totalFree == null
+        ? `${totalCapacity} locuri`
+        : `${totalFree}/${totalCapacity} libere`;
   const HERO_H = Math.round(Math.min(Math.max(screenH * 0.44, 300), 460));
 
   return (
@@ -227,7 +255,7 @@ export default function GarageScreen() {
                 <View
                   className="h-12 w-12 items-center justify-center rounded-full border-[3px] border-background"
                   style={{
-                    backgroundColor: statusColor[displayStatus],
+                    backgroundColor: pinColor,
                     shadowColor: "#000",
                     shadowOpacity: 0.25,
                     shadowRadius: 6,
@@ -268,31 +296,38 @@ export default function GarageScreen() {
 
               The price sits with the other facts rather than beside the title.
               On the same row it would make the heading's width depend on how
-              long the price happens to be — and "Cu plată · tarif necunoscut"
-              is a great deal longer than "5 lei / oră", which would squeeze an
-              imported car park's street name into two cramped lines while
-              leaving a seeded one alone. */}
+              long the price happens to be — "Tarif necunoscut" is a good deal
+              longer than "5 lei / oră", which would squeeze one car park's
+              street name into two cramped lines while leaving another alone. */}
           <Text className="font-heavy text-2xl leading-8 text-foreground">
-            {spot.title}
+            {spotName(spot)}
           </Text>
 
+          {/* Where it is, and what people make of it. The pin only earns its
+              place when there is somewhere to point at: `area` is derived from
+              the sector outlines, and a car park outside all six -- one sits in
+              Voluntari, in Ilfov -- is left without one rather than given a
+              sector it is not in. The score is always drawn, hollow until
+              somebody gives it one; see components/rating.tsx. */}
           <View className="mt-2 flex-row flex-wrap items-center gap-1.5">
-            <MapPin size={14} color={palette.indigo[600]} />
-            <Text className="font-mid text-sm text-muted-foreground">
-              {spot.area}
-            </Text>
-            {spot.rating != null ? (
+            {spot.area ? (
               <>
-                <Text className="font-mid text-sm text-muted-foreground">·</Text>
-                <Star size={13} color={palette.primary} fill={palette.primary} />
-                <Text className="font-semi text-sm text-foreground">
-                  {spot.rating.toFixed(1)}
+                <MapPin
+                  size={14}
+                  color={palette.coral}
+                  strokeWidth={2.2}
+                  style={{ flexShrink: 0 }}
+                />
+                <Text className="font-mid text-sm text-muted-foreground">
+                  {spot.area}
                 </Text>
+                <Text className="font-mid text-sm text-muted-foreground">·</Text>
               </>
             ) : null}
+            <Rating value={spot.rating} size={14} />
           </View>
 
-          {dist != null || totalCapacity != null ? (
+          {dist != null || capacityLabel != null ? (
             <View className="mt-1.5 flex-row flex-wrap items-center gap-1.5">
               {dist != null ? (
                 <>
@@ -306,10 +341,10 @@ export default function GarageScreen() {
                   </Text>
                 </>
               ) : null}
-              {dist != null && totalCapacity != null ? (
+              {dist != null && capacityLabel != null ? (
                 <Text className="font-mid text-sm text-muted-foreground">·</Text>
               ) : null}
-              {totalCapacity != null ? (
+              {capacityLabel != null ? (
                 <>
                   <SquareParking
                     size={14}
@@ -317,16 +352,30 @@ export default function GarageScreen() {
                     strokeWidth={2.2}
                   />
                   <Text className="font-semi text-sm text-foreground">
-                    {totalFree}/{totalCapacity}{" "}
-                    <Text className="font-mid text-muted-foreground">libere</Text>
+                    {totalFree == null ? (
+                      <>
+                        {totalCapacity}{" "}
+                        <Text className="font-mid text-muted-foreground">
+                          locuri
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        {totalFree}/{totalCapacity}{" "}
+                        <Text className="font-mid text-muted-foreground">
+                          libere
+                        </Text>
+                      </>
+                    )}
                   </Text>
                 </>
               ) : null}
             </View>
           ) : null}
 
-          {/* Price and how much to believe the status: two chips on one line,
-              both facts about the spot rather than parts of its name. */}
+          {/* What it costs, and how much to believe the pin's colour. The two
+              belong together: the pin says what the app claims, this says
+              whether that claim is still worth acting on. */}
           <View className="mt-3 flex-row flex-wrap items-center gap-2">
             <View className="flex-row items-center gap-1.5 rounded-full border-hairline border-border bg-card px-3 py-1.5">
               <Banknote size={14} color={palette.mutedForeground} />
@@ -358,7 +407,10 @@ export default function GarageScreen() {
         </View>
       </ScrollView>
 
-      {/* Floating controls over the map: back (left) + live status (right) */}
+      {/* Floating controls over the map: back (left), and what the pin's
+          colour means (right). The badge is the pin's legend rather than a
+          second opinion — same status, named, so a colour nobody has learned
+          yet still reads. */}
       <SafeAreaView
         edges={["top"]}
         className="absolute inset-x-0 top-0"
@@ -373,12 +425,11 @@ export default function GarageScreen() {
           >
             <ArrowLeft size={20} color={palette.foreground} />
           </Pressable>
-          <View className="flex-row items-center gap-2">
-            <StatusBadge
-              status={displayStatus}
-              className="border-hairline border-border bg-card"
-            />
-          </View>
+          <StatusBadge
+            status={displayStatus}
+            unknown={confidence === "none"}
+            className="border-hairline border-border bg-card"
+          />
         </View>
       </SafeAreaView>
     </View>

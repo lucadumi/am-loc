@@ -2,6 +2,15 @@
  * Builds `constants/public-parking.ts` from OpenStreetMap.
  *
  *     node scripts/fetch-parking.mjs
+ *     node scripts/fetch-areas.mjs     # ← and then this, always
+ *
+ * THE SECOND LINE IS NOT OPTIONAL. This script writes the file from scratch,
+ * and the `area` of every car park is put there afterwards by
+ * `fetch-areas.mjs`, which resolves each point against Bucharest's sector
+ * outlines. Running only the first line therefore silently strips the area
+ * from every OSM car park, and the failure is quiet: the cards simply stop
+ * drawing their location pin, because a missing area is drawn as nothing at
+ * all rather than as an error.
  *
  * The public half of the map. Where a private spot is listed by the person who
  * owns it, a public one is a place the city already knows about, and the app's
@@ -60,14 +69,31 @@ const ENDPOINTS = [
  * `out center` returns one coordinate per element instead of its full polygon,
  * which is all a pin needs and a fraction of the bytes.
  */
+/**
+ * What a driver may actually use.
+ *
+ * `private|no` is the obvious half. `permit|residents` is the half that took a
+ * fine to notice: Bucharest's `parcare de reședință` is a bay a sector hall
+ * assigns to the household in the block behind it, on a yearly subscription,
+ * and a passing driver who takes one is ticketed or towed. It is not cheap
+ * parking, it is somebody's parking -- and OpenStreetMap has a tag for exactly
+ * that, which this query was not reading.
+ *
+ * These are also the spots AmLoc means to get from their holders rather than
+ * from a map: a resident leaving for the day is the park-sharing case, and the
+ * listing has to come from the person entitled to it. Importing the bay as a
+ * public space would put it on the map with nobody behind it.
+ */
+const USABLE = `["access"!~"private|no|permit|residents"]`;
+
 const QUERY = (bbox) => `
 [out:json][timeout:120];
 (
-  way["amenity"="parking"]["access"!~"private|no"]["name"](${bbox});
-  node["amenity"="parking"]["access"!~"private|no"]["name"](${bbox});
-  way["amenity"="parking"]["access"!~"private|no"]["capacity"](${bbox});
-  node["amenity"="parking"]["access"!~"private|no"]["capacity"](${bbox});
-  way["amenity"="parking"]["parking"~"multi-storey|underground"]["access"!~"private|no"](${bbox});
+  way["amenity"="parking"]${USABLE}["name"](${bbox});
+  node["amenity"="parking"]${USABLE}["name"](${bbox});
+  way["amenity"="parking"]${USABLE}["capacity"](${bbox});
+  node["amenity"="parking"]${USABLE}["capacity"](${bbox});
+  way["amenity"="parking"]["parking"~"multi-storey|underground"]${USABLE}(${bbox});
 );
 out center tags;
 `;
@@ -113,6 +139,43 @@ function capacityOf(tags) {
 }
 
 /**
+ * The hourly rate, where OpenStreetMap happens to record one.
+ *
+ * `charge` is free text and mappers write it as they please: `5 lei/ora`,
+ * `10 RON/15min`, `2 EUR/h`. Only lei are read, and only into an hourly rate,
+ * because that is the single number the app compares car parks by. Anything
+ * priced per stay, per day or in another currency is left unpriced rather than
+ * converted on a guess -- `paid: true` still says it charges, which is the
+ * honest half of the answer.
+ *
+ * Per-minute rates are scaled up, and that is not pedantry: `10 RON/15min` is
+ * 40 lei an hour, and read as ten it would sort the most expensive car park in
+ * the centre as cheaper than the blue zone.
+ */
+function chargeOf(tags) {
+  const raw = tags.charge;
+  if (!raw) return undefined;
+
+  const match = /([\d]+(?:[.,]\d+)?)\s*(?:lei|leu|ron)\s*\/\s*(\d+)?\s*(h|ora|oră|hour|min)/i.exec(
+    raw,
+  );
+  if (!match) return undefined;
+
+  const amount = Number(match[1].replace(",", "."));
+  const per = Number(match[2] ?? "1");
+  const unit = match[3].toLowerCase();
+  if (!Number.isFinite(amount) || amount <= 0 || !Number.isFinite(per) || per <= 0) {
+    return undefined;
+  }
+
+  const perHour = unit.startsWith("min") ? (amount * 60) / per : amount / per;
+  /* Two decimals, so `10 RON/15min` is 40 rather than 40.000000000000006, and
+     a rate nobody would charge is dropped instead of drawn. */
+  const rounded = Math.round(perHour * 100) / 100;
+  return rounded > 0 && rounded < 500 ? rounded : undefined;
+}
+
+/**
  * Structure or kerb.
  *
  * `SpotKind` only has the two, and a surface car park is much more like a
@@ -136,6 +199,21 @@ function titleOf(tags) {
   return null;
 }
 
+/**
+ * Names that say "residents only" where the tagging does not.
+ *
+ * Of the fifteen residents' car parks in the box, four carry `access=permit` or
+ * `access=residents` and the query above drops those. Eight carry no `access`
+ * tag at all and are recognisable only by what they are called, and dropping
+ * eight of fifteen would be worse than useless -- the map would look as though
+ * it had been cleaned.
+ *
+ * Both Romanian spellings of the comma-below letters are matched, because OSM
+ * carries `reședință`, `resedinta` and `reşedinţă` for the same word, and a
+ * pattern that reads only the correct one silently keeps the rest.
+ */
+const RESIDENTS_ONLY = /re[sșş]edin[țţt]|rezident|residential/i;
+
 function toSpots(elements) {
   const spots = [];
 
@@ -145,6 +223,9 @@ function toSpots(elements) {
     // Something with neither a name nor an address is a shape on a map; there
     // is nothing to show a driver but a dot.
     if (!title) continue;
+
+    // Untagged residents' parking, caught by its name. See RESIDENTS_ONLY.
+    if (RESIDENTS_ONLY.test(title)) continue;
 
     const point = element.type === "node" ? element : element.center;
     if (!point) continue;
@@ -162,12 +243,25 @@ function toSpots(elements) {
       latitude: round(point.lat),
       longitude: round(point.lon),
       totalCount: capacityOf(tags),
-      /* Deliberately no price. OSM records *whether* a car park charges, not
-         what it charges, and `pricePerHour` left undefined already means free
-         everywhere else in the app -- so filling it in from `fee=yes` would say
-         "free" about somewhere that is not. `paid` records the question
-         truthfully; the amount stays unknown until somebody reads the sign. */
-      paid: tags.fee === "yes" ? true : tags.fee === "no" ? false : undefined,
+      /* Read from `charge` where a mapper wrote one, and left undefined
+         otherwise -- never inferred from `fee`. OSM records *whether* a car
+         park charges far more often than what it charges, and `pricePerHour`
+         undefined already means "unknown" everywhere else in the app, so
+         filling it in from `fee=yes` would put a number on a sign nobody read.
+         `paid` answers the cheaper question truthfully on its own. */
+      pricePerHour: chargeOf(tags),
+      paid:
+        tags.fee === "yes"
+          ? true
+          : tags.fee === "no"
+            ? false
+            : /* A recorded rate is itself a statement that the place charges,
+                 whether or not anybody also set `fee`. Left undefined, a car
+                 park with a price would have read "tarif necunoscut" in the
+                 one branch of `formatPrice` that ignores the price. */
+              chargeOf(tags) !== undefined
+              ? true
+              : undefined,
     });
   }
 
