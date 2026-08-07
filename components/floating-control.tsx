@@ -1,7 +1,14 @@
-import { Pressable } from "react-native";
+import { IconButton } from "@/components/ui/icon-button";
 
-import { cn } from "@/lib/utils";
-
+/**
+ * A control floating over the map.
+ *
+ * Kept as its own name rather than deleted, because the map screen reads
+ * better for it and because "floating over a map" is a place in the app, not a
+ * size. What it no longer does is spell the surface out for itself: that lives
+ * in `IconButton`, so the four other round buttons in the app cannot drift
+ * away from this one.
+ */
 export function FloatingControl({
   children,
   onPress,
@@ -12,14 +19,8 @@ export function FloatingControl({
   className?: string;
 }) {
   return (
-    <Pressable
-      onPress={onPress}
-      className={cn(
-        "h-12 w-12 items-center justify-center rounded-full border-hairline border-border bg-card",
-        className,
-      )}
-    >
+    <IconButton onPress={onPress} className={className}>
       {children}
-    </Pressable>
+    </IconButton>
   );
 }

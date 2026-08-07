@@ -18,14 +18,17 @@ import {
   View,
 } from "react-native";
 import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ScreenHeader } from "@/components/screen-header";
+import { Screen } from "@/components/ui/screen";
+import { Spinner } from "@/components/ui/spinner";
 import { SlideButton } from "@/components/slide-button";
+import { Button } from "@/components/ui/button";
 import { Input, TextArea } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { reportCategoryColor, reportCategoryIcon } from "@/constants/reports";
-import { palette } from "@/constants/theme";
+import { palette, scrim } from "@/constants/theme";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { addReport, getReportById, updateReport } from "@/lib/api";
 import { BUCHAREST, formatCoords } from "@/lib/geo";
@@ -171,7 +174,7 @@ export default function ReportScreen() {
     : (location?.label ?? "Se localizează…");
 
   return (
-    <SafeAreaView edges={["top"]} className="flex-1 bg-background">
+    <Screen>
       <ScreenHeader
         title={editing ? "Editează sesizarea" : "Sesizează un blocaj"}
       />
@@ -267,11 +270,14 @@ export default function ReportScreen() {
                     <Pressable
                       onPress={() => removePhoto(uri)}
                       className="absolute right-1.5 top-1.5 h-7 w-7 items-center justify-center rounded-full"
-                      style={{ backgroundColor: "rgba(20,20,22,0.7)" }}
+                      /* Strong enough to read over whatever the photograph
+                         happens to be, which is the whole reason this level
+                         exists separately from the map scrim. */
+                      style={{ backgroundColor: scrim.control }}
                       accessibilityRole="button"
                       accessibilityLabel="Elimină fotografia"
                     >
-                      <X size={15} color="#FFFFFF" strokeWidth={2.4} />
+                      <X size={15} color={palette.card} strokeWidth={2.4} />
                     </Pressable>
                   </View>
                 ))}
@@ -279,22 +285,16 @@ export default function ReportScreen() {
             ) : null}
             {room > 0 ? (
               <View className="flex-row gap-3">
-                <Pressable
-                  onPress={pickFromCamera}
-                  className="flex-1 flex-row items-center justify-center gap-2 rounded-full border-hairline border-border bg-card py-3.5 active:opacity-80"
-                >
+                <Button variant="card" onPress={pickFromCamera} className="flex-1">
                   <Camera size={20} color={palette.foreground} />
                   <Text className="font-semi text-sm text-foreground">
                     {photos.length ? "Încă o poză" : "Fă o poză"}
                   </Text>
-                </Pressable>
-                <Pressable
-                  onPress={pickFromLibrary}
-                  className="flex-1 flex-row items-center justify-center gap-2 rounded-full border-hairline border-border bg-card py-3.5 active:opacity-80"
-                >
+                </Button>
+                <Button variant="card" onPress={pickFromLibrary} className="flex-1">
                   <ImageIcon size={20} color={palette.foreground} />
                   <Text className="font-semi text-sm text-foreground">Galerie</Text>
-                </Pressable>
+                </Button>
               </View>
             ) : null}
           </View>
@@ -354,7 +354,11 @@ export default function ReportScreen() {
                       className="h-8 w-8 items-center justify-center rounded-full border-2 border-background"
                       style={{ backgroundColor: palette.destructive }}
                     >
-                      <TriangleAlert size={16} color="#151517" strokeWidth={2.4} />
+                      <TriangleAlert
+                        size={16}
+                        color={palette.primaryForeground}
+                        strokeWidth={2.4}
+                      />
                     </View>
                   </Marker>
                 </MapView>
@@ -375,7 +379,18 @@ export default function ReportScreen() {
           </View>
 
           {/* Submit */}
-          {category ? (
+          {submitting ? (
+            /* The slide is gone while this runs, deliberately. Photographs go
+               to storage before the row is written, which on mobile data is
+               seconds, and leaving a live control there invites a second slide
+               that would file the report twice. */
+            <View className="h-16 flex-row items-center justify-center gap-3 rounded-full bg-secondary">
+              <Spinner size={26} />
+              <Text className="font-semi text-foreground">
+                {editing ? "Se salvează…" : "Se trimite…"}
+              </Text>
+            </View>
+          ) : category ? (
             <SlideButton
               label={
                 editing
@@ -393,6 +408,6 @@ export default function ReportScreen() {
           )}
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </Screen>
   );
 }

@@ -9,7 +9,6 @@ import {
 } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
 import {
-  ActivityIndicator,
   Linking,
   Platform,
   Pressable,
@@ -23,6 +22,7 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import { ScreenHeader } from "@/components/screen-header";
 import { ConfidenceBadge } from "@/components/confidence-badge";
 import { Rating } from "@/components/rating";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 import { windowsFor } from "@/lib/availability-windows";
 import { isPrivate, mayDeclare, mayReport } from "@/lib/private-spots";
 import { believeAll, type BelievedSpot } from "@/lib/spot-belief";
@@ -32,8 +32,10 @@ import type { ConfidenceLevel } from "@/lib/spot-state";
 import { OwnerOffer } from "@/components/owner-offer";
 import { StatusBadge } from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
+import { Chip } from "@/components/ui/chip";
+import { IconButton } from "@/components/ui/icon-button";
 import { Text } from "@/components/ui/text";
-import { palette, statusColor } from "@/constants/theme";
+import { palette, scrim, shadow, statusColor } from "@/constants/theme";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { getSpotById } from "@/lib/api";
 import {
@@ -132,16 +134,7 @@ export default function GarageScreen() {
   }, [spot?.id, spot?.latitude, spot?.longitude, spot]);
 
   if (spot === null) {
-    return (
-      <View className="flex-1 bg-background">
-        <SafeAreaView edges={["top"]}>
-          <ScreenHeader />
-        </SafeAreaView>
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator color={palette.primary} />
-        </View>
-      </View>
-    );
+    return <LoadingScreen />;
   }
 
   if (spot === undefined) {
@@ -254,14 +247,7 @@ export default function GarageScreen() {
               >
                 <View
                   className="h-12 w-12 items-center justify-center rounded-full border-[3px] border-background"
-                  style={{
-                    backgroundColor: pinColor,
-                    shadowColor: "#000",
-                    shadowOpacity: 0.25,
-                    shadowRadius: 6,
-                    shadowOffset: { width: 0, height: 3 },
-                    elevation: 5,
-                  }}
+                  style={{ backgroundColor: pinColor, ...shadow.marker }}
                 >
                   <Text className="font-heavy text-lg text-primary-foreground">
                     P
@@ -273,21 +259,22 @@ export default function GarageScreen() {
 
           {/* Scrim keeps the floating controls legible over the map */}
           <LinearGradient
-            colors={["rgba(20,20,22,0.22)", "rgba(20,20,22,0)"]}
+            colors={[scrim.overlay, scrim.overlayEnd]}
             style={{ position: "absolute", top: 0, left: 0, right: 0, height: 120 }}
             pointerEvents="none"
           />
 
           {/* Tap-through hint */}
-          <View
+          <Chip
             pointerEvents="none"
-            className="absolute bottom-4 right-4 flex-row items-center gap-1.5 rounded-full border-hairline border-border bg-card/95 px-3 py-1.5"
+            surface="floating"
+            className="absolute bottom-4 right-4"
           >
             <Navigation size={13} color={palette.indigo[600]} strokeWidth={2.4} />
             <Text className="font-semi text-xs text-foreground">
               Deschide în Hărți
             </Text>
-          </View>
+          </Chip>
         </Pressable>
 
         {/* Detail sheet */}
@@ -377,12 +364,12 @@ export default function GarageScreen() {
               belong together: the pin says what the app claims, this says
               whether that claim is still worth acting on. */}
           <View className="mt-3 flex-row flex-wrap items-center gap-2">
-            <View className="flex-row items-center gap-1.5 rounded-full border-hairline border-border bg-card px-3 py-1.5">
+            <Chip>
               <Banknote size={14} color={palette.mutedForeground} />
               <Text className="font-semi text-sm text-foreground">
                 {formatPrice(spot.pricePerHour, spot.paid)}
               </Text>
-            </View>
+            </Chip>
             <ConfidenceBadge level={confidence} />
             {!mayReport(spot) ? (
               <Text className="font-mid text-xs text-muted-foreground">
@@ -417,14 +404,13 @@ export default function GarageScreen() {
         pointerEvents="box-none"
       >
         <View className="flex-row items-center justify-between px-5 py-2.5">
-          <Pressable
+          <IconButton
+            size="sm"
             onPress={() => router.back()}
-            className="h-10 w-10 items-center justify-center rounded-full border-hairline border-border bg-card"
-            accessibilityRole="button"
             accessibilityLabel="Înapoi"
           >
             <ArrowLeft size={20} color={palette.foreground} />
-          </Pressable>
+          </IconButton>
           <StatusBadge
             status={displayStatus}
             unknown={confidence === "none"}

@@ -1,8 +1,8 @@
 import { View } from "react-native";
 
+import { Chip } from "@/components/ui/chip";
 import { Text } from "@/components/ui/text";
 import { confidenceColor, confidenceLabel } from "@/constants/theme";
-import { cn } from "@/lib/utils";
 import type { ConfidenceLevel } from "@/lib/spot-state";
 
 /**
@@ -25,12 +25,7 @@ export function ConfidenceBadge({
   const uncertain = level === "stale" || level === "none" || level === "disputed";
 
   return (
-    <View
-      className={cn(
-        "flex-row items-center gap-1.5 rounded-full bg-background/80 px-2.5 py-1",
-        className,
-      )}
-    >
+    <Chip size="sm" surface="muted" className={className}>
       {/* A hollow ring for anything uncertain, so the two states are told
           apart by shape and not only by colour. */}
       <View
@@ -44,6 +39,6 @@ export function ConfidenceBadge({
       <Text className="font-semi text-xs" style={{ color }}>
         {confidenceLabel[level]}
       </Text>
-    </View>
+    </Chip>
   );
 }

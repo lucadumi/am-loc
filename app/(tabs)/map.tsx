@@ -14,8 +14,10 @@ import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { FloatingControl } from "@/components/floating-control";
 import { SearchBar } from "@/components/search-bar";
 import { SpotFilterSheet } from "@/components/spot-filter-sheet";
+import { IconButton } from "@/components/ui/icon-button";
+import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
-import { palette, statusColor, statusLabel } from "@/constants/theme";
+import { palette, shadow, statusColor, statusLabel } from "@/constants/theme";
 import { floatingTabBarInset } from "@/constants/layout";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { useLive } from "@/hooks/use-live";
@@ -78,18 +80,11 @@ function FilterButton({
   onPress: () => void;
 }) {
   return (
-    <Pressable
+    <IconButton
+      size="lg"
       onPress={onPress}
-      accessibilityRole="button"
       accessibilityLabel="Filtre"
-      className="h-14 w-14 items-center justify-center rounded-full border-hairline border-border bg-card"
-      style={{
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.06,
-        shadowRadius: 12,
-        elevation: 3,
-      }}
+      style={shadow.card}
     >
       <SlidersHorizontal size={22} color={palette.foreground} />
       {count > 0 ? (
@@ -99,7 +94,7 @@ function FilterButton({
           </Text>
         </View>
       ) : null}
-    </Pressable>
+    </IconButton>
   );
 }
 
@@ -156,12 +151,26 @@ export default function MapScreen() {
   const [reports, setReports] = useState<BlockerReport[]>([]);
   const [filters, setFilters] = useState<SpotFilters>(DEFAULT_FILTERS);
   const [filterOpen, setFilterOpen] = useState(false);
+  /**
+   * Whether the first load has landed.
+   *
+   * Only the first: `load` also runs on every focus and on every claim anybody
+   * files anywhere, and a spinner over the map each time somebody two streets
+   * away announced a space would be worse than no spinner at all. After this
+   * is true the map updates in place, which is what a live map should look
+   * like.
+   */
+  const [ready, setReady] = useState(false);
 
   const load = useCallback(() => {
     getSpots()
       .then((loaded) => believeAll(loaded))
       .then(setSpots)
-      .catch((error) => console.error("Could not load spots", error));
+      .catch((error) => console.error("Could not load spots", error))
+      // Settled rather than fulfilled: a failed load has finished loading, and
+      // leaving the wheel turning over a map that is never going to fill would
+      // be the one state that tells the driver nothing at all.
+      .finally(() => setReady(true));
     getReports()
       .then(setReports)
       .catch((error) => console.error("Could not load reports", error));
@@ -312,7 +321,7 @@ export default function MapScreen() {
               >
                 <TriangleAlert
                   size={ringed ? 20 : 16}
-                  color="#151517"
+                  color={palette.primaryForeground}
                   strokeWidth={2.4}
                 />
               </View>
@@ -337,6 +346,18 @@ export default function MapScreen() {
         ) : null}
       </MapView>
 
+      {/* Over the map rather than instead of it: the map itself is useful
+          while the pins are still coming, and replacing it with a blank
+          loading screen would take the city away to say "wait". */}
+      {!ready ? (
+        <View
+          pointerEvents="none"
+          className="absolute inset-0 items-center justify-center"
+        >
+          <Spinner size={44} />
+        </View>
+      ) : null}
+
       <SafeAreaView
         edges={["top"]}
         className="absolute inset-x-0 top-0 bg-primary px-5 pb-3 pt-2"
@@ -354,13 +375,7 @@ export default function MapScreen() {
           <Pressable
             onPress={() => setFilterOpen(true)}
             className="mt-3 flex-row items-center gap-2 self-start rounded-full bg-indigo-600 px-3.5 py-1.5"
-            style={{
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.06,
-              shadowRadius: 12,
-              elevation: 3,
-            }}
+            style={shadow.card}
           >
             <Text className="font-heavy text-xs text-card">
               {spotCountLabel(visibleSpots.length)}

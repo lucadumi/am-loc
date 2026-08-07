@@ -1,5 +1,6 @@
 import { View } from "react-native";
 
+import { Chip } from "@/components/ui/chip";
 import { Text } from "@/components/ui/text";
 import { palette, statusColor, statusLabel } from "@/constants/theme";
 import { cn } from "@/lib/utils";
@@ -47,12 +48,7 @@ export function StatusBadge({
   }
 
   return (
-    <View
-      className={cn(
-        "flex-row items-center gap-1.5 rounded-full bg-background/80 px-2.5 py-1",
-        className,
-      )}
-    >
+    <Chip size="sm" surface="muted" className={className}>
       {/* Hollow for an unknown, so the state is told apart by shape as well as
           by colour — the same device `ConfidenceBadge` uses. */}
       <View
@@ -66,6 +62,6 @@ export function StatusBadge({
       <Text className="font-semi text-xs" style={{ color }}>
         {label}
       </Text>
-    </View>
+    </Chip>
   );
 }

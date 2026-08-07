@@ -12,7 +12,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { palette } from "@/constants/theme";
+import { Card } from "@/components/ui/card";
+import { palette, shadow } from "@/constants/theme";
 import { haptics } from "@/lib/haptics";
 
 const ICONS: Record<string, typeof House> = {
@@ -36,7 +37,7 @@ const LABELS: Record<string, string> = {
 const DURATION = 360;
 const EASING = Easing.inOut(Easing.cubic);
 // Transparent yellow, so the highlight fades straight to primary (no grey mid).
-const PRIMARY_TRANSPARENT = "rgba(245,197,24,0)";
+const PRIMARY_TRANSPARENT = palette.primaryTransparent;
 
 /**
  * One icon-only tab. A single `progress` shared value (0 inactive → 1 active)
@@ -175,15 +176,9 @@ function TabBar({ state, navigation }: BottomTabBarProps) {
       className="absolute inset-x-0 bottom-0 items-center px-4 pt-3"
       style={{ paddingBottom: Math.max(insets.bottom, 16) }}
     >
-      <View
-        className="flex-row items-center gap-2 rounded-full border-hairline border-border bg-card px-2.5 py-1.5"
-        style={{
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 5 },
-          shadowOpacity: 0.08,
-          shadowRadius: 16,
-          elevation: 6,
-        }}
+      <Card
+        className="flex-row items-center gap-2 rounded-full px-2.5 py-1.5"
+        style={shadow.raised}
       >
         {state.routes.map((route, index) => {
           const focused = state.index === index;
@@ -224,7 +219,7 @@ function TabBar({ state, navigation }: BottomTabBarProps) {
             />
           );
         })}
-      </View>
+      </Card>
     </View>
   );
 }

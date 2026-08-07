@@ -2,8 +2,9 @@ import { useRouter } from "expo-router";
 import { KeyRound, TriangleAlert } from "lucide-react-native";
 import { ReactNode } from "react";
 import { Image, Pressable, View } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { Screen } from "@/components/ui/screen";
 import { Text } from "@/components/ui/text";
 import { palette } from "@/constants/theme";
 import { floatingTabBarInset } from "@/constants/layout";
@@ -51,7 +52,7 @@ export default function AddScreen() {
   const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView edges={["top"]} className="flex-1 bg-background">
+    <Screen>
       <View
         className="flex-1 gap-4 px-5 pt-4"
         style={{ paddingBottom: floatingTabBarInset(insets.bottom) }}
@@ -81,6 +82,6 @@ export default function AddScreen() {
           }}
         />
       </View>
-    </SafeAreaView>
+    </Screen>
   );
 }
