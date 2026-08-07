@@ -45,17 +45,29 @@ export function formatDistance(meters: number): string {
 /**
  * What a spot costs, in the app's own words.
  *
- * "Unknown" is a real answer and gets said out loud rather than rendered as
- * zero. Bucharest is precisely the city where that matters: a stretch of kerb
- * is either the 5 lei/h blue zone, a sector residents' permit, or genuinely
- * free, and the three are told apart by a sign rather than by a dataset.
+ * FOUR STATES, NOT THREE, and the fourth is the one that has to be said out
+ * loud. Bucharest is precisely the city where it matters: a stretch of kerb is
+ * either the 5 lei/h blue zone, a sector residents' permit or genuinely free,
+ * and the three are told apart by a sign rather than by a dataset. So an
+ * unknown price is never rendered as zero, and "charges" is never rendered as
+ * "free".
+ *
+ * "Cu plată" is deliberately not "Cu plată · tarif necunoscut". The second half
+ * was true and useless: a driver reading "cu plată" already knows the app has
+ * not told them the amount, so spelling out the absence only made the longest
+ * label in the app out of the least information in it. What is left says the
+ * one thing that changes a decision -- that this place charges.
+ *
+ * The bare unknown keeps its qualifier, because there the missing word is the
+ * whole message: nobody has said whether it charges at all, and shortening it
+ * to "Tarif" or dropping it would read as free.
  */
 export function formatPrice(
   pricePerHour: number | undefined,
   paid: boolean | undefined,
 ): string {
   if (pricePerHour !== undefined) return `${pricePerHour} lei / oră`;
-  if (paid === true) return "Cu plată · tarif necunoscut";
+  if (paid === true) return "Cu plată";
   if (paid === false) return "Gratuit";
   return "Tarif necunoscut";
 }

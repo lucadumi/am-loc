@@ -30,10 +30,20 @@ import {
 import { BUCHAREST } from "@/lib/geo";
 import { BlockerReport, SpotFilters } from "@/types";
 
-const LEGEND_ITEMS: { color: string; label: string }[] = [
+/**
+ * What the pins mean.
+ *
+ * The hollow entry is not decoration. `unreliable` draws a pin hollow whenever
+ * the claim behind it has gone stale, is contested, or was never made at all --
+ * and that last case is 838 of the 851 imported car parks, so the commonest
+ * pin on this map is a grey outline. A legend that listed only the three solid
+ * states would explain the rare pins and leave the usual one a mystery.
+ */
+const LEGEND_ITEMS: { color: string; label: string; hollow?: boolean }[] = [
   { color: statusColor.free, label: statusLabel.free },
   { color: statusColor.leaving, label: statusLabel.leaving },
   { color: statusColor.taken, label: statusLabel.taken },
+  { color: palette.mutedForeground, label: "Fără raportări", hollow: true },
   { color: palette.destructive, label: "Sesizare" },
 ];
 
@@ -45,7 +55,11 @@ function Legend() {
           <View className="w-4 items-center">
             <View
               className="h-2.5 w-2.5 rounded-full"
-              style={{ backgroundColor: item.color }}
+              style={
+                item.hollow
+                  ? { borderWidth: 1.5, borderColor: item.color }
+                  : { backgroundColor: item.color }
+              }
             />
           </View>
           <Text className="font-mid text-xs text-foreground">{item.label}</Text>

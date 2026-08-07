@@ -2,7 +2,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { CMPB_PARKING } from "@/constants/cmpb-parking.ts";
 import { PUBLIC_PARKING } from "@/constants/public-parking.ts";
-import { distanceMeters, etaMinutes, type LatLng } from "@/lib/geo.ts";
+import {
+  BUCHAREST,
+  distanceMeters,
+  etaMinutes,
+  type LatLng,
+} from "@/lib/geo.ts";
 import { currentIdentity, resolveIdentity } from "@/lib/identity.ts";
 import { publish } from "@/lib/live.ts";
 import { isRemote } from "@/lib/remote.ts";
@@ -43,22 +48,72 @@ const REPORTS_KEY = "amloc.reports.v1";
 const REPORT_STATUS_KEY = "amloc.report-status.v1";
 
 /**
- * Every car park the app knows about without asking anybody: the blue zone
- * first, then whatever OpenStreetMap has that CMPB does not.
+ * How close an OpenStreetMap car park has to be to a CMPB lot before it is
+ * taken to be the same asphalt seen twice.
+ *
+ * A hundred metres sounds generous for "the same place" and is not, because of
+ * what the two coordinates actually are. Neither registry marks a car park's
+ * entrance: CMPB records one point per lot and OSM's `out center` returns the
+ * centroid of a polygon, so a long stretch of kerb along one street is a point
+ * in the middle of it in one file and a point at the end of it in the other.
+ * Piața Constituției lands 47 m apart and Ferdinand 102 m apart, and both are
+ * plainly one car park.
+ */
+const SAME_PLACE_M = 100;
+
+/** A degree of latitude in metres. Longitude shrinks by cos(latitude). */
+const M_PER_DEG_LAT = 111_320;
+
+/**
+ * Every car park the app knows about without asking anybody: the blue zone,
+ * then whatever OpenStreetMap has that CMPB does not already operate.
  *
  * Two sources because they answer different questions. CMPB knows every space
  * it operates, how many bays it has and what it charges, and nothing about a
- * car park it does not run. OSM knows about the free kerbs, the mall garages
- * and the private ones, and carries almost no tariffs. Neither alone is a map
- * of Bucharest.
+ * car park it does not run. OSM knows the free kerbs, the mall garages and the
+ * out-of-town ones, and carries almost no tariffs. Neither alone is a map of
+ * Bucharest.
  *
- * They are concatenated rather than merged by position: a CMPB lot and an OSM
- * car park at the same corner are usually the same asphalt, but the ids come
- * from different registries and matching them by distance would be a guess. It
- * is a real duplicate on the map and it is the honest kind -- both entries are
- * true, from different registries, and neither invents a space.
+ * WHERE THEY OVERLAP, CMPB WINS AND THE OSM COPY IS DROPPED. Sixteen of the 97
+ * OSM car parks sit within `SAME_PLACE_M` of a CMPB lot, and they are the same
+ * places under different names -- `Parcare National Arena` is CMPB's
+ * `Lia Manoliu` to the metre, `Parcare Piața Operei` is `Opera` three metres
+ * away.
+ *
+ * Keeping both was the earlier choice here and it was wrong, for a reason
+ * stronger than tidiness. The duplicates do not merely repeat each other, they
+ * contradict each other, and the OSM side is the one that is wrong: OSM has
+ * `Piața Gemeni` and `Parcare SUUB` as `fee=no`, so the app drew "Gratuit" over
+ * two lots where CMPB charges 5 lei an hour. A driver acting on that gets a
+ * fine, and "there were two pins and one of them was right" is no defence.
+ *
+ * CMPB is authoritative for its own lots in the only sense that matters: it is
+ * the company taking the money. So a CMPB lot is never dropped in favour of an
+ * OSM one, only the other way round.
+ *
+ * Computed once, at module load. The bounding-box test before the haversine is
+ * what keeps 97 x 768 pairs from being 74,000 trigonometric calls.
  */
-const IMPORTED_PARKING: ParkingSpot[] = [...CMPB_PARKING, ...PUBLIC_PARKING];
+const IMPORTED_PARKING: ParkingSpot[] = (() => {
+  const cosLat = Math.cos((BUCHAREST.latitude * Math.PI) / 180);
+  const dLat = SAME_PLACE_M / M_PER_DEG_LAT;
+  const dLng = SAME_PLACE_M / (M_PER_DEG_LAT * cosLat);
+
+  const operatedByCmpb = (spot: ParkingSpot) =>
+    CMPB_PARKING.some(
+      (lot) =>
+        Math.abs(lot.latitude - spot.latitude) <= dLat &&
+        Math.abs(lot.longitude - spot.longitude) <= dLng &&
+        distanceMeters(
+          spot.latitude,
+          spot.longitude,
+          lot.latitude,
+          lot.longitude,
+        ) <= SAME_PLACE_M,
+    );
+
+  return [...CMPB_PARKING, ...PUBLIC_PARKING.filter((s) => !operatedByCmpb(s))];
+})();
 
 /**
  * An id for something this device is about to file.
@@ -261,16 +316,26 @@ export async function updateReport(
 }
 
 /**
- * A spot with how far the driver has to go to reach it.
+ * A spot with how far it is from where the driver actually wants to end up.
  *
- * `distance` is from the driver, not from a destination they searched for.
- * That is the whole difference between this screen and the search: here the
- * destination *is* wherever they are standing.
+ * BOTH FIELDS ARE MEASURED FROM THE DESTINATION, NOT FROM THE CAR. That is the
+ * app's whole idea of "near": a driver does not care how far the car park is
+ * from the road they are on, they care how far they will have to walk once
+ * they have left the car. So `walkMin` is the walk from this car park to the
+ * place they are heading for, which is the number that decides whether a spot
+ * is worth taking.
+ *
+ * The destination is whatever `rankNearby` was handed. With nothing searched
+ * for it is the driver's own position -- they are standing at the place they
+ * want to be, and the walk is the one back to it after parking. Once a search
+ * exists it is the searched place instead, and nothing here has to change:
+ * the meaning of the number was never "distance from you", so pointing it at a
+ * destination does not reinterpret it.
  */
 export type NearbySpot<T extends ParkingSpot = ParkingSpot> = T & {
-  /** Metres from the driver, straight line. */
+  /** Metres from the destination, straight line. */
   distance: number;
-  /** Minutes on foot. */
+  /** Minutes on foot from this car park to the destination. */
   walkMin: number;
 };
 
@@ -308,11 +373,16 @@ export function compareForDriver(a: NearbySpot, b: NearbySpot): number {
 }
 
 /**
- * Everything worth walking to from where the driver is, best first.
+ * Everything worth walking to from the destination, best first.
  *
- * Nothing is dropped on availability: the hundred car parks imported from
- * OpenStreetMap carry no observation at all, so such a filter would hide every
- * real car park in the city and leave a driver looking at nothing.
+ * `origin` is that destination -- the place the driver wants to end up, which
+ * is their own position until a search gives them another one. Everything here
+ * is measured from it rather than from the car, because the walk after parking
+ * is what a driver is actually choosing between.
+ *
+ * Nothing is dropped on availability: the imported car parks carry no
+ * observation at all, so such a filter would hide every real car park in the
+ * city and leave a driver looking at nothing.
  *
  * Pure, so the ordering can be tested without a device or a fix.
  */

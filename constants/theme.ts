@@ -21,6 +21,15 @@ export const palette = {
   leaving: "#FBBF24",
   taken: "#F87171",
   destructive: "#EF4444",
+  /**
+   * Coral, for the map pin that marks where a spot is.
+   *
+   * Deliberately not one of the three status colours above, and not the
+   * destructive red either: a pin says *where*, never *how it is going*, and
+   * borrowing `taken` would have every card's location marker read as a
+   * warning that the place is full.
+   */
+  coral: "#FF6B5A",
   /** Cool indigo accent, complement of the brand yellow. */
   indigo: {
     50: "#EEF2FF",
