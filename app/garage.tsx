@@ -26,6 +26,7 @@ import { ConfidenceBadge } from "@/components/confidence-badge";
 import { windowsFor } from "@/lib/availability-windows";
 import { isPrivate, mayDeclare, mayReport } from "@/lib/private-spots";
 import { believeAll, type BelievedSpot } from "@/lib/spot-belief";
+import { spotName } from "@/lib/spot-name";
 import { LOCAL_REPORTER_ID } from "@/lib/spot-reports";
 import type { ConfidenceLevel } from "@/lib/spot-state";
 import { OwnerOffer } from "@/components/owner-offer";
@@ -180,6 +181,19 @@ export default function GarageScreen() {
      inventing the bays, and a driver would read the invention as a survey. */
   const totalFree = spot.availableCount ?? null;
   const totalCapacity = spot.totalCount ?? null;
+  /* Two different sentences, because they are two different facts and only one
+     of them is usually known. `104 locuri` is the size of the car park, which
+     the registries do record. `3/104 libere` additionally claims somebody
+     counted the empty ones, which no source in Bucharest publishes -- so it is
+     said only when a driver actually reported a count. Before this, the free
+     number was `null` for all 865 imported car parks and the line rendered as
+     "/104 libere", which read as a survey that had come back blank. */
+  const capacityLabel =
+    totalCapacity == null
+      ? null
+      : totalFree == null
+        ? `${totalCapacity} locuri`
+        : `${totalFree}/${totalCapacity} libere`;
   const HERO_H = Math.round(Math.min(Math.max(screenH * 0.44, 300), 460));
 
   return (
@@ -273,26 +287,38 @@ export default function GarageScreen() {
               imported car park's street name into two cramped lines while
               leaving a seeded one alone. */}
           <Text className="font-heavy text-2xl leading-8 text-foreground">
-            {spot.title}
+            {spotName(spot)}
           </Text>
 
-          <View className="mt-2 flex-row flex-wrap items-center gap-1.5">
-            <MapPin size={14} color={palette.indigo[600]} />
-            <Text className="font-mid text-sm text-muted-foreground">
-              {spot.area}
-            </Text>
-            {spot.rating != null ? (
-              <>
+          {/* The pin only earns its place when there is somewhere to point at.
+              None of the imported car parks carry an area -- neither registry
+              records one -- so an unconditional row left a lone marker beside
+              an empty string on every one of them. */}
+          {spot.area || spot.rating != null ? (
+            <View className="mt-2 flex-row flex-wrap items-center gap-1.5">
+              {spot.area ? (
+                <>
+                  <MapPin size={14} color={palette.indigo[600]} />
+                  <Text className="font-mid text-sm text-muted-foreground">
+                    {spot.area}
+                  </Text>
+                </>
+              ) : null}
+              {spot.area && spot.rating != null ? (
                 <Text className="font-mid text-sm text-muted-foreground">·</Text>
-                <Star size={13} color={palette.primary} fill={palette.primary} />
-                <Text className="font-semi text-sm text-foreground">
-                  {spot.rating.toFixed(1)}
-                </Text>
-              </>
-            ) : null}
-          </View>
+              ) : null}
+              {spot.rating != null ? (
+                <>
+                  <Star size={13} color={palette.primary} fill={palette.primary} />
+                  <Text className="font-semi text-sm text-foreground">
+                    {spot.rating.toFixed(1)}
+                  </Text>
+                </>
+              ) : null}
+            </View>
+          ) : null}
 
-          {dist != null || totalCapacity != null ? (
+          {dist != null || capacityLabel != null ? (
             <View className="mt-1.5 flex-row flex-wrap items-center gap-1.5">
               {dist != null ? (
                 <>
@@ -306,10 +332,10 @@ export default function GarageScreen() {
                   </Text>
                 </>
               ) : null}
-              {dist != null && totalCapacity != null ? (
+              {dist != null && capacityLabel != null ? (
                 <Text className="font-mid text-sm text-muted-foreground">·</Text>
               ) : null}
-              {totalCapacity != null ? (
+              {capacityLabel != null ? (
                 <>
                   <SquareParking
                     size={14}
@@ -317,8 +343,21 @@ export default function GarageScreen() {
                     strokeWidth={2.2}
                   />
                   <Text className="font-semi text-sm text-foreground">
-                    {totalFree}/{totalCapacity}{" "}
-                    <Text className="font-mid text-muted-foreground">libere</Text>
+                    {totalFree == null ? (
+                      <>
+                        {totalCapacity}{" "}
+                        <Text className="font-mid text-muted-foreground">
+                          locuri
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        {totalFree}/{totalCapacity}{" "}
+                        <Text className="font-mid text-muted-foreground">
+                          libere
+                        </Text>
+                      </>
+                    )}
                   </Text>
                 </>
               ) : null}

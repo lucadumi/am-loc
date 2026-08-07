@@ -8,6 +8,7 @@ import { SpotImage } from "@/components/spot-image";
 import { StatusBadge } from "@/components/status-badge";
 import { palette } from "@/constants/theme";
 import { formatPrice } from "@/lib/geo";
+import { spotName } from "@/lib/spot-name";
 import { ParkingSpot } from "@/types";
 
 /**
@@ -42,7 +43,7 @@ export function SpotCard({
         </View>
         <View className="gap-2 p-3">
           <Text numberOfLines={1} className="font-title text-base text-foreground">
-            {spot.title}
+            {spotName(spot)}
           </Text>
           <View className="flex-row items-center gap-3">
             <View className="flex-1 flex-row items-center gap-1">
@@ -52,17 +53,25 @@ export function SpotCard({
                   <Text className="font-semi text-xs text-foreground">
                     {spot.walkMin} min
                   </Text>
-                  <Text className="font-mid text-xs text-muted-foreground">·</Text>
+                  {spot.area ? (
+                    <Text className="font-mid text-xs text-muted-foreground">
+                      ·
+                    </Text>
+                  ) : null}
                 </>
-              ) : (
+              ) : spot.area ? (
                 <MapPin size={13} color={palette.indigo[600]} />
-              )}
-              <Text
-                numberOfLines={1}
-                className="flex-1 font-mid text-xs text-muted-foreground"
-              >
-                {spot.area}
-              </Text>
+              ) : null}
+              {/* Absent on every imported car park, so an unconditional line
+                  left a stray marker over blank space on each of them. */}
+              {spot.area ? (
+                <Text
+                  numberOfLines={1}
+                  className="flex-1 font-mid text-xs text-muted-foreground"
+                >
+                  {spot.area}
+                </Text>
+              ) : null}
             </View>
             {spot.rating ? (
               <View className="flex-row items-center gap-1">

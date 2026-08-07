@@ -22,6 +22,7 @@ import { useCurrentLocation } from "@/hooks/use-current-location";
 import { useLive } from "@/hooks/use-live";
 import { getSpots, rankNearby } from "@/lib/api";
 import { believeAll, type BelievedSpot } from "@/lib/spot-belief";
+import { spotName } from "@/lib/spot-name";
 import { ParkingSpot } from "@/types";
 
 export default function HomeScreen() {
@@ -200,10 +201,13 @@ export default function HomeScreen() {
                         numberOfLines={1}
                         className="font-title text-base text-foreground"
                       >
-                        {last.title}
+                        {spotName(last)}
                       </Text>
+                      {/* The area is absent on every imported car park, and a
+                          bare "· Fără raportări" reads as a missing word. */}
                       <Text className="font-mid text-xs text-muted-foreground">
-                        {last.area} · {confidenceLabel[last.confidenceLevel]}
+                        {last.area ? `${last.area} · ` : ""}
+                        {confidenceLabel[last.confidenceLevel]}
                       </Text>
                     </View>
                     <ChevronRight size={20} color={palette.mutedForeground} />

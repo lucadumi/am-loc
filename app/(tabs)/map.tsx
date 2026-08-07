@@ -15,8 +15,6 @@ import { FloatingControl } from "@/components/floating-control";
 import { SearchBar } from "@/components/search-bar";
 import { SpotFilterSheet } from "@/components/spot-filter-sheet";
 import { Text } from "@/components/ui/text";
-import { CMPB_ATTRIBUTION } from "@/constants/cmpb-parking";
-import { PARKING_ATTRIBUTION } from "@/constants/public-parking";
 import { palette, statusColor, statusLabel } from "@/constants/theme";
 import { floatingTabBarInset } from "@/constants/layout";
 import { useCurrentLocation } from "@/hooks/use-current-location";
@@ -53,15 +51,6 @@ function Legend() {
           <Text className="font-mid text-xs text-foreground">{item.label}</Text>
         </View>
       ))}
-      {/* Both licences require this and neither is optional: OpenStreetMap is
-          ODbL, and CMPB authorise reproduction only "cu menţionarea sursei".
-          It sits in the legend because that is the one panel on the map that
-          is always drawn, whatever is filtered out. */}
-      <Text className="mt-1 font-mid text-[10px] leading-3 text-muted-foreground">
-        {PARKING_ATTRIBUTION}
-        {"\n"}
-        {CMPB_ATTRIBUTION}
-      </Text>
     </View>
   );
 }
