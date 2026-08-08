@@ -289,10 +289,17 @@ async function reportEventRows(reportIds?: string[]): Promise<ReportEventRow[]> 
   return data ?? [];
 }
 
-/** Every report worth showing, newest first, with what was done about each. */
+/**
+ * Every report worth showing, newest first, with what was done about each.
+ *
+ * Read through `reports_readable` rather than `reports`, which is what keeps
+ * one driver from reading another's number plate: the view nulls the column
+ * for anyone but its author, and the plate is revoked on the table itself so
+ * this is the only way to it. See `0006_hide_plates_from_strangers.sql`.
+ */
 export async function fetchReports(): Promise<BlockerReport[]> {
   const { data, error } = await client()
-    .from("reports")
+    .from("reports_readable")
     .select("*")
     .gte("created_at", since(REPORT_HISTORY_DAYS * 24))
     .order("created_at", { ascending: false })
@@ -312,7 +319,12 @@ export async function fetchReportById(
   id: string,
 ): Promise<BlockerReport | undefined> {
   const [report, events] = await Promise.all([
-    client().from("reports").select("*").eq("id", id).returns<ReportRow[]>().maybeSingle(),
+    client()
+      .from("reports_readable")
+      .select("*")
+      .eq("id", id)
+      .returns<ReportRow[]>()
+      .maybeSingle(),
     reportEventRows([id]),
   ]);
   if (report.error) throw new SupabaseError("Could not read report", report.error);
@@ -333,14 +345,19 @@ export async function insertReport(
   const author = await currentReporterId();
   const photos = await uploadPhotos(report.id, report.photos ?? [], author);
 
+  /* Every column except the plate, and named rather than `*`. The plate is
+     revoked on this table, so asking for it back would fail -- and there is
+     nothing to ask for: the caller supplied it a line ago. */
   const { data, error } = await client()
     .from("reports")
     .insert(toReportInsert({ ...report, photos }, author))
-    .select()
-    .returns<ReportRow[]>()
+    .select(
+      "id, category, latitude, longitude, address, note, photos, created_by, created_at",
+    )
+    .returns<Omit<ReportRow, "plate">[]>()
     .single();
   if (error || !data) throw new SupabaseError("Could not file the report", error);
-  return toBlockerReport(data);
+  return toBlockerReport({ ...data, plate: report.plate ?? null });
 }
 
 /**
