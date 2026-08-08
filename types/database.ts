@@ -104,6 +104,14 @@ export interface ReportRow {
   latitude: number;
   longitude: number;
   address: string | null;
+  /**
+   * Null for anybody but the author.
+   *
+   * The app reads reports through `reports_readable`, which masks this column
+   * per row; the column itself is revoked on the table. So a null here means
+   * either that no plate was given or that it is not yours to see, and the two
+   * are deliberately indistinguishable to the client.
+   */
   plate: string | null;
   note: string | null;
   photos: string[];

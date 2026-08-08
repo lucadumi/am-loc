@@ -32,7 +32,14 @@ export function SearchBar({
     >
       <View className={cn(fieldSurface, "flex-1")}>
         <Search size={20} color={palette.mutedForeground} />
-        <Text className="flex-1 font-sans text-base text-muted-foreground">
+        {/* Sized through `style`, not `text-base`, for the same reason as
+            `Input`: the utility carries a 24px line height that leaves the
+            glyphs sitting low in their box. These two are the same shape and
+            have to sit at the same height. */}
+        <Text
+          className="flex-1 font-sans text-muted-foreground"
+          style={{ fontSize: 16 }}
+        >
           {placeholder}
         </Text>
       </View>
