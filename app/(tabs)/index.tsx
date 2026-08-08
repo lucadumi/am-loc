@@ -6,17 +6,18 @@ import {
   History,
 } from "lucide-react-native";
 import { useCallback, useMemo, useState } from "react";
-import { ActivityIndicator, Image, Pressable, ScrollView, View } from "react-native";
+import { Image, Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { GreetingHeader } from "@/components/greeting-header";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 import { SearchBar } from "@/components/search-bar";
 import { SectionHeader } from "@/components/section-header";
 import { SpotCard } from "@/components/spot-card";
 import { SpotImage } from "@/components/spot-image";
 import { Text } from "@/components/ui/text";
 import { VehicleChips } from "@/components/vehicle-chips";
-import { confidenceLabel, palette } from "@/constants/theme";
+import { confidenceLabel, palette, scrim } from "@/constants/theme";
 import { floatingTabBarInset } from "@/constants/layout";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { useLive } from "@/hooks/use-live";
@@ -114,6 +115,12 @@ export default function HomeScreen() {
 
   const last = spots?.find((s) => s.kind === "garage") ?? spots?.[0];
 
+  /* The whole screen waits, rather than the list inside it. Everything on this
+     page is downstream of the spots -- the greeting's subtitle counts them,
+     the carousel is them -- so a header over an empty body would be a page
+     that looks finished and is not. */
+  if (spots === null) return <LoadingScreen />;
+
   return (
     <View className="flex-1 bg-background">
       <ScrollView
@@ -145,6 +152,8 @@ export default function HomeScreen() {
             onPrimary
             subtitle={headline}
             onProfile={() => router.push("/profile")}
+            onNotifications={() => router.push("/notifications")}
+            onArchived={() => router.push("/archived")}
           />
           <SearchBar onPress={() => router.push("/search")} />
           <Text className="font-title text-base text-primary-foreground">
@@ -164,94 +173,83 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {spots === null ? (
-            <View className="items-center py-16">
-              <ActivityIndicator color={palette.primary} />
-            </View>
-          ) : (
-            <>
-              <View className="mt-7 gap-3">
-                <SectionHeader
-                  title="Lângă tine"
-                  actionIcon={ArrowUpRight}
-                  onAction={() => router.push("/nearby")}
-                  className="px-5"
-                />
-                {nearby.length ? (
-                  <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ gap: 14, paddingHorizontal: 20 }}
-                  >
-                    {nearby.slice(0, 6).map((s) => (
-                      <SpotCard key={s.id} spot={s} onPress={() => openSpot(s)} />
-                    ))}
-                  </ScrollView>
-                ) : (
-                  <Text className="px-5 font-mid text-sm text-muted-foreground">
-                    {failed
-                      ? "Nu am putut încărca locurile."
-                      : "Nicio parcare în apropiere."}
-                  </Text>
-                )}
-              </View>
-
-              {/* Promo banner → find parking on the map */}
-              <Pressable
-                onPress={() => router.push("/map")}
-                className="mt-7"
+          <View className="mt-7 gap-3">
+            <SectionHeader
+              title="Lângă tine"
+              actionIcon={ArrowUpRight}
+              onAction={() => router.push("/nearby")}
+              className="px-5"
+            />
+            {nearby.length ? (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ gap: 14, paddingHorizontal: 20 }}
               >
-                <Image
-                  source={require("../../assets/images/parking.jpg")}
-                  style={{ width: "100%", height: 110 }}
-                  resizeMode="cover"
-                />
-                <View
-                  className="absolute inset-0"
-                  style={{ backgroundColor: "rgba(20,20,22,0.22)" }}
-                />
-                <View className="absolute inset-0 flex-row items-center px-5">
-                  <Text className="flex-1 font-title text-lg leading-tight text-white">
-                    Găsește parcare în câteva secunde
-                  </Text>
-                  <View className="ml-4 h-11 w-11 items-center justify-center rounded-full bg-primary">
-                    <ArrowRight size={22} color={palette.primaryForeground} />
-                  </View>
-                </View>
-              </Pressable>
+                {nearby.slice(0, 6).map((s) => (
+                  <SpotCard key={s.id} spot={s} onPress={() => openSpot(s)} />
+                ))}
+              </ScrollView>
+            ) : (
+              <Text className="px-5 font-mid text-sm text-muted-foreground">
+                {failed
+                  ? "Nu am putut încărca locurile."
+                  : "Nicio parcare în apropiere."}
+              </Text>
+            )}
+          </View>
 
-              {last ? (
-                <View className="mt-7 gap-3 px-5">
-                  <SectionHeader title="Ultima parcare" actionIcon={History} />
-                  <Pressable
-                    onPress={() => openSpot(last)}
-                    className="flex-row items-center gap-3 rounded-lg border-hairline border-border bg-card p-3"
+          {/* Promo banner → find parking on the map */}
+          <Pressable onPress={() => router.push("/map")} className="mt-7">
+            <Image
+              source={require("../../assets/images/parking.jpg")}
+              style={{ width: "100%", height: 110 }}
+              resizeMode="cover"
+            />
+            <View
+              className="absolute inset-0"
+              style={{ backgroundColor: scrim.overlay }}
+            />
+            <View className="absolute inset-0 flex-row items-center px-5">
+              <Text className="flex-1 font-title text-lg leading-tight text-white">
+                Găsește parcare în câteva secunde
+              </Text>
+              <View className="ml-4 h-11 w-11 items-center justify-center rounded-full bg-primary">
+                <ArrowRight size={22} color={palette.primaryForeground} />
+              </View>
+            </View>
+          </Pressable>
+
+          {last ? (
+            <View className="mt-7 gap-3 px-5">
+              <SectionHeader title="Ultima parcare" actionIcon={History} />
+              <Pressable
+                onPress={() => openSpot(last)}
+                className="flex-row items-center gap-3 rounded-lg border-hairline border-border bg-card p-3"
+              >
+                <SpotImage
+                  kind={last.kind}
+                  iconSize={22}
+                  className="h-14 w-14 rounded-md"
+                />
+                <View className="flex-1">
+                  <Text
+                    numberOfLines={1}
+                    className="font-title text-base text-foreground"
                   >
-                    <SpotImage
-                      kind={last.kind}
-                      iconSize={22}
-                      className="h-14 w-14 rounded-md"
-                    />
-                    <View className="flex-1">
-                      <Text
-                        numberOfLines={1}
-                        className="font-title text-base text-foreground"
-                      >
-                        {spotName(last)}
-                      </Text>
-                      {/* The area is absent on every imported car park, and a
+                    {spotName(last)}
+                  </Text>
+                  {/* The area is absent on every imported car park, and a
                           bare "· Fără raportări" reads as a missing word. */}
-                      <Text className="font-mid text-xs text-muted-foreground">
-                        {last.area ? `${last.area} · ` : ""}
-                        {confidenceLabel[last.confidenceLevel]}
-                      </Text>
-                    </View>
-                    <ChevronRight size={20} color={palette.mutedForeground} />
-                  </Pressable>
+                  <Text className="font-mid text-xs text-muted-foreground">
+                    {last.area ? `${last.area} · ` : ""}
+                    {confidenceLabel[last.confidenceLevel]}
+                  </Text>
                 </View>
-              ) : null}
-            </>
-          )}
+                <ChevronRight size={20} color={palette.mutedForeground} />
+              </Pressable>
+            </View>
+          ) : null}
         </View>
       </ScrollView>
     </View>

@@ -1,6 +1,7 @@
 import { Search } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 
+import { fieldSurface } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { palette } from "@/constants/theme";
 import { cn } from "@/lib/utils";
@@ -29,7 +30,7 @@ export function SearchBar({
       accessibilityLabel={placeholder}
       className={cn("flex-row items-center gap-3", className)}
     >
-      <View className="h-14 flex-1 flex-row items-center gap-2 rounded-full border-hairline border-border bg-card px-4">
+      <View className={cn(fieldSurface, "flex-1")}>
         <Search size={20} color={palette.mutedForeground} />
         <Text className="flex-1 font-sans text-base text-muted-foreground">
           {placeholder}

@@ -1,7 +1,8 @@
 import { useRouter } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 
+import { IconButton } from "@/components/ui/icon-button";
 import { Text } from "@/components/ui/text";
 import { palette } from "@/constants/theme";
 import { cn } from "@/lib/utils";
@@ -21,19 +22,19 @@ export function ScreenHeader({
         className,
       )}
     >
-      <Pressable
+      <IconButton
+        size="sm"
         onPress={() => router.back()}
-        className="h-10 w-10 items-center justify-center rounded-full border-hairline border-border bg-card"
-        accessibilityRole="button"
         accessibilityLabel="Înapoi"
       >
         <ArrowLeft size={20} color={palette.foreground} />
-      </Pressable>
+      </IconButton>
       {title ? (
         <Text className="font-title text-lg text-foreground">{title}</Text>
       ) : (
         <View />
       )}
+      {/* Balances the button so the title sits centred. */}
       <View className="h-10 w-10" />
     </View>
   );

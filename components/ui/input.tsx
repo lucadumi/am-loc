@@ -5,6 +5,18 @@ import { palette } from "@/constants/theme";
 import { cn } from "@/lib/utils";
 
 /**
+ * What a field looks like in this app.
+ *
+ * Exported because `SearchBar` is field-shaped without being a field: it is a
+ * button that opens the search screen, and it had its own copy of these
+ * classes with a slightly smaller gap and padding. Two spellings of one shape
+ * is how a search bar ends up a few pixels shorter than the input below it and
+ * nobody can say why.
+ */
+export const fieldSurface =
+  "h-14 flex-row items-center gap-2.5 rounded-full border-hairline border-border bg-card px-5";
+
+/**
  * The app's text field, and the only way one should be built.
  *
  * Left to style its own `TextInput`, every screen drifts: the padding stops
@@ -26,7 +38,7 @@ export const Input = forwardRef<TextInput, TextInputProps & {
   return (
     <View
       className={cn(
-        "h-14 flex-row items-center gap-2.5 rounded-full border-hairline border-border bg-card px-5",
+        fieldSurface,
         className,
       )}
     >

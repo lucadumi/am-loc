@@ -1,7 +1,8 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
-import { ActivityIndicator, Pressable } from "react-native";
+import { Pressable } from "react-native";
 
+import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import { palette } from "@/constants/theme";
 import { cn } from "@/lib/utils";
@@ -13,6 +14,13 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary",
         secondary: "bg-secondary",
+        /**
+         * The card surface, for an action that offers rather than urges: pick
+         * a photograph, choose a source. Written out by hand twice in
+         * `report.tsx` before it had a name, which is how a button ends up
+         * with a different height from the one beside it.
+         */
+        card: "border-hairline border-border bg-card active:opacity-80",
       },
       size: {
         default: "h-14 px-6",
@@ -32,6 +40,7 @@ const labelVariants = cva("font-title text-base", {
     variant: {
       default: "text-primary-foreground",
       secondary: "text-foreground",
+      card: "text-foreground",
     },
   },
   defaultVariants: { variant: "default" },
@@ -67,8 +76,15 @@ export function Button({
       {...props}
     >
       {loading ? (
-        <ActivityIndicator
+        /* On the yellow button both parts go dark: the rim's usual yellow
+           would be invisible on it. The spokes have gaps either way, so the
+           wheel still reads as turning against the fill behind it. */
+        <Spinner
+          size={24}
           color={
+            variant === "default" ? palette.primaryForeground : palette.foreground
+          }
+          accent={
             variant === "default" ? palette.primaryForeground : palette.primary
           }
         />

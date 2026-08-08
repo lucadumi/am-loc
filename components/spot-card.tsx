@@ -4,6 +4,7 @@ import { Pressable, View } from "react-native";
 import { Rating } from "@/components/rating";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { IconRow } from "@/components/ui/icon-row";
 import { Text } from "@/components/ui/text";
 import { SpotImage } from "@/components/spot-image";
 import { StatusBadge } from "@/components/status-badge";
@@ -80,38 +81,24 @@ export function SpotCard({
               layout -- this is the answer to "where is it", which is a
               different question from "how far is it". */}
           {spot.area ? (
-            <View className="flex-row items-center gap-1">
-              <MapPin
-                size={13}
-                color={palette.coral}
-                strokeWidth={2.2}
-                style={{ flexShrink: 0 }}
-              />
-              <Text
-                numberOfLines={1}
-                className="flex-1 font-mid text-xs text-muted-foreground"
-              >
-                {spot.area}
-              </Text>
-            </View>
+            <IconRow
+              truncate
+              icon={
+                <MapPin size={13} color={palette.coral} strokeWidth={2.2} />
+              }
+            >
+              {spot.area}
+            </IconRow>
           ) : null}
 
           <View className="flex-row items-center justify-between gap-3">
             {spot.walkMin ? (
-              <View className="flex-row items-center gap-1">
-                {/* `flexShrink: 0` on every icon in a row, and it is not belt
-                    and braces: a flex child shrinks by default and an SVG has
-                    no content to stop it, so a squeezed row silently renders
-                    the icon at no width at all. */}
-                <Footprints
-                  size={13}
-                  color={palette.indigo[600]}
-                  style={{ flexShrink: 0 }}
-                />
-                <Text className="font-semi text-xs text-foreground">
-                  {spot.walkMin} min pe jos
-                </Text>
-              </View>
+              <IconRow
+                icon={<Footprints size={13} color={palette.indigo[600]} />}
+                textClassName="font-semi text-foreground"
+              >
+                {`${spot.walkMin} min pe jos`}
+              </IconRow>
             ) : (
               <View />
             )}
