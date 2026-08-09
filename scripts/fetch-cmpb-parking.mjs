@@ -183,10 +183,8 @@ async function main() {
     access: "public",
     source: "cmpb",
     kind: "street",
-    status: "taken",
     latitude: ${lot.latitude},
     longitude: ${lot.longitude},
-    updatedAt: FETCHED_AT,
     paid: true,${field("pricePerHour", lot.pricePerHour)}${field("totalCount", lot.totalCount)}
   },`,
     )

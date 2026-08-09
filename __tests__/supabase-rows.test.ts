@@ -19,31 +19,18 @@ import { before, describe, test } from "node:test";
 import { registerTestLoader } from "./register-loader.ts";
 
 import { isRemote, supabaseCredentials } from "../lib/remote.ts";
-import { believe } from "../lib/spot-state.ts";
 import {
   eventsByReport,
-  latestBySpot,
   toBlockerReport,
   toBlockerReports,
   toParkingSpot,
   toParkingSpots,
   toReportInsert,
-  toSpotReport,
 } from "../lib/supabase-rows.ts";
-import type {
-  ReportEventRow,
-  ReportRow,
-  SpotRow,
-  StatusReportRow,
-} from "../types/database.ts";
+import type { ReportEventRow, ReportRow, SpotRow } from "../types/database.ts";
 
-let belief: typeof import("../lib/spot-belief.ts");
-let reports: typeof import("../lib/spot-reports.ts");
-
-before(async () => {
+before(() => {
   registerTestLoader();
-  belief = await import("../lib/spot-belief.ts");
-  reports = await import("../lib/spot-reports.ts");
 });
 
 const spotRow = (over: Partial<SpotRow> = {}): SpotRow => ({
@@ -67,71 +54,10 @@ const spotRow = (over: Partial<SpotRow> = {}): SpotRow => ({
   ...over,
 });
 
-const reportRow = (over: Partial<StatusReportRow> = {}): StatusReportRow => ({
-  id: 1,
-  spot_id: "s_lipscani",
-  status: "free",
-  leaving_in_min: null,
-  spaces: null,
-  reporter_id: "22222222-2222-4222-8222-222222222222",
-  created_at: "2026-08-03T11:00:00.000Z",
-  ...over,
-});
-
-describe("reading status report rows", () => {
-  test("renames the columns the app's model expects", () => {
-    const report = toSpotReport(
-      reportRow({ spot_id: "s1", status: "leaving", leaving_in_min: 5 })
-    );
-    assert.deepEqual(report, {
-      spotId: "s1",
-      status: "leaving",
-      at: "2026-08-03T11:00:00.000Z",
-      reporterId: "22222222-2222-4222-8222-222222222222",
-      leavingInMin: 5,
-      spaces: undefined,
-    });
-  });
-
-  test("a null column becomes undefined, not null", () => {
-    const report = toSpotReport(reportRow({ leaving_in_min: null }));
-    // Postgres has one idea of absence and TypeScript has two. A null leaking
-    // through here would reach props typed `number | undefined` and read as
-    // "leaving in null minutes" the moment anything formatted it.
-    assert.equal(report.leavingInMin, undefined);
-    assert.ok(!Object.values(report).includes(null as never));
-  });
-});
-
-describe("picking the newest claim per spot", () => {
-  test("does not trust the query's ordering", () => {
-    const latest = latestBySpot([
-      reportRow({ id: 1, spot_id: "a", created_at: "2026-08-03T10:00:00.000Z" }),
-      reportRow({ id: 2, spot_id: "a", created_at: "2026-08-03T12:00:00.000Z" }),
-      reportRow({ id: 3, spot_id: "a", created_at: "2026-08-03T11:00:00.000Z" }),
-      reportRow({ id: 4, spot_id: "b", created_at: "2026-08-03T09:00:00.000Z" }),
-    ]);
-    assert.equal(latest.get("a")?.id, 2);
-    assert.equal(latest.get("b")?.id, 4);
-  });
-});
-
-describe("flattening a spot row", () => {
-  test("takes its status and time from the newest claim", () => {
-    const spot = toParkingSpot(
-      spotRow(),
-      reportRow({ status: "leaving", leaving_in_min: 8 })
-    );
-    assert.equal(spot.status, "leaving");
-    assert.equal(spot.updatedAt, "2026-08-03T11:00:00.000Z");
-    assert.equal(spot.leavingInMin, 8);
-    assert.equal(spot.reportedBy, "22222222-2222-4222-8222-222222222222");
-  });
-
+describe("mapping a spot row", () => {
   test("carries the columns the screens read", () => {
     const spot = toParkingSpot(
       spotRow({ kind: "garage", price_per_hour: 6, total_count: 420, image_url: "u" }),
-      reportRow()
     );
     assert.equal(spot.kind, "garage");
     assert.equal(spot.pricePerHour, 6);
@@ -144,45 +70,32 @@ describe("flattening a spot row", () => {
   test("nulls become undefined so optional props stay optional", () => {
     const spot = toParkingSpot(
       spotRow({ area: null, price_per_hour: null, total_count: null, rating: null, image_url: null }),
-      reportRow()
     );
     for (const key of ["area", "pricePerHour", "totalCount", "rating", "imageUrl"] as const) {
       assert.strictEqual(spot[key], undefined, `${key} should be undefined, not null`);
     }
   });
 
-  test("a spot nobody has reported on reads as taken, as of its creation", () => {
-    // Not an arbitrary default. Calling it free would advertise a space on no
-    // evidence at all, and because `updatedAt` is the spot's own creation time
-    // the belief model ages the non-claim out to stale by itself.
+  test("no status is invented for a public spot", () => {
+    /* `spots` has no status column and the app no longer makes one up. It used
+       to flatten the newest claim on and default to `taken`, which put an
+       invented status on 838 of the 851 imported car parks -- read by a pin
+       colour, it asserted that essentially every car park in Bucharest was
+       full, on no evidence. Absent is the true answer. */
     const spot = toParkingSpot(spotRow());
-    assert.equal(spot.status, "taken");
-    assert.equal(spot.updatedAt, "2026-08-03T09:00:00.000Z");
-    assert.equal(spot.leavingInMin, undefined);
+    assert.equal(spot.status, undefined);
+    assert.equal(spot.availableCount, undefined);
   });
 
-  test("and that placeholder is attributed to nobody", () => {
-    // Falling back to `created_by` here would let anyone earn a reputation
-    // from claims they never made: add spots, wait for the report window to
-    // pass, and collect a confirmation from every driver who agrees the kerb
-    // is occupied. The whole point of the schema is that this cannot happen.
-    const spot = toParkingSpot(spotRow());
-    assert.equal(spot.reportedBy, undefined);
-    assert.notEqual(spot.reportedBy, spotRow().created_by);
+  test("a row that does not say who owns it is a public kerb", () => {
+    // Defaulting the other way would turn anything unmarked into somebody's
+    // private property that nobody may speak for, and quietly empty the map.
+    assert.equal(toParkingSpot(spotRow({ access: null })).access, "public");
   });
 
-  test("joins many spots to their claims in one pass", () => {
-    const spots = toParkingSpots(
-      [spotRow({ id: "a" }), spotRow({ id: "b" }), spotRow({ id: "c" })],
-      [
-        reportRow({ spot_id: "a", status: "free" }),
-        reportRow({ spot_id: "b", status: "taken" }),
-      ]
-    );
-    assert.deepEqual(
-      spots.map((s) => [s.id, s.status]),
-      [["a", "free"], ["b", "taken"], ["c", "taken"]]
-    );
+  test("maps a page of rows in one pass", () => {
+    const spots = toParkingSpots([spotRow({ id: "a" }), spotRow({ id: "b" })]);
+    assert.deepEqual(spots.map((s) => s.id), ["a", "b"]);
   });
 });
 
@@ -193,72 +106,6 @@ describe("the gate that decides which data layer runs", () => {
     // repo out has credentials and the app still has to open.
     assert.equal(isRemote(), false);
     assert.equal(supabaseCredentials(), null);
-  });
-});
-
-describe("a remote spot's claim is not counted twice", () => {
-  const NOW = new Date("2026-08-03T11:05:00.000Z");
-
-  /** A spot as `toParkingSpot` builds it, plus the rows it was built from. */
-  const remote = () => {
-    const rows = [
-      reportRow({ id: 2, status: "free", created_at: "2026-08-03T11:00:00.000Z", reporter_id: "newest" }),
-      reportRow({ id: 1, status: "taken", created_at: "2026-08-03T10:58:00.000Z", reporter_id: "older" }),
-    ];
-    return { spot: toParkingSpots([spotRow()], rows)[0], filed: rows.map(toSpotReport) };
-  };
-
-  test("the flattened claim and its own row are one observation", () => {
-    const { spot, filed } = remote();
-    const reports = belief.reportsFor(spot, filed);
-    assert.equal(reports.length, 2, "two rows should stay two claims, not three");
-    assert.equal(
-      reports.filter((r) => r.reporterId === "newest").length,
-      1,
-      "the newest reporter must not appear twice"
-    );
-  });
-
-  test("so a duplicated claim cannot flip what the map shows", () => {
-    const { spot, filed } = remote();
-    const counted = belief.withBelief(spot, NOW, filed);
-
-    assert.equal(counted.belief.considered, 2);
-    assert.ok(counted.belief.contested, "two reporters disagreeing reads as contested");
-    // "taken" decays over 25 minutes and "free" over 4, so five minutes on the
-    // older contradiction is still the better evidence.
-    assert.equal(counted.belief.status, "taken");
-
-    // The same rows read the way `reportsFor` read them before it
-    // deduplicated: the flattened claim counted again as a report of its own.
-    // `believe` sums weight per status with no per-reporter check, so the
-    // second copy simply doubles that status's vote and buys the win.
-    const doubled = believe([reports.seedReport(spot), ...filed], NOW);
-    assert.equal(doubled.considered, 3);
-    assert.equal(
-      doubled.status,
-      "free",
-      "counting one observation twice is enough to overturn the verdict"
-    );
-  });
-
-  test("a genuinely new claim is still added to the seed one", () => {
-    // The local path has no flattened duplicate, so nothing may be dropped
-    // there: the seed claim a fixture carries is still a claim.
-    const local = {
-      id: "s1",
-      title: "Strada Lipscani",
-      access: "public" as const,
-      status: "free" as const,
-      latitude: 44.43,
-      longitude: 26.1,
-      updatedAt: "2026-08-03T11:00:00.000Z",
-      reportedBy: "ana",
-    };
-    const filed = [
-      { spotId: "s1", status: "taken" as const, at: "2026-08-03T11:02:00.000Z", reporterId: "bogdan" },
-    ];
-    assert.equal(belief.reportsFor(local, filed).length, 2);
   });
 });
 

@@ -19,9 +19,17 @@
  */
 
 import { isRemote } from "./remote.ts";
-import { LOCAL_REPORTER_ID } from "./spot-reports.ts";
 
-let cached: string = LOCAL_REPORTER_ID;
+/**
+ * Who this device is before it has an account, and when there is no project.
+ *
+ * Declared here rather than imported, now that the reporting module it used to
+ * live in is gone. Still needed: `mayDeclare` compares an owner id against the
+ * current identity, so the offline park-sharing flow has to have one.
+ */
+export const LOCAL_IDENTITY = "me";
+
+let cached: string = LOCAL_IDENTITY;
 
 /** The id this device files under, as last resolved. Never throws, never waits. */
 export function currentIdentity(): string {
@@ -36,7 +44,7 @@ export function currentIdentity(): string {
  * are whose before it has to draw them.
  */
 export async function resolveIdentity(): Promise<string> {
-  if (!isRemote()) return LOCAL_REPORTER_ID;
+  if (!isRemote()) return LOCAL_IDENTITY;
   const { currentReporterId } = await import("./supabase.ts");
   cached = await currentReporterId();
   return cached;

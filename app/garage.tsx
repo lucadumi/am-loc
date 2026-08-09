@@ -20,15 +20,12 @@ import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ScreenHeader } from "@/components/screen-header";
-import { ConfidenceBadge } from "@/components/confidence-badge";
 import { Rating } from "@/components/rating";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import { windowsFor } from "@/lib/availability-windows";
-import { isPrivate, mayDeclare, mayReport } from "@/lib/private-spots";
-import { believeAll, type BelievedSpot } from "@/lib/spot-belief";
+import { isPrivate, mayDeclare } from "@/lib/private-spots";
+import { withOffers, type OfferedSpot } from "@/lib/private-spots";
 import { spotName } from "@/lib/spot-name";
-import { LOCAL_REPORTER_ID } from "@/lib/spot-reports";
-import type { ConfidenceLevel } from "@/lib/spot-state";
 import { OwnerOffer } from "@/components/owner-offer";
 import { StatusBadge } from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
@@ -38,6 +35,7 @@ import { Text } from "@/components/ui/text";
 import { palette, scrim, shadow, statusColor } from "@/constants/theme";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { getSpotById } from "@/lib/api";
+import { LOCAL_IDENTITY } from "@/lib/identity";
 import {
   distanceMeters,
   formatDistance,
@@ -73,8 +71,7 @@ export default function GarageScreen() {
   const location = useCurrentLocation();
 
   // null = loading, undefined = not found, object = resolved.
-  const [spot, setSpot] = useState<BelievedSpot | null | undefined>(null);
-  const [confidence, setConfidence] = useState<ConfidenceLevel>("none");
+  const [spot, setSpot] = useState<OfferedSpot | null | undefined>(null);
   const [windows, setWindows] = useState<AvailabilityWindow[]>([]);
   const heroMap = useRef<MapView>(null);
 
@@ -95,12 +92,11 @@ export default function GarageScreen() {
     Promise.all([getSpotById(id), windowsFor(id)])
       .then(async ([found, offered]) => {
         if (alive) setWindows(offered);
-        return found ? (await believeAll([found]))[0] : undefined;
+        return found ? (await withOffers([found]))[0] : undefined;
       })
       .then((s) => {
         if (!alive) return;
         setSpot(s ?? undefined);
-        if (s) setConfidence(s.confidenceLevel);
       })
       // `null` is the loading state, so a rejection left here would spin
       // forever. Resolving to "not found" at least ends the wait.
@@ -158,22 +154,18 @@ export default function GarageScreen() {
       </View>
     );
   }
-
-  const displayStatus = spot.status;
   /**
-   * The pin's colour, which is how this screen says whether the place is free.
+   * The pin's colour, which is a question about who is entitled to speak.
    *
-   * Grey when nobody has reported, rather than the red `taken` resolves to.
-   * A spot with no observation is flattened to `taken` because that is the
-   * safe default for filtering and ranking -- see `toParkingSpot` in
-   * lib/supabase-rows.ts -- but a red pin is not a default, it is a claim that
-   * somebody looked and the place was full. 838 of the 851 imported car parks
-   * carry no observation at all, so painting them red would have this screen
-   * assert that essentially every car park in Bucharest is occupied, on no
-   * evidence. Grey says the true thing: nobody has checked.
+   * A private spot carries its owner's answer. A public one carries none: the
+   * app knows where this car park is, how big it is and what it charges, and
+   * nothing about whether there is room in it now. 838 of the 851 imported car
+   * parks are in that position, and painting them a status colour would have
+   * this screen assert something nobody ever said. Grey says the true thing.
    */
-  const pinColor =
-    confidence === "none" ? palette.mutedForeground : statusColor[displayStatus];
+  const pinColor = spot.status
+    ? statusColor[spot.status]
+    : palette.mutedForeground;
   const dist = location
     ? distanceMeters(
         location.latitude,
@@ -370,8 +362,7 @@ export default function GarageScreen() {
                 {formatPrice(spot.pricePerHour, spot.paid)}
               </Text>
             </Chip>
-            <ConfidenceBadge level={confidence} />
-            {!mayReport(spot) ? (
+            {isPrivate(spot) ? (
               <Text className="font-mid text-xs text-muted-foreground">
                 {spot.ownerName
                   ? `${spot.ownerName} spune când e liber`
@@ -387,7 +378,7 @@ export default function GarageScreen() {
               spot={spot}
               windows={windows}
               offer={spot.offer}
-              mine={mayDeclare(spot, LOCAL_REPORTER_ID)}
+              mine={mayDeclare(spot, LOCAL_IDENTITY)}
               onChanged={reload}
             />
           ) : null}
@@ -411,11 +402,12 @@ export default function GarageScreen() {
           >
             <ArrowLeft size={20} color={palette.foreground} />
           </IconButton>
-          <StatusBadge
-            status={displayStatus}
-            unknown={confidence === "none"}
-            className="border-hairline border-border bg-card"
-          />
+          {spot.status ? (
+            <StatusBadge
+              status={spot.status}
+              className="border-hairline border-border bg-card"
+            />
+          ) : null}
         </View>
       </SafeAreaView>
     </View>

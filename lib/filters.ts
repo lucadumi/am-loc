@@ -19,7 +19,6 @@ export const DISTANCE_STEP = 250;
 
 /** The unfiltered state: every group at its default, nothing excluded. */
 export const DEFAULT_FILTERS: SpotFilters = {
-  statuses: [],
   kinds: [],
   maxDistance: null,
   priceRange: [PRICE_MIN, PRICE_MAX],
@@ -34,7 +33,6 @@ function isPriceRangeActive([lo, hi]: [number, number]): boolean {
 /** Number of filter groups that deviate from their defaults (for a badge). */
 export function countActiveFilters(f: SpotFilters): number {
   let n = 0;
-  if (f.statuses.length) n++;
   if (f.kinds.length) n++;
   if (f.maxDistance != null) n++;
   if (isPriceRangeActive(f.priceRange)) n++;
@@ -56,7 +54,6 @@ export function filterSpots<T extends ParkingSpot>(
 ): T[] {
   const [minPrice, maxPrice] = f.priceRange;
   return spots.filter((s) => {
-    if (f.statuses.length && !f.statuses.includes(s.status)) return false;
     if (f.kinds.length && !f.kinds.includes(s.kind ?? "street")) return false;
 
     const price = s.pricePerHour ?? 0;

@@ -1,4 +1,13 @@
-export type SpotStatus = "free" | "leaving" | "taken";
+/**
+ * Whether a space is free, and the only spots that have one.
+ *
+ * Present on a private spot alone, derived from its owner's windows by
+ * `applyDeclaration`. A public spot has no status at all: nobody is asked, and
+ * the app would rather say nothing than draw a colour on no evidence. There is
+ * no `leaving` because an owner who means "in twenty minutes" has a better way
+ * to say it -- a window that starts then.
+ */
+export type SpotStatus = "free" | "taken";
 
 /** Street spot (single/few kerb spaces) vs a structured garage with slots. */
 export type SpotKind = "street" | "garage";
@@ -8,8 +17,8 @@ export type SpotKind = "street" | "garage";
  *
  * This is the app's central distinction, not a label. A public kerb space
  * belongs to nobody, so what is known about it is what passers-by have claimed,
- * and the right machinery is `believe()` in lib/spot-state.ts: weigh the claims,
- * decay them, report disagreement.
+ * and the app no longer claims to know: nobody is asked, so it carries no
+ * availability at all.
  *
  * A private space belongs to somebody. Its owner does not *observe* that it is
  * free, they *decide* it, and a stranger's opinion about it is worth nothing at
@@ -57,27 +66,24 @@ export interface ParkingSpot {
    */
   access: SpotAccess;
   /**
-   * What the app currently claims.
+   * Whether it is free, for a private spot only.
    *
-   * For a public spot this is a flattened claim and the belief model is the
-   * real answer. For a private one it is derived from the owner's windows by
-   * `withBelief`, which overwrites it, so screens reading this field directly
-   * still see the truth.
+   * Absent on a public one, and that absence is the honest answer rather than a
+   * gap: nobody counts a public car park for this app, so it has nothing to say
+   * about whether there is room. Derived for a private spot from its owner's
+   * windows by `applyDeclaration` in lib/private-spots.ts.
    */
-  status: SpotStatus;
+  status?: SpotStatus;
   latitude: number;
   longitude: number;
-  /** ISO timestamp of the last community update. */
-  updatedAt: string;
-  /** Minutes until the reporter leaves (only for status === "leaving"). */
-  leavingInMin?: number;
-  /** Free-text note from the reporter. */
-  note?: string;
-  /** Display name / handle of the reporter. */
-  reportedBy?: string;
   /** "street" (default) or "garage". */
   kind?: SpotKind;
-  /** Free spaces available now (street: a small count; garage: live count). */
+  /**
+   * Free spaces right now, where somebody is entitled to say.
+   *
+   * Only ever set for a private spot, from its owner's own windows. A public
+   * car park has no such number and none is invented for it.
+   */
   availableCount?: number;
   /** Total capacity (mainly for garages). */
   totalCount?: number;
@@ -154,8 +160,6 @@ export interface AvailabilityWindow {
  * means any price. See lib/filters.ts for the defaults and the pure predicate.
  */
 export interface SpotFilters {
-  /** Statuses to keep; empty = all statuses. */
-  statuses: SpotStatus[];
   /** Spot kinds to keep; empty = all kinds. */
   kinds: SpotKind[];
   /** Max distance from the user in meters; null = any distance. */

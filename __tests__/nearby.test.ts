@@ -33,10 +33,8 @@ const at = (id: string, metres: number, over: Partial<ParkingSpot> = {}): Parkin
   id,
   title: id,
   access: "public",
-  status: "taken",
   latitude: ME.latitude + metres / M_PER_DEG_LAT,
   longitude: ME.longitude,
-  updatedAt: "2026-08-06T10:00:00.000Z",
   ...over,
 });
 

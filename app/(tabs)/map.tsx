@@ -22,7 +22,7 @@ import { floatingTabBarInset } from "@/constants/layout";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { useLive } from "@/hooks/use-live";
 import { getReports, getSpots } from "@/lib/api";
-import { believeAll, type BelievedSpot } from "@/lib/spot-belief";
+import { withOffers, type OfferedSpot } from "@/lib/private-spots";
 import {
   DEFAULT_FILTERS,
   countActiveFilters,
@@ -42,10 +42,9 @@ import { BlockerReport, SpotFilters } from "@/types";
  * states would explain the rare pins and leave the usual one a mystery.
  */
 const LEGEND_ITEMS: { color: string; label: string; hollow?: boolean }[] = [
-  { color: statusColor.free, label: statusLabel.free },
-  { color: statusColor.leaving, label: statusLabel.leaving },
-  { color: statusColor.taken, label: statusLabel.taken },
-  { color: palette.mutedForeground, label: "Fără raportări", hollow: true },
+  { color: statusColor.free, label: `${statusLabel.free} · loc privat` },
+  { color: statusColor.taken, label: `${statusLabel.taken} · loc privat` },
+  { color: palette.mutedForeground, label: "Parcare publică", hollow: true },
   { color: palette.destructive, label: "Sesizare" },
 ];
 
@@ -99,38 +98,21 @@ function FilterButton({
 }
 
 /**
- * A claim old enough, contested enough, or absent enough that it should not
- * read as fact.
+ * What colour a pin is, which is a question about who is entitled to speak.
  *
- * `none` belongs here for the same reason the other two do, and it became the
- * common case the moment the map started carrying imported car parks. Those are
- * real places nobody has reported on, and their `status` is shut only because
- * the type demands a value -- drawn solid they would read as a hundred
- * confidently full car parks, which is a claim the app has no basis for and the
- * opposite of what it knows.
+ * A private spot has an owner who decides, so its pin carries their answer. A
+ * public one has nobody: the app knows where it is, how big it is and what it
+ * charges, and nothing whatever about whether there is room in it now. Drawing
+ * those in a status colour would be a hundred confident claims nobody made, so
+ * they are grey and hollow -- which is the true statement.
  */
-function unreliable(spot: BelievedSpot): boolean {
-  return (
-    spot.confidenceLevel === "stale" ||
-    spot.confidenceLevel === "disputed" ||
-    spot.confidenceLevel === "none"
-  );
+function pinColor(spot: OfferedSpot): string {
+  return spot.status ? statusColor[spot.status] : palette.mutedForeground;
 }
 
-/**
- * What colour a pin is, which is a question about the claim rather than about
- * the kerb.
- *
- * With no reports at all there is no claim to colour, so the pin goes grey. The
- * `status` field still holds `taken`, because the type requires some value and
- * shut is the safe one, but painting that red would turn "nobody has looked" into
- * "it is full" -- and after the OpenStreetMap import, that would be most of the
- * map saying something nobody ever said.
- */
-function pinColor(spot: BelievedSpot): string {
-  return spot.confidenceLevel === "none"
-    ? palette.mutedForeground
-    : statusColor[spot.status];
+/** Nobody has standing to say whether this one is free. */
+function unreliable(spot: OfferedSpot): boolean {
+  return !spot.status;
 }
 
 export default function MapScreen() {
@@ -147,7 +129,7 @@ export default function MapScreen() {
     focus?: string;
   }>();
   const flownTo = useRef<string | null>(null);
-  const [spots, setSpots] = useState<BelievedSpot[]>([]);
+  const [spots, setSpots] = useState<OfferedSpot[]>([]);
   const [reports, setReports] = useState<BlockerReport[]>([]);
   const [filters, setFilters] = useState<SpotFilters>(DEFAULT_FILTERS);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -164,7 +146,7 @@ export default function MapScreen() {
 
   const load = useCallback(() => {
     getSpots()
-      .then((loaded) => believeAll(loaded))
+      .then((loaded) => withOffers(loaded))
       .then(setSpots)
       .catch((error) => console.error("Could not load spots", error))
       // Settled rather than fulfilled: a failed load has finished loading, and

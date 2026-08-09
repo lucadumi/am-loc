@@ -45,10 +45,8 @@ const privateSpot = (over: Partial<ParkingSpot> = {}): ParkingSpot => ({
   title: "Garaj, Str. Glinka 12",
   access: "private",
   source: "owner",
-  status: "taken",
   latitude: 44.465,
   longitude: 26.09,
-  updatedAt: "2026-08-05T06:00:00.000Z",
   ownerId: "owner_1",
   ownerName: "Ana",
   ...over,
@@ -59,11 +57,8 @@ const publicSpot = (over: Partial<ParkingSpot> = {}): ParkingSpot => ({
   title: "Strada Lipscani",
   access: "public",
   source: "community",
-  status: "free",
   latitude: 44.4319,
   longitude: 26.1015,
-  updatedAt: "2026-08-05T08:55:00.000Z",
-  reportedBy: "r1",
   ...over,
 });
 
@@ -199,69 +194,42 @@ describe("the owner's own list", () => {
   });
 });
 
-describe("the belief model is not consulted about a private spot", () => {
-  test("a stranger's reports cannot move it", async () => {
-    /* The load-bearing test of the whole change. Forty fresh reports, all
-       saying the garage is free, against an owner who has offered nothing. The
-       owner wins, because the others are not weaker evidence -- they are not
-       evidence. */
-    const { withBelief } = await import("../lib/spot-belief.ts");
+describe("only an owner may say whether a private spot is free", () => {
+  test("a public spot carries no status at all", async () => {
+    /* The load-bearing assertion of the whole change. Nobody is asked about a
+       public car park and nothing is invented for it, so the field a screen
+       would colour a pin from is simply absent -- which is what draws it grey
+       and hollow rather than as a hundred confidently full car parks. */
+    const { applyDeclaration } = await import("../lib/private-spots.ts");
+    const spot = applyDeclaration(publicSpot(), [], NOON_WED);
 
-    const shouting = Array.from({ length: 40 }, () => ({
-      spotId: "p1",
-      status: "free" as const,
-      at: "2026-08-05T08:59:00.000Z",
-      reporterId: "r1",
-    }));
-
-    const believed = withBelief(privateSpot(), NOON_WED, shouting, []);
-
-    assert.equal(believed.status, "taken");
-    assert.equal(believed.belief.status, "taken");
-    assert.equal(believed.confidenceLevel, "declared");
+    assert.equal(spot.status, undefined);
+    assert.equal(spot.offer, undefined);
+    assert.equal(spot.availableCount, undefined);
   });
 
-  test("the owner's window decides, and is drawn as declared", async () => {
-    const { withBelief } = await import("../lib/spot-belief.ts");
-    const believed = withBelief(privateSpot(), NOON_WED, [], [window()]);
+  test("a private spot with no window offered is shut, not free", async () => {
+    /* Silence from an owner is a no. The tempting alternative -- treating "the
+       owner has not said anything" as "help yourself" -- attaches a stranger's
+       car to somebody's driveway. */
+    const { applyDeclaration } = await import("../lib/private-spots.ts");
+    const shut = applyDeclaration(privateSpot(), [], NOON_WED);
 
-    assert.equal(believed.status, "free");
-    assert.equal(believed.confidenceLevel, "declared");
-    assert.equal(believed.belief.confidence, 1, "a decision is not an estimate");
-    assert.equal(believed.belief.stale, false, "and it does not rot");
-    assert.equal(believed.offer?.open, true);
-  });
-
-  test("there is nobody to credit a declaration to", async () => {
-    /* `belief.source` is the reporter the UI attributes a status to. Left set
-       on a declaration, it would name some stranger as the author of a claim
-       only the owner is entitled to make. */
-    const { withBelief } = await import("../lib/spot-belief.ts");
-    const believed = withBelief(privateSpot(), NOON_WED, [], [window()]);
-    assert.equal(believed.belief.source, null);
-  });
-
-  test("a public spot still goes through the belief model untouched", async () => {
-    const { withBelief } = await import("../lib/spot-belief.ts");
-    const believed = withBelief(publicSpot(), NOON_WED, []);
-    assert.notEqual(believed.confidenceLevel, "declared");
-    assert.equal(believed.offer, undefined);
+    assert.equal(shut.status, "taken");
+    assert.equal(shut.availableCount, 0);
+    assert.equal(shut.offer?.open, false);
   });
 
   test("the declaration reaches the fields screens actually read", async () => {
-    /* Half the app reads `spot.status` rather than `spot.belief.status` -- the
-       map's pin colour, the home screen's filter, the saved list's badge. A spot
-       whose two copies disagreed would be free on the map and taken on the card. */
-    const { applyDeclaration } = await import("../lib/spot-belief.ts");
+    /* Half the app reads `spot.status` rather than the offer -- the map's pin
+       colour, the card's badge. A spot whose two copies disagreed would be free
+       on the map and taken on the card. */
+    const { applyDeclaration } = await import("../lib/private-spots.ts");
     const open = applyDeclaration(privateSpot(), [window({ pricePerHour: 6 })], NOON_WED);
 
     assert.equal(open.status, "free");
     assert.equal(open.availableCount, 1);
-    assert.equal(open.pricePerHour, 6);
-    assert.equal(open.offer.until, "2026-08-05T14:00:00.000Z");
-
-    const shut = applyDeclaration(privateSpot(), [], NOON_WED);
-    assert.equal(shut.status, "taken");
-    assert.equal(shut.availableCount, 0);
+    assert.equal(open.pricePerHour, 6, "the price rides on the window");
+    assert.equal(open.offer?.until, "2026-08-05T14:00:00.000Z");
   });
 });

@@ -8,30 +8,26 @@
  *   1. DECLARATIONS -- what an owner says about their own space. Authoritative
  *      for exactly one person, time-bounded, and it expires rather than decays.
  *      This module.
- *   2. OBSERVATIONS -- what a passer-by says about a public kerb. Contested,
- *      weighted by who said it, and rotting by the minute. `believe` in
- *      lib/spot-state.ts.
+ *   2. OBSERVATIONS -- what a passer-by says about a public kerb. There are
+ *      none. The app used to weigh strangers' claims against each other and no
+ *      longer asks for any, so a public spot carries no availability at all:
+ *      where it is, how big it is and what it costs, and nothing about whether
+ *      there is room in it right now.
  *
  * ---
  *
- * WHY A DECLARATION IS NOT A REPORT. The belief model exists to arbitrate
- * between strangers who cannot all be right. That is the correct instrument for
- * a public kerb, where nobody has standing and the only evidence is that several
- * people looked. It is the wrong instrument -- not a weaker one, the wrong one --
- * for a garage with an owner. The owner is not estimating whether their space is
- * free. They know, because they decide.
+ * WHY THERE IS ONLY ONE SPECIES LEFT. Arbitrating between strangers who cannot
+ * all be right needs the strangers to be filing something, and it needs their
+ * claims to be checkable by the next person to arrive. Neither held: nobody was
+ * asked, and a claim about a car park is verifiable by nobody. Occupancy will
+ * arrive from a ledger -- an operator's barrier, or the windows below -- and a
+ * ledger does not contradict itself, so it needs no arbitrator at all. The
+ * belief model was removed rather than left switched off.
  *
- * Two things follow, and both are enforced rather than documented.
- *
- * A stranger may not report on a private spot at all. Not "may report with low
- * weight": may not. Left open, any user could mark somebody's driveway occupied
- * for the afternoon, and no amount of reputation weighting fixes that, because
- * the vandal's claim is not less credible than the owner's -- it is irrelevant to
- * it.
- *
- * And an owner's declaration does not decay. Applying `HALF_LIVES` to "free
- * weekdays nine to five" would have the app growing unsure, by half past ten,
- * about a fact that has not changed and will not until five.
+ * A declaration also does not decay, which is the other half of the same point.
+ * A half-life applied to "free weekdays nine to five" would have the app
+ * growing unsure, by half past ten, about a fact that has not changed and will
+ * not until five.
  *
  * ---
  *
@@ -173,4 +169,76 @@ export function liveWindows(
 /** Sort windows the way an owner reads them: earliest in the day first. */
 export function byStart(a: AvailabilityWindow, b: AvailabilityWindow): number {
   return a.from - b.from || a.to - b.to;
+}
+
+/**
+ * A spot with whatever its owner has declared folded into its own fields.
+ *
+ * `offer` is present only for a private spot, because only a private spot has
+ * anybody entitled to make one. A public spot passes through untouched and
+ * carries no `status` at all -- see the header of this module and `ParkingSpot`
+ * in @/types for why the app no longer claims one.
+ */
+export type OfferedSpot<T extends ParkingSpot = ParkingSpot> = T & {
+  offer?: SpotOffer;
+};
+
+/**
+ * Fold an owner's windows into the spot the screens read.
+ *
+ * `status` and `availableCount` are written onto the spot itself rather than
+ * left on `offer`, because screens read those fields directly in half a dozen
+ * places -- the map's pin colour, the card's badge -- and a spot whose two
+ * copies of its own answer disagreed would show free on the map and taken on
+ * the card.
+ *
+ * `now` is a parameter rather than read from the clock so screens can be tested,
+ * and so a list rendered in one pass cannot have its rows disagree about what
+ * time it is.
+ */
+export function applyDeclaration<T extends ParkingSpot>(
+  spot: T,
+  windows: AvailabilityWindow[],
+  now: Date = new Date(),
+): OfferedSpot<T> {
+  if (!isPrivate(spot)) return spot;
+
+  const offer = offeredAt(windows, now);
+  const status = declaredStatus(offer);
+  return {
+    ...spot,
+    status,
+    /* The price rides on the window, not on the spot, because an owner may lend
+       it free at the weekend and charge on weekdays. Falls back to whatever the
+       spot carries so a listing with no per-window price still shows one. */
+    pricePerHour: offer.pricePerHour ?? spot.pricePerHour,
+    availableCount: status === "free" ? 1 : 0,
+    offer,
+  };
+}
+
+/** The same, for a list. */
+export function applyDeclarations<T extends ParkingSpot>(
+  spots: T[],
+  windowsBySpot: Map<string, AvailabilityWindow[]> = new Map(),
+  now: Date = new Date(),
+): OfferedSpot<T>[] {
+  return spots.map((spot) =>
+    applyDeclaration(spot, windowsBySpot.get(spot.id) ?? [], now),
+  );
+}
+
+/**
+ * Load the owners' windows and fold them in.
+ *
+ * Only asked for when something on the list actually has an owner, so the
+ * public-only screens this app opens on pay nothing for the private half.
+ */
+export async function withOffers<T extends ParkingSpot>(
+  spots: T[],
+  now: Date = new Date(),
+): Promise<OfferedSpot<T>[]> {
+  if (!spots.some(isPrivate)) return spots;
+  const { loadWindowsBySpot } = await import("./availability-windows.ts");
+  return applyDeclarations(spots, await loadWindowsBySpot(), now);
 }

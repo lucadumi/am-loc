@@ -1,10 +1,10 @@
 name: CI
 
 # Fast checks only: type-check, lint, and the unit tests for the deterministic
-# core (the belief model, status reports, availability windows). Deliberately
-# does NOT build the app or start Metro -- an Expo build needs a simulator or
-# EAS credentials, takes minutes, and would not catch anything these three do
-# not.
+# core (availability windows, ranking, the row mapping and the blocker report
+# flow). Deliberately does NOT build the app or start Metro -- an Expo build
+# needs a simulator or EAS credentials, takes minutes, and would not catch
+# anything these three do not.
 #
 # The tests need no simulator because everything they cover is pure: functions
 # over plain objects with the clock injected, and an in-memory stand-in for
