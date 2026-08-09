@@ -2,7 +2,7 @@
  * Availability windows: when an owner is offering their own parking space.
  *
  * The storage half of lib/private-spots.ts, and the deliberate counterpart to
- * lib/spot-reports.ts. Both persist what somebody said about a spot; the
+ * the status reports the app used to keep. Both persist what somebody said
  * difference is who is allowed to say it and what happens to it afterwards.
  *
  * A status report is evidence and is append-only, because a newer claim has to
@@ -91,7 +91,7 @@ export async function windowsFor(spotId: string): Promise<AvailabilityWindow[]> 
   return (await loadWindows()).filter((window) => window.spotId === spotId);
 }
 
-/** The map `believeAll` needs to answer a whole screen in one read. */
+/** The map `withOffers` needs to answer a whole screen in one read. */
 export async function loadWindowsBySpot(): Promise<
   Map<string, AvailabilityWindow[]>
 > {

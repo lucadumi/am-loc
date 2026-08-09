@@ -17,12 +17,12 @@ import { SpotCard } from "@/components/spot-card";
 import { SpotImage } from "@/components/spot-image";
 import { Text } from "@/components/ui/text";
 import { VehicleChips } from "@/components/vehicle-chips";
-import { confidenceLabel, palette, scrim } from "@/constants/theme";
+import { palette, scrim } from "@/constants/theme";
 import { floatingTabBarInset } from "@/constants/layout";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { useLive } from "@/hooks/use-live";
 import { getSpots, rankNearby } from "@/lib/api";
-import { believeAll, type BelievedSpot } from "@/lib/spot-belief";
+import { withOffers, type OfferedSpot } from "@/lib/private-spots";
 import { spotName } from "@/lib/spot-name";
 import { ParkingSpot } from "@/types";
 
@@ -30,14 +30,14 @@ export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const location = useCurrentLocation();
-  const [spots, setSpots] = useState<BelievedSpot[] | null>(null);
+  const [spots, setSpots] = useState<OfferedSpot[] | null>(null);
   const [failed, setFailed] = useState(false);
 
   // How much to believe a spot depends on who reported it, so the reporter
   // records have to load with the spots rather than after them.
   const load = useCallback(() => {
     getSpots()
-      .then((loaded) => believeAll(loaded))
+      .then((loaded) => withOffers(loaded))
       .then((believed) => {
         setSpots(believed);
         setFailed(false);
@@ -99,14 +99,15 @@ export default function HomeScreen() {
     const around = rankNearby(spots, location, { limit: 500 });
     if (!around.length) return "Nicio parcare în apropiere";
 
-    const free = around.filter(
-      (spot) => spot.status === "free" && spot.confidenceLevel !== "none",
-    ).length;
-
-    if (free) {
-      return free === 1
-        ? "1 loc liber raportat în apropiere"
-        : `${free} locuri libere raportate în apropiere`;
+    /* How many places there are to try, not how many are free. Nobody counts a
+       public car park for this app, so "3 locuri libere" would be a number
+       invented for the headline. `around` is real: these car parks exist, at
+       these distances, at these prices. */
+    const nearby = around.length;
+    if (nearby) {
+      return nearby === 1
+        ? "1 parcare în apropiere"
+        : `${nearby} parcări în apropiere`;
     }
     return around.length === 1
       ? "1 parcare în apropiere"
@@ -242,8 +243,7 @@ export default function HomeScreen() {
                   {/* The area is absent on every imported car park, and a
                           bare "· Fără raportări" reads as a missing word. */}
                   <Text className="font-mid text-xs text-muted-foreground">
-                    {last.area ? `${last.area} · ` : ""}
-                    {confidenceLabel[last.confidenceLevel]}
+                    {last.area ?? "Parcare publică"}
                   </Text>
                 </View>
                 <ChevronRight size={20} color={palette.mutedForeground} />

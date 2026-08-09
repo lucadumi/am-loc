@@ -26,20 +26,18 @@ import type {
   ReportUpdate,
   SpotRow,
   StatusReportInsert,
-  StatusReportRow,
 } from "@/types/database.ts";
 
 import { decodeDataUrl } from "./base64.ts";
-import type { SpotReport } from "./spot-state.ts";
 import { SupabaseError, currentReporterId, supabase } from "./supabase.ts";
 import {
   toAvailabilityWindows,
   toWindowInsert,
   toBlockerReport,
   toBlockerReports,
+  toParkingSpot,
   toParkingSpots,
   toReportInsert,
-  toSpotReport,
 } from "./supabase-rows.ts";
 
 /**
@@ -71,7 +69,6 @@ import {
  * worth doing when the table is large enough to care; today it would be
  * ceremony around thirty rows.
  */
-const REPORT_WINDOW_DAYS = 30;
 
 function client() {
   const supabaseClient = supabase();
@@ -81,44 +78,11 @@ function client() {
   return supabaseClient;
 }
 
-function since(hours: number): string {
-  return new Date(Date.now() - hours * 3_600_000).toISOString();
-}
-
-async function recentReportRows(): Promise<StatusReportRow[]> {
-  const { data, error } = await client()
-    .from("status_reports")
-    .select("*")
-    .gte("created_at", since(REPORT_WINDOW_DAYS * 24))
-    .order("created_at", { ascending: false })
-    .returns<StatusReportRow[]>();
-  if (error) throw new SupabaseError("Could not read status_reports", error);
-  return data ?? [];
-}
-
-/**
- * How many of one spot's claims the detail screen reads.
- *
- * A count rather than a window, because for a single spot it is strictly
- * better: a busy kerb gives fifty recent claims, a forgotten one gives its
- * last few however old they are, and either way the query is bounded by a
- * number instead of by how popular the street happens to be.
- */
-const SPOT_CLAIM_SAMPLE = 50;
-
-/** Every spot, with the newest claim about it flattened on. */
+/** Every spot the project knows about. */
 export async function fetchSpots(): Promise<ParkingSpot[]> {
-  const [spots, reports] = await Promise.all([
-    client().from("spots").select("*").returns<SpotRow[]>(),
-    recentReportRows(),
-  ]);
+  const spots = await client().from("spots").select("*").returns<SpotRow[]>();
   if (spots.error) throw new SupabaseError("Could not read spots", spots.error);
-  return toParkingSpots(spots.data ?? [], reports);
-}
-
-/** Every claim recent enough to still be worth weighing. */
-export async function fetchStatusReports(): Promise<SpotReport[]> {
-  return (await recentReportRows()).map(toSpotReport);
+  return toParkingSpots(spots.data ?? []);
 }
 
 /**
@@ -168,36 +132,13 @@ export async function deleteAvailabilityWindow(id: string): Promise<void> {
   if (error) throw new SupabaseError("Could not withdraw the offer", error);
 }
 
-/** File a claim about a spot, as the signed-in user. */
-export async function insertStatusReport(input: {
-  spotId: string;
-  status: SpotStatus;
-  reporterId?: string;
-  leavingInMin?: number;
-  spaces?: number;
-}): Promise<SpotReport> {
-  const reporterId = input.reporterId ?? (await currentReporterId());
-  const { data, error } = await client()
-    .from("status_reports")
-    .insert({
-      spot_id: input.spotId,
-      status: input.status,
-      reporter_id: reporterId,
-      leaving_in_min: input.leavingInMin ?? null,
-      spaces: input.spaces ?? null,
-    } satisfies StatusReportInsert)
-    .select()
-    .returns<StatusReportRow[]>()
-    .single();
-  if (error || !data) {
-    throw new SupabaseError("Could not file the status report", error);
-  }
-  return toSpotReport(data);
-}
-
 // ---------------------------------------------------------------------------
 // Blocker reports
 // ---------------------------------------------------------------------------
+
+function since(hours: number): string {
+  return new Date(Date.now() - hours * 3_600_000).toISOString();
+}
 
 /** Where the photographs live. Public, because a forwarded complaint is text. */
 const PHOTO_BUCKET = "report-photos";
@@ -381,20 +322,12 @@ export async function updateReportRow(
 
 /** One spot by id, or undefined when there is no such row. */
 export async function fetchSpotById(id: string): Promise<ParkingSpot | undefined> {
-  const [spot, reports] = await Promise.all([
-    client().from("spots").select("*").eq("id", id).returns<SpotRow[]>().maybeSingle(),
-    client()
-      .from("status_reports")
-      .select("*")
-      .eq("spot_id", id)
-      .order("created_at", { ascending: false })
-      .limit(SPOT_CLAIM_SAMPLE)
-      .returns<StatusReportRow[]>(),
-  ]);
-  if (spot.error) throw new SupabaseError("Could not read spot", spot.error);
-  if (reports.error) {
-    throw new SupabaseError("Could not read status_reports", reports.error);
-  }
-  if (!spot.data) return undefined;
-  return toParkingSpots([spot.data], reports.data ?? [])[0];
+  const { data, error } = await client()
+    .from("spots")
+    .select("*")
+    .eq("id", id)
+    .returns<SpotRow[]>()
+    .maybeSingle();
+  if (error) throw new SupabaseError("Could not read spot", error);
+  return data ? toParkingSpot(data) : undefined;
 }

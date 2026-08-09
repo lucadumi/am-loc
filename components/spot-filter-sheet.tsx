@@ -1,6 +1,6 @@
 import { MapPin } from "lucide-react-native";
 import { ReactNode } from "react";
-import { Pressable, ScrollView, View, useWindowDimensions } from "react-native";
+import { ScrollView, View, useWindowDimensions } from "react-native";
 
 import { BottomSheet } from "@/components/bottom-sheet";
 import { IntervalSlider } from "@/components/interval-slider";
@@ -8,7 +8,7 @@ import { RangeSlider } from "@/components/range-slider";
 import { Segmented } from "@/components/segmented";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
-import { palette, statusColor, statusLabel } from "@/constants/theme";
+import { palette } from "@/constants/theme";
 import {
   DISTANCE_MAX,
   DISTANCE_MIN,
@@ -22,10 +22,7 @@ import {
 } from "@/lib/filters";
 import { formatDistance } from "@/lib/geo";
 import { haptics } from "@/lib/haptics";
-import { cn } from "@/lib/utils";
-import { SpotFilters, SpotKind, SpotStatus } from "@/types";
-
-const STATUS_ORDER: SpotStatus[] = ["free", "leaving", "taken"];
+import { SpotFilters, SpotKind } from "@/types";
 
 const KIND_OPTIONS: { key: "all" | SpotKind; label: string }[] = [
   { key: "all", label: "Toate" },
@@ -62,41 +59,6 @@ function Section({
   );
 }
 
-/** A toggleable status pill tinted with its status color when selected. */
-function StatusChip({
-  status,
-  active,
-  onPress,
-}: {
-  status: SpotStatus;
-  active: boolean;
-  onPress: () => void;
-}) {
-  const color = statusColor[status];
-  return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="button"
-      accessibilityState={{ selected: active }}
-      className={cn(
-        "flex-row items-center gap-2 rounded-full border-hairline px-3.5 py-2",
-        active ? "border-transparent" : "border-border bg-secondary",
-      )}
-      style={active ? { backgroundColor: color + "22", borderColor: color } : undefined}
-    >
-      <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
-      <Text
-        className={cn(
-          "font-semi text-sm",
-          active ? "text-foreground" : "text-muted-foreground",
-        )}
-      >
-        {statusLabel[status]}
-      </Text>
-    </Pressable>
-  );
-}
-
 /**
  * Bottom-sheet of spot filters. Edits are applied live to the parent's
  * {@link SpotFilters} (the map updates behind the sheet); the primary button
@@ -122,15 +84,6 @@ export function SpotFilterSheet({
   const { height } = useWindowDimensions();
   const set = (patch: Partial<SpotFilters>) => onChange({ ...filters, ...patch });
 
-  const toggleStatus = (s: SpotStatus) => {
-    haptics.selection();
-    set({
-      statuses: filters.statuses.includes(s)
-        ? filters.statuses.filter((x) => x !== s)
-        : [...filters.statuses, s],
-    });
-  };
-
   const kindValue: "all" | SpotKind =
     filters.kinds.length === 1 ? filters.kinds[0] : "all";
 
@@ -142,19 +95,6 @@ export function SpotFilterSheet({
         style={{ maxHeight: height * 0.58 }}
         showsVerticalScrollIndicator={false}
       >
-        <Section label="Disponibilitate">
-          <View className="flex-row flex-wrap gap-2">
-            {STATUS_ORDER.map((s) => (
-              <StatusChip
-                key={s}
-                status={s}
-                active={filters.statuses.includes(s)}
-                onPress={() => toggleStatus(s)}
-              />
-            ))}
-          </View>
-        </Section>
-
         <Section label="Tip loc">
           <Segmented
             options={KIND_OPTIONS}

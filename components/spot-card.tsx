@@ -11,7 +11,6 @@ import { StatusBadge } from "@/components/status-badge";
 import { palette } from "@/constants/theme";
 import { formatPrice } from "@/lib/geo";
 import { spotName } from "@/lib/spot-name";
-import type { ConfidenceLevel } from "@/lib/spot-state";
 import { ParkingSpot } from "@/types";
 
 /**
@@ -27,14 +26,11 @@ export function SpotCard({
   fullWidth,
 }: {
   /**
-   * `confidenceLevel` is optional because a bare `ParkingSpot` has none, but
-   * every screen that draws this card runs its spots through `believeAll`
-   * first, so in practice it is always there. It has to reach the dot: a spot
-   * nobody has reported on is flattened to `taken`, and drawn as a solid red
-   * dot that becomes a claim the app cannot support -- 838 of the 851 imported
-   * car parks are in exactly that position.
+   * A public spot carries no status, so it gets no badge: the app knows where
+   * this car park is and what it charges, and nothing about whether there is
+   * room in it. Only an owner's declaration fills the corner.
    */
-  spot: ParkingSpot & { walkMin?: number; confidenceLevel?: ConfidenceLevel };
+  spot: ParkingSpot & { walkMin?: number };
   onPress?: () => void;
   fullWidth?: boolean;
 }) {
@@ -43,13 +39,11 @@ export function SpotCard({
       <Card className="overflow-hidden">
         <View className="relative">
           <SpotImage kind={spot.kind} className="h-32 w-full" />
-          <View className="absolute left-2 top-2">
-            <StatusBadge
-              status={spot.status}
-              unknown={spot.confidenceLevel === "none"}
-              dotOnly
-            />
-          </View>
+          {spot.status ? (
+            <View className="absolute left-2 top-2">
+              <StatusBadge status={spot.status} dotOnly />
+            </View>
+          ) : null}
           {/* The price, over the placeholder panel rather than in the body, so
               a driver comparing cards reads what each one costs without
               looking down.

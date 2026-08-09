@@ -239,7 +239,6 @@ function toSpots(elements) {
       /* No observation exists, so this is not a claim that it is free. It is
          the conservative flattening, and `withBelief` gives these spots a
          confidence of zero and the label "Fără raportări". */
-      status: "taken",
       latitude: round(point.lat),
       longitude: round(point.lon),
       totalCount: capacityOf(tags),
@@ -330,7 +329,7 @@ export const PARKING_ATTRIBUTION = "© OpenStreetMap contributors (ODbL)";
  */
 export const PUBLIC_PARKING: ParkingSpot[] = [
 ${spots.map(serialise).join("\n")}
-].map((spot) => ({ ...spot, updatedAt: PARKING_FETCHED_AT }) as ParkingSpot);
+];
 `;
 }
 

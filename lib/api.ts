@@ -8,10 +8,9 @@ import {
   etaMinutes,
   type LatLng,
 } from "@/lib/geo.ts";
-import { currentIdentity, resolveIdentity } from "@/lib/identity.ts";
+import { currentIdentity, LOCAL_IDENTITY, resolveIdentity } from "@/lib/identity.ts";
 import { publish } from "@/lib/live.ts";
 import { isRemote } from "@/lib/remote.ts";
-import { LOCAL_REPORTER_ID } from "@/lib/spot-reports.ts";
 // `import type`, not a plain import: `@/types` is types only, so a value
 // import of it survives Node's type stripping and asks for exports that do not
 // exist at runtime. That is the difference between this module being covered
@@ -147,7 +146,7 @@ async function loadStoredReports(): Promise<BlockerReport[]> {
       JSON.parse(raw);
     return stored.map(({ photoUri, ...report }) => ({
       ...(report as BlockerReport),
-      reportedBy: report.reportedBy ?? LOCAL_REPORTER_ID,
+      reportedBy: report.reportedBy ?? LOCAL_IDENTITY,
       photos:
         photoUri && !report.photos?.length ? [photoUri] : report.photos,
     }));

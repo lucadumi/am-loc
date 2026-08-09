@@ -7,8 +7,8 @@
  * `lib/supabase.ts`, it can be checked with plain objects and no network, no
  * device and no credentials.
  *
- * The one genuinely interesting decision in this file is what a spot's
- * `status` means, and it is explained at `toParkingSpot`.
+ * Note what is absent: a status. `spots` has no such column and the app no
+ * longer derives one for a public place -- see `SpotStatus` in @/types.
  */
 
 import type { AvailabilityWindow, BlockerReport, ParkingSpot } from "@/types";
@@ -19,77 +19,23 @@ import type {
   ReportInsert,
   ReportRow,
   SpotRow,
-  StatusReportRow,
 } from "@/types/database.ts";
-
-import type { SpotReport } from "./spot-state.ts";
 
 /** Postgres says `null`; the app's optional fields say `undefined`. */
 const optional = <T>(value: T | null): T | undefined =>
   value === null ? undefined : value;
 
-/** One row of `status_reports` as the claim the belief model understands. */
-export function toSpotReport(row: StatusReportRow): SpotReport {
-  return {
-    spotId: row.spot_id,
-    status: row.status,
-    at: row.created_at,
-    reporterId: row.reporter_id,
-    leavingInMin: optional(row.leaving_in_min),
-    spaces: optional(row.spaces),
-  };
-}
-
 /**
- * The newest claim per spot.
+ * A spot row, as the `ParkingSpot` the screens read.
  *
- * Ordering is done here rather than trusted from the query, because a mapping
- * that is only correct when the caller remembered `order by created_at desc`
- * is a trap for the next person to write a query.
+ * A straight rename of columns, and that is the whole of it now. It used to
+ * flatten the newest claim about the kerb onto the spot and invent a `taken`
+ * for the ones nobody had claimed anything about, which put a made-up status on
+ * 838 of the 851 imported car parks. There is no status here at all any more:
+ * where the place is, how big it is, what it charges. A private spot gets one
+ * from its owner's windows, in `applyDeclaration`.
  */
-export function latestBySpot(
-  rows: StatusReportRow[],
-): Map<string, StatusReportRow> {
-  const latest = new Map<string, StatusReportRow>();
-  for (const row of rows) {
-    const current = latest.get(row.spot_id);
-    if (!current || Date.parse(row.created_at) > Date.parse(current.created_at)) {
-      latest.set(row.spot_id, row);
-    }
-  }
-  return latest;
-}
-
-/**
- * A spot row, flattened into the `ParkingSpot` the screens read.
- *
- * `spots` deliberately has no status column: a spot's status is not a property
- * of the kerb, it is the current state of an argument about it. But filters,
- * lists and ranking all read `spot.status`, so the newest claim is flattened
- * back onto the spot here, exactly as the seed fixtures already carry one.
- *
- * **A spot nobody has reported on reads as `taken`, as of the moment it was
- * added.** Both alternatives are worse. Calling it `free` advertises a space
- * on no evidence whatsoever, which is precisely the failure that empties a
- * community map of its users. Inventing an "unknown" status would mean
- * touching every screen that switches on the three the app has. Marking it
- * taken keeps it off the "free spots" lists while leaving it on the map, and
- * because `updatedAt` is the spot's own creation time, the belief model ages
- * the non-claim out to `stale` on its own and draws it hollow. The map ends up
- * saying "somebody added this and nobody has checked it", which is true.
- *
- * **That placeholder is attributed to nobody, deliberately.** `reportedBy`
- * looks like a harmless thing to fall back to `created_by` for, and it is not:
- * `seedReport` would turn the invented "taken" into a claim authored by
- * whoever added the spot, and `believe` would hand it back as `belief.source`
- * -- an attribution the UI shows and anything built on top of it would credit.
- * Bulk-adding spots would then manufacture authorship of claims nobody made.
- * Left undefined, the invented claim has no author, which is the truth.
- */
-export function toParkingSpot(
-  row: SpotRow,
-  latest?: StatusReportRow,
-): ParkingSpot {
+export function toParkingSpot(row: SpotRow): ParkingSpot {
   /* A row that does not say is a public kerb. Defaulting the other way would
      turn anything unmarked into somebody's private property that nobody may
      report on, and quietly empty the map. */
@@ -104,14 +50,6 @@ export function toParkingSpot(
     area: optional(row.area),
     latitude: row.latitude,
     longitude: row.longitude,
-    /* A private spot's status is not read from reports at all -- there are
-       none, and a stranger may not file any. It is left shut here and
-       overwritten by `withBelief` from the owner's windows, so a spot whose
-       owner has offered nothing reads as taken rather than as free. */
-    status: access === "private" ? "taken" : (latest?.status ?? "taken"),
-    updatedAt: latest?.created_at ?? row.created_at,
-    leavingInMin: latest ? optional(latest.leaving_in_min) : undefined,
-    reportedBy: access === "private" ? undefined : latest?.reporter_id,
     ownerId: optional(row.owner_id),
     ownerName: optional(row.owner_name),
     totalCount: optional(row.total_count),
@@ -125,13 +63,9 @@ export function toParkingSpot(
   };
 }
 
-/** Spot rows plus the claims made about them, joined in one pass. */
-export function toParkingSpots(
-  rows: SpotRow[],
-  reports: StatusReportRow[],
-): ParkingSpot[] {
-  const latest = latestBySpot(reports);
-  return rows.map((row) => toParkingSpot(row, latest.get(row.id)));
+/** A page of spot rows. */
+export function toParkingSpots(rows: SpotRow[]): ParkingSpot[] {
+  return rows.map(toParkingSpot);
 }
 
 
