@@ -150,9 +150,14 @@ export function SpotFilterSheet({
           variant="secondary"
           label="Resetează"
           className="flex-1"
+          /* Closes as well as clears. Resetting is a decision that has been
+             made, not a step towards another one -- leaving the sheet open
+             afterwards asks the driver to dismiss a panel whose every control
+             they have just put back to where it started. */
           onPress={() => {
             haptics.selection();
             onReset();
+            onClose();
           }}
         />
         <Button

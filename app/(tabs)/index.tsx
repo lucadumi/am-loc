@@ -156,7 +156,19 @@ export default function HomeScreen() {
             onNotifications={() => router.push("/notifications")}
             onArchived={() => router.push("/archived")}
           />
-          <SearchBar onPress={() => router.push("/search")} />
+          {/* Straight to the map with the search open, rather than to a
+              screen of its own. The answers are places on a map, so the map is
+              where the question belongs -- and a tab that is already mounted
+              needs a fresh value each time, or a second tap on the same
+              parameter changes nothing. */}
+          <SearchBar
+            onPress={() =>
+              router.push({
+                pathname: "/map",
+                params: { search: String(Date.now()) },
+              })
+            }
+          />
           <Text className="font-title text-base text-primary-foreground">
             Categorii
           </Text>

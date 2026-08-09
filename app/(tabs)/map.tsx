@@ -1,27 +1,36 @@
 import {
+  MapPin,
   Minus,
   Navigation,
   Plus,
   SlidersHorizontal,
   TriangleAlert,
 } from "lucide-react-native";
-import { useCallback, useMemo, useRef, useState } from "react";
-import { Pressable, View } from "react-native";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Pressable, ScrollView, View, useWindowDimensions } from "react-native";
 import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
+import Animated, { FadeIn, FadeInUp, FadeOutUp } from "react-native-reanimated";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 
 import { FloatingControl } from "@/components/floating-control";
 import { SearchBar } from "@/components/search-bar";
+import {
+  DestinationField,
+  DestinationHeader,
+  hasSuggestions,
+  ResultList,
+  SuggestionList,
+} from "@/components/destination-search";
+import { MapSheet } from "@/components/map-sheet";
 import { SpotFilterSheet } from "@/components/spot-filter-sheet";
 import { IconButton } from "@/components/ui/icon-button";
 import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
-import { palette, shadow, statusColor, statusLabel } from "@/constants/theme";
-import { floatingTabBarInset } from "@/constants/layout";
+import { palette, shadow, statusColor } from "@/constants/theme";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { useLive } from "@/hooks/use-live";
-import { getReports, getSpots } from "@/lib/api";
+import { getReports, getSpots, rankNearby } from "@/lib/api";
 import { withOffers, type OfferedSpot } from "@/lib/private-spots";
 import {
   DEFAULT_FILTERS,
@@ -29,46 +38,10 @@ import {
   filterSpots,
   spotCountLabel,
 } from "@/lib/filters";
+import { floatingTabBarInset } from "@/constants/layout";
 import { BUCHAREST } from "@/lib/geo";
+import { GeocodeError, searchPlaces, type Place } from "@/lib/geocode";
 import { BlockerReport, SpotFilters } from "@/types";
-
-/**
- * What the pins mean.
- *
- * The hollow entry is not decoration. `unreliable` draws a pin hollow whenever
- * the claim behind it has gone stale, is contested, or was never made at all --
- * and that last case is 838 of the 851 imported car parks, so the commonest
- * pin on this map is a grey outline. A legend that listed only the three solid
- * states would explain the rare pins and leave the usual one a mystery.
- */
-const LEGEND_ITEMS: { color: string; label: string; hollow?: boolean }[] = [
-  { color: statusColor.free, label: `${statusLabel.free} · loc privat` },
-  { color: statusColor.taken, label: `${statusLabel.taken} · loc privat` },
-  { color: palette.mutedForeground, label: "Parcare publică", hollow: true },
-  { color: palette.destructive, label: "Sesizare" },
-];
-
-function Legend() {
-  return (
-    <View className="gap-2 rounded-xl border-hairline border-border bg-card px-3.5 py-3">
-      {LEGEND_ITEMS.map((item) => (
-        <View key={item.label} className="flex-row items-center gap-2.5">
-          <View className="w-4 items-center">
-            <View
-              className="h-2.5 w-2.5 rounded-full"
-              style={
-                item.hollow
-                  ? { borderWidth: 1.5, borderColor: item.color }
-                  : { backgroundColor: item.color }
-              }
-            />
-          </View>
-          <Text className="font-mid text-xs text-foreground">{item.label}</Text>
-        </View>
-      ))}
-    </View>
-  );
-}
 
 /** Square button beside the search bar; a yellow badge shows the active count. */
 function FilterButton({
@@ -110,6 +83,22 @@ function pinColor(spot: OfferedSpot): string {
   return spot.status ? statusColor[spot.status] : palette.mutedForeground;
 }
 
+/**
+ * Where the sheet rests, as fractions of the screen.
+ *
+ * Two stops rather than three. The third would be a "get out of the way" state,
+ * and this tab is already a map with no list on it -- a driver who wants the
+ * city rather than the results closes the search. Written as an array so that
+ * conclusion costs one number to reverse rather than a rewrite of the gesture.
+ */
+const SHEET_STOPS = [0.45, 0.88];
+
+/** How far from the destination is still worth walking. */
+const SEARCH_RADIUS_M = 1200;
+
+/** How long to wait for the typing to stop before spending a request. */
+const TYPING_SETTLE_MS = 350;
+
 /** Nobody has standing to say whether this one is free. */
 function unreliable(spot: OfferedSpot): boolean {
   return !spot.status;
@@ -118,15 +107,18 @@ function unreliable(spot: OfferedSpot): boolean {
 export default function MapScreen() {
   const mapRef = useRef<MapView>(null);
   const router = useRouter();
-  const location = useCurrentLocation();
+  const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
+  const location = useCurrentLocation();
   /* Arriving from a report: where to fly, and which pin to ring. Flown once
      per set of coordinates rather than on every focus, so coming back to the
      tab later leaves the map where the driver left it. */
-  const { lat, lng, focus } = useLocalSearchParams<{
+  const { lat, lng, focus, search } = useLocalSearchParams<{
     lat?: string;
     lng?: string;
     focus?: string;
+    /** A nonce from the home screen's search bar; its value is never read. */
+    search?: string;
   }>();
   const flownTo = useRef<string | null>(null);
   const [spots, setSpots] = useState<OfferedSpot[]>([]);
@@ -143,6 +135,24 @@ export default function MapScreen() {
    * like.
    */
   const [ready, setReady] = useState(false);
+
+  /* The search, as three separate things rather than one "mode" enum. They are
+     genuinely independent: a driver can reopen the field over an existing
+     destination and change their mind, which has to leave the old destination
+     standing until a new one is picked. */
+  const [searching, setSearching] = useState(false);
+  const [query, setQuery] = useState("");
+  const [destination, setDestination] = useState<Place | null>(null);
+  /* What the sheet is showing, which outlives `destination` by one animation:
+     clearing it has to leave something on screen to slide away, or the sheet
+     would vanish mid-gesture. */
+  const [sheetPlace, setSheetPlace] = useState<Place | null>(null);
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [seeking, setSeeking] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+
+  /** Which stop the sheet rests at. Searching always wants the tall one. */
+  const [sheetIndex, setSheetIndex] = useState(SHEET_STOPS.length - 1);
 
   const load = useCallback(() => {
     getSpots()
@@ -201,6 +211,50 @@ export default function MapScreen() {
     }, [lat, lng]),
   );
 
+  /* Debounced, aborted and rate-limited, in that order. Nominatim runs on
+     donated hardware and asks for one request a second; `searchPlaces` enforces
+     that itself, and this keeps the queue from filling up with keystrokes whose
+     answers nobody will ever read. */
+  useEffect(() => {
+    if (!searching) return;
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      setSeeking(true);
+      setSearchError(null);
+      searchPlaces(query, controller.signal)
+        .then((found) => {
+          if (!controller.signal.aborted) setPlaces(found);
+        })
+        .catch((error) => {
+          if (controller.signal.aborted) return;
+          console.error("Could not search for a destination", error);
+          setSearchError(
+            error instanceof GeocodeError && error.message
+              ? error.message
+              : "Nu am putut căuta acum.",
+          );
+        })
+        .finally(() => {
+          if (!controller.signal.aborted) setSeeking(false);
+        });
+    }, TYPING_SETTLE_MS);
+
+    return () => {
+      controller.abort();
+      clearTimeout(timer);
+    };
+  }, [query, searching]);
+
+  /* Arriving from the home screen's search bar. Keyed on the nonce rather than
+     on its presence, because this tab stays mounted: without a changing value,
+     a second tap would find the parameter unchanged and do nothing. */
+  const openedFor = useRef<string | null>(null);
+  useEffect(() => {
+    if (!search || openedFor.current === search) return;
+    openedFor.current = search;
+    setSearching(true);
+  }, [search]);
+
   const activeCount = countActiveFilters(filters);
   const visibleSpots = useMemo(
     () =>
@@ -213,6 +267,118 @@ export default function MapScreen() {
       ),
     [spots, filters, location],
   );
+
+  /* What the sheet lists, and what the map draws, are the same set on purpose.
+     A list of twelve car parks over a map showing eight hundred pins would have
+     the driver hunting for the one they just read about. */
+  const ranked = useMemo(
+    () =>
+      destination
+        ? rankNearby(visibleSpots, destination, { radiusM: SEARCH_RADIUS_M })
+        : null,
+    [visibleSpots, destination],
+  );
+  const pinned = ranked ?? visibleSpots;
+
+  /* What the filter controls are counting. With a destination set, the honest
+     number is what is actually on the map and in the sheet -- the whole city's
+     total would not change when the driver tightened a filter they can see the
+     effect of. */
+  const shownCount = pinned.length;
+
+  /**
+   * How much of the map is hidden behind something, so the map can stop putting
+   * pins there.
+   *
+   * `mapPadding` does not crop the map -- it tells it which rectangle is
+   * actually being looked at, so centring, zooming and the region it flies to
+   * all resolve inside the visible strip rather than behind the sheet. Without
+   * it, flying to a destination puts it in the middle of the screen, which with
+   * the sheet up is halfway underneath it.
+   */
+  const sheetShowing = !!destination && !searching;
+  const mapPadding = useMemo(
+    () => ({
+      top: 0,
+      right: 0,
+      bottom: sheetShowing
+        ? height * (SHEET_STOPS[sheetIndex] ?? SHEET_STOPS[0]) +
+          floatingTabBarInset(insets.bottom)
+        : 0,
+      left: 0,
+    }),
+    [sheetShowing, sheetIndex, height, insets.bottom],
+  );
+
+  /* Both dependencies matter. Reopening the search hides the sheet, which drops
+     its contents; backing out of the search has to put them back, and only
+     `searching` changed. */
+  useEffect(() => {
+    if (destination && !searching) setSheetPlace(destination);
+  }, [destination, searching]);
+
+  /* Fly once per destination, after the render that applied the padding. */
+  useEffect(() => {
+    if (!destination) return;
+    const timer = setTimeout(
+      () =>
+        mapRef.current?.animateToRegion(
+          {
+            latitude: destination.latitude,
+            longitude: destination.longitude,
+            latitudeDelta: 0.018,
+            longitudeDelta: 0.018,
+          },
+          600,
+        ),
+      60,
+    );
+    return () => clearTimeout(timer);
+  }, [destination]);
+
+  const suggestionsOpen = hasSuggestions({
+    query,
+    places,
+    loading: seeking,
+    error: searchError,
+  });
+
+  const openSearch = () => {
+    setSearching(true);
+    setQuery("");
+    setPlaces([]);
+    setSearchError(null);
+  };
+
+  /* Backing out leaves whatever was already chosen alone. A driver who opens
+     the field over an existing destination and changes their mind wants the old
+     answer back, not an empty map. */
+  const closeSearch = () => {
+    setSearching(false);
+    setQuery("");
+    setPlaces([]);
+  };
+
+  const pickDestination = (place: Place) => {
+    setDestination(place);
+    setSearching(false);
+    setQuery("");
+    setPlaces([]);
+    setSearchError(null);
+    /* Down to the short stop, because the point of choosing a destination on a
+       map is seeing where the answers are in relation to it. The flight itself
+       is left to the effect below, so that it happens after `mapPadding` has
+       been told the sheet is there -- flying first would centre the destination
+       on the whole screen and then leave it behind the sheet. */
+    setSheetIndex(0);
+  };
+
+  const clearDestination = () => {
+    setDestination(null);
+    setSearching(false);
+    setQuery("");
+    setPlaces([]);
+  };
 
   const zoom = async (delta: number) => {
     const cam = await mapRef.current?.getCamera();
@@ -245,8 +411,35 @@ export default function MapScreen() {
         userInterfaceStyle="light"
         showsMyLocationButton={false}
         showsCompass={false}
+        mapPadding={mapPadding}
       >
-        {visibleSpots.map((s) => (
+        {destination ? (
+          /* Coral, and larger than a parking pin, because it is the one thing
+             on the map that is not a parking place. `palette.coral` is already
+             the app's "here is a location" colour -- see the note beside it in
+             constants/theme.ts -- so a driver who has seen a spot card knows
+             what this is without a legend. */
+          <Marker
+            key="destination"
+            coordinate={{
+              latitude: destination.latitude,
+              longitude: destination.longitude,
+            }}
+            anchor={{ x: 0.5, y: 0.5 }}
+            zIndex={10}
+          >
+            <View className="items-center justify-center">
+              <View
+                className="h-11 w-11 items-center justify-center rounded-full border-[3px] border-background"
+                style={{ backgroundColor: palette.coral, ...shadow.card }}
+              >
+                <MapPin size={20} color="#FFFFFF" strokeWidth={2.4} />
+              </View>
+            </View>
+          </Marker>
+        ) : null}
+
+        {pinned.map((s) => (
           <Marker
             key={s.id}
             coordinate={{ latitude: s.latitude, longitude: s.longitude }}
@@ -340,27 +533,80 @@ export default function MapScreen() {
         </View>
       ) : null}
 
+      {/* No band at all: these are controls floating over a city, and the city
+          is the thing worth seeing. The brand colour moved to the search
+          field's border, where it marks the one control being used rather than
+          tinting the map behind it. */}
       <SafeAreaView
         edges={["top"]}
-        className="absolute inset-x-0 top-0 bg-primary px-5 pb-3 pt-2"
+        className="absolute inset-x-0 top-0 px-5 pb-3 pt-2"
         pointerEvents="box-none"
       >
-        <View className="flex-row items-center gap-3">
-          <SearchBar
-            placeholder="Caută un loc de parcare…"
-            className="flex-1"
-            onPress={() => router.push("/search")}
-          />
-          <FilterButton count={activeCount} onPress={() => setFilterOpen(true)} />
-        </View>
-        {activeCount > 0 ? (
+        {searching ? (
+          <Animated.View entering={FadeIn.duration(140)}>
+            <DestinationField
+              value={query}
+              onChange={setQuery}
+              onCancel={closeSearch}
+              autoFocus
+            />
+          </Animated.View>
+        ) : (
+          <Animated.View
+            entering={FadeIn.duration(140)}
+            className="flex-row items-center gap-3"
+          >
+            <SearchBar
+              placeholder={destination ? destination.name : "Unde vrei să mergi?"}
+              className="flex-1"
+              accent
+              style={shadow.card}
+              onPress={openSearch}
+            />
+            <FilterButton count={activeCount} onPress={() => setFilterOpen(true)} />
+          </Animated.View>
+        )}
+
+        {/* The answers, hanging off the field that asked for them. A card over
+            the map rather than a sheet from the bottom: the question is at the
+            top of the screen, so the addresses that might match it belong
+            directly beneath, and the parking found around whichever is chosen
+            stays in the sheet below -- which leaves the middle of the map, and
+            the destination pin in it, visible between the two. */}
+        {searching && suggestionsOpen ? (
+          <Animated.View
+            entering={FadeInUp.duration(160)}
+            exiting={FadeOutUp.duration(120)}
+            className="mt-3 overflow-hidden rounded-2xl bg-card"
+            style={shadow.card}
+          >
+            {/* Sized against the screen rather than a constant. 320px was
+                generous on a large phone and cut the fifth answer off on a
+                small one, which reads as the app having found fewer places. */}
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              style={{ maxHeight: height * 0.42 }}
+            >
+              <SuggestionList
+                query={query}
+                places={places}
+                loading={seeking}
+                error={searchError}
+                onPick={pickDestination}
+              />
+            </ScrollView>
+          </Animated.View>
+        ) : null}
+        {/* Hidden while the dropdown is open: the panel covers it, and a count
+            of results is not the question being asked at that moment. */}
+        {activeCount > 0 && !searching ? (
           <Pressable
             onPress={() => setFilterOpen(true)}
             className="mt-3 flex-row items-center gap-2 self-start rounded-full bg-indigo-600 px-3.5 py-1.5"
             style={shadow.card}
           >
             <Text className="font-heavy text-xs text-card">
-              {spotCountLabel(visibleSpots.length)}
+              {spotCountLabel(shownCount)}
             </Text>
             <View className="h-1 w-1 rounded-full bg-white/60" />
             <Text className="font-semi text-xs text-card">Filtre active</Text>
@@ -387,13 +633,36 @@ export default function MapScreen() {
         </FloatingControl>
       </View>
 
-      <View
-        className="absolute left-5"
-        style={{ bottom: floatingTabBarInset(insets.bottom) + 8 }}
-        pointerEvents="none"
-      >
-        <Legend />
-      </View>
+      {/* Only once there is something to say. Until the driver searches, this
+          tab is the map it has always been -- a sheet resting over it with
+          nothing in it would be a permanent tax on the city. */}
+      {sheetPlace ? (
+        <MapSheet
+          snapPoints={SHEET_STOPS}
+          visible={!!destination && !searching}
+          onHidden={() => setSheetPlace(null)}
+          index={sheetIndex}
+          onIndexChange={setSheetIndex}
+          bottomInset={floatingTabBarInset(insets.bottom)}
+          header={
+            <DestinationHeader
+              place={sheetPlace}
+              count={ranked?.length ?? 0}
+              onPress={openSearch}
+              onClear={clearDestination}
+            />
+          }
+        >
+          <ScrollView>
+            <ResultList
+              spots={ranked ?? []}
+              onPick={(spot) =>
+                router.push({ pathname: "/garage", params: { id: spot.id } })
+              }
+            />
+          </ScrollView>
+        </MapSheet>
+      ) : null}
 
       <SpotFilterSheet
         open={filterOpen}
@@ -401,7 +670,7 @@ export default function MapScreen() {
         filters={filters}
         onChange={setFilters}
         onReset={() => setFilters(DEFAULT_FILTERS)}
-        resultCount={visibleSpots.length}
+        resultCount={shownCount}
         hasLocation={!!location}
       />
     </View>
