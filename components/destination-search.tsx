@@ -16,7 +16,7 @@ import { ArrowLeft, MapPin, Search, X } from "lucide-react-native";
 import { ActivityIndicator, Pressable, TextInput, View } from "react-native";
 
 import { SpotCard } from "@/components/spot-card";
-import { fieldSurface } from "@/components/ui/input";
+import { fieldVariants } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { palette, shadow } from "@/constants/theme";
 import { GEOCODER_ATTRIBUTION, type Place } from "@/lib/geocode";
@@ -52,7 +52,7 @@ export function DestinationField({
         <ArrowLeft size={20} color={palette.foreground} />
       </Pressable>
 
-      <View className={cn(fieldSurface, "flex-1 border-primary")}>
+      <View className={cn(fieldVariants({ accent: true }), "flex-1")}>
         <Search size={20} color={palette.primary} />
         <TextInput
           value={value}
