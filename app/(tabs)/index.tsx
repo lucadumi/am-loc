@@ -1,14 +1,14 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import {
-  ArrowRight,
   ArrowUpRight,
   ChevronRight,
   History,
 } from "lucide-react-native";
 import { useCallback, useMemo, useState } from "react";
-import { Image, Pressable, ScrollView, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { Banner } from "@/components/banner";
 import { GreetingHeader } from "@/components/greeting-header";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import { SearchBar } from "@/components/search-bar";
@@ -17,7 +17,7 @@ import { SpotCard } from "@/components/spot-card";
 import { SpotImage } from "@/components/spot-image";
 import { Text } from "@/components/ui/text";
 import { VehicleChips } from "@/components/vehicle-chips";
-import { palette, scrim } from "@/constants/theme";
+import { palette } from "@/constants/theme";
 import { floatingTabBarInset } from "@/constants/layout";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { useLive } from "@/hooks/use-live";
@@ -212,26 +212,12 @@ export default function HomeScreen() {
             )}
           </View>
 
-          {/* Promo banner → find parking on the map */}
-          <Pressable onPress={() => router.push("/map")} className="mt-7">
-            <Image
-              source={require("../../assets/images/parking.jpg")}
-              style={{ width: "100%", height: 110 }}
-              resizeMode="cover"
-            />
-            <View
-              className="absolute inset-0"
-              style={{ backgroundColor: scrim.overlay }}
-            />
-            <View className="absolute inset-0 flex-row items-center px-5">
-              <Text className="flex-1 font-title text-lg leading-tight text-white">
-                Găsește parcare în câteva secunde
-              </Text>
-              <View className="ml-4 h-11 w-11 items-center justify-center rounded-full bg-primary">
-                <ArrowRight size={22} color={palette.primaryForeground} />
-              </View>
-            </View>
-          </Pressable>
+          <Banner
+            className="mt-7"
+            image={require("../../assets/images/parking.jpg")}
+            label="Găsește parcare în câteva secunde"
+            onPress={() => router.push("/map")}
+          />
 
           {last ? (
             <View className="mt-7 gap-3 px-5">
