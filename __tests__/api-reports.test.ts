@@ -17,6 +17,7 @@ import assert from "node:assert/strict";
 import { before, beforeEach, describe, test } from "node:test";
 
 import { registerTestLoader } from "./register-loader.ts";
+import type { BlockerReport } from "../types/index.ts";
 
 let api: typeof import("../lib/api.ts");
 let fake: typeof import("./fake-async-storage.ts");
@@ -97,5 +98,53 @@ describe("blocker reports with no backend configured", () => {
 
     const reports = await api.getReports();
     assert.deepEqual(reports, []);
+  });
+});
+
+describe("counting what one driver has filed", () => {
+  const report = (over: Partial<BlockerReport>): BlockerReport => ({
+    id: "r1",
+    category: "sidewalk",
+    latitude: 44.43,
+    longitude: 26.1,
+    createdAt: "2026-08-01T10:00:00Z",
+    status: "open",
+    reportedBy: "me",
+    ...over,
+  });
+
+  test("only this driver's reports are counted", () => {
+    /* The list handed in is the whole city's. A tally that forgot to filter
+       would tell a driver who has never reported anything that they have
+       filed thirty complaints. */
+    const tally = api.tallyReports(
+      [
+        report({ id: "a" }),
+        report({ id: "b", reportedBy: "somebody-else" }),
+        report({ id: "c" }),
+      ],
+      "me",
+    );
+    assert.equal(tally.filed, 2);
+  });
+
+  test("resolved is a subset of filed, and counts only proof", () => {
+    const tally = api.tallyReports(
+      [
+        report({ id: "a", status: "resolved" }),
+        report({ id: "b", status: "forwarded" }),
+        report({ id: "c", status: "open" }),
+        report({ id: "d", status: "resolved", reportedBy: "somebody-else" }),
+      ],
+      "me",
+    );
+    assert.equal(tally.filed, 3);
+    // A forwarded report is paperwork in motion, not a cleared kerb.
+    assert.equal(tally.resolved, 1);
+  });
+
+  test("a driver who has filed nothing has nothing", () => {
+    const tally = api.tallyReports([report({ reportedBy: "x" })], "me");
+    assert.deepEqual(tally, { filed: 0, resolved: 0 });
   });
 });
