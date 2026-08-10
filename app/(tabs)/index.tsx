@@ -22,6 +22,7 @@ import { floatingTabBarInset } from "@/constants/layout";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { useLive } from "@/hooks/use-live";
 import { getSpots, rankNearby } from "@/lib/api";
+import { resolveAccount } from "@/lib/identity";
 import { withOffers, type OfferedSpot } from "@/lib/private-spots";
 import { spotName } from "@/lib/spot-name";
 import { ParkingSpot } from "@/types";
@@ -32,6 +33,12 @@ export default function HomeScreen() {
   const location = useCurrentLocation();
   const [spots, setSpots] = useState<OfferedSpot[] | null>(null);
   const [failed, setFailed] = useState(false);
+  /* What to call the driver. Absent until they set one, which is what
+     `GreetingHeader` already falls back on -- so this is loaded beside the
+     spots rather than being waited for: a greeting is not worth holding the
+     page open, and "Bine ai revenit, Șofer" is the honest line for somebody
+     who has not told us their name. */
+  const [name, setName] = useState<string | undefined>();
 
   // How much to believe a spot depends on who reported it, so the reporter
   // records have to load with the spots rather than after them.
@@ -59,6 +66,12 @@ export default function HomeScreen() {
       // the driver is looking at this screen takes the same path as one that
       // changed while they were away.
       load();
+      // On focus rather than on mount: this tab stays mounted for the life of
+      // the app, so a name set on the profile screen would otherwise not show
+      // here until the app was restarted.
+      resolveAccount()
+        .then((account) => setName(account.displayName))
+        .catch(() => {});
     }, [load]),
   );
 
@@ -151,6 +164,7 @@ export default function HomeScreen() {
         >
           <GreetingHeader
             onPrimary
+            {...(name ? { name } : {})}
             subtitle={headline}
             onProfile={() => router.push("/profile")}
             onNotifications={() => router.push("/notifications")}
