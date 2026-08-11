@@ -35,7 +35,7 @@ import { Text } from "@/components/ui/text";
 import { palette, scrim, shadow, statusColor } from "@/constants/theme";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { getSpotById } from "@/lib/api";
-import { LOCAL_IDENTITY } from "@/lib/identity";
+import { resolveIdentity } from "@/lib/identity";
 import {
   distanceMeters,
   formatDistance,
@@ -73,6 +73,11 @@ export default function GarageScreen() {
   // null = loading, undefined = not found, object = resolved.
   const [spot, setSpot] = useState<OfferedSpot | null | undefined>(null);
   const [windows, setWindows] = useState<AvailabilityWindow[]>([]);
+  /* Who is looking, which decides whether the owner's controls are drawn at
+     all. Resolved beside the spot rather than read from the cache: this screen
+     is reachable by a deep link from a map pin, so it cannot assume anything
+     earlier has already asked. */
+  const [me, setMe] = useState<string | null>(null);
   const heroMap = useRef<MapView>(null);
 
   /* Bumped whenever the owner opens or withdraws a window, so the screen
@@ -89,9 +94,12 @@ export default function GarageScreen() {
       setSpot(undefined);
       return;
     }
-    Promise.all([getSpotById(id), windowsFor(id)])
-      .then(async ([found, offered]) => {
-        if (alive) setWindows(offered);
+    Promise.all([getSpotById(id), windowsFor(id), resolveIdentity()])
+      .then(async ([found, offered, identity]) => {
+        if (alive) {
+          setWindows(offered);
+          setMe(identity);
+        }
         return found ? (await withOffers([found]))[0] : undefined;
       })
       .then((s) => {
@@ -378,7 +386,7 @@ export default function GarageScreen() {
               spot={spot}
               windows={windows}
               offer={spot.offer}
-              mine={mayDeclare(spot, LOCAL_IDENTITY)}
+              mine={!!me && mayDeclare(spot, me)}
               onChanged={reload}
             />
           ) : null}

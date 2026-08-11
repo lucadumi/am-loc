@@ -407,6 +407,37 @@ export function rankNearby<T extends ParkingSpot>(
     .slice(0, limit);
 }
 
+/** What one driver has actually done, for their own profile. */
+export interface ReportTally {
+  /** Reports this identity filed. */
+  filed: number;
+  /** Of those, the ones somebody has since shown to be cleared. */
+  resolved: number;
+}
+
+/**
+ * Count what a driver has filed, from reports already in hand.
+ *
+ * Takes the list rather than fetching one, so the profile screen counts the
+ * same reports the Sesizări tab is showing rather than a second query that
+ * could disagree with it -- and so this can be tested without a device.
+ *
+ * `resolved` is counted rather than `open`, because it is the number worth
+ * showing. A complaint that is still open is a complaint nobody has acted on,
+ * and a profile that led with it would be telling a driver their reports do
+ * not work; the cleared ones are the evidence that they do.
+ */
+export function tallyReports(
+  reports: BlockerReport[],
+  identity: string,
+): ReportTally {
+  const mine = reports.filter((report) => report.reportedBy === identity);
+  return {
+    filed: mine.length,
+    resolved: mine.filter((report) => report.status === "resolved").length,
+  };
+}
+
 /** Resolve a single spot by id, across everything the app can see. */
 export async function getSpotById(id: string): Promise<ParkingSpot | undefined> {
   if (isRemote()) {

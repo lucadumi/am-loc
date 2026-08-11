@@ -1,3 +1,4 @@
+import { cva, type VariantProps } from "class-variance-authority";
 import { forwardRef } from "react";
 import { TextInput, View, type TextInputProps } from "react-native";
 
@@ -15,6 +16,46 @@ import { cn } from "@/lib/utils";
  */
 export const fieldSurface =
   "h-14 flex-row items-center gap-2.5 rounded-full border-hairline border-border bg-card px-5";
+
+/**
+ * The brand colour on a field's edge, in one place.
+ *
+ * Shared by the pill and the box below, which are different shapes of the same
+ * idea: whichever one a screen reaches for, an emphasised field is emphasised
+ * the same way. It works by replacement rather than addition -- `cn` runs
+ * tailwind-merge, so this simply supersedes the `border-border` the surfaces
+ * already carry, which an inline `borderColor` could not be relied on to do.
+ *
+ * That replacement only lands correctly because `cn` has been told
+ * `border-hairline` is a width; left to guess, tailwind-merge reads it as a
+ * colour and this class drops the border entirely. See lib/utils.ts.
+ */
+const ACCENT_EDGE = "border-primary";
+
+/**
+ * The field's surface, with or without the brand colour on its edge.
+ *
+ * `accent` marks a field the screen exists for: the destination bar over the
+ * map, the search bar once it is live, the address somebody is signing up
+ * with. It was written by hand as `border-primary` in two of those places and
+ * as `border-2 border-primary` in a third, which is not one decision made
+ * three times -- it is three different edges, and the odd one out was thicker
+ * than the others for no reason anybody chose.
+ *
+ * The width deliberately does not change. A hairline in yellow is already the
+ * loudest thing on a white card, and thickening it makes the field look
+ * focused when it is merely important.
+ *
+ * Exported as a function rather than a second string constant so the two
+ * consumers that build their own field -- `SearchBar` and `DestinationSearch`,
+ * neither of which is a `TextInput` -- get the same answer as `Input` does.
+ */
+export const fieldVariants = cva(fieldSurface, {
+  variants: {
+    accent: { true: ACCENT_EDGE, false: "" },
+  },
+  defaultVariants: { accent: false },
+});
 
 /**
  * The app's text field, and the only way one should be built.
@@ -40,16 +81,12 @@ export const fieldSurface =
  * sat visibly low the moment anybody typed. The size is set through `style`
  * here precisely so it arrives without a line height attached.
  */
-export const Input = forwardRef<TextInput, TextInputProps & {
-  className?: string;
-}>(function Input({ className, ...props }, ref) {
+export const Input = forwardRef<
+  TextInput,
+  TextInputProps & VariantProps<typeof fieldVariants> & { className?: string }
+>(function Input({ className, accent, ...props }, ref) {
   return (
-    <View
-      className={cn(
-        fieldSurface,
-        className,
-      )}
-    >
+    <View className={cn(fieldVariants({ accent }), className)}>
       <TextInput
         ref={ref}
         className="flex-1 font-sans text-foreground"
@@ -71,26 +108,37 @@ export const Input = forwardRef<TextInput, TextInputProps & {
  * Not a taller `Input`: the text starts at the top rather than being centred,
  * which is what `textAlignVertical` is for, and a full radius on a box this tall
  * would put the first character inside the curve.
+ *
+ * Takes the same `accent` as `Input`, off the same constant, so a form does not
+ * end up with a yellow field above a grey one for no reason but which shape
+ * the answer happens to need.
  */
-export const TextArea = forwardRef<TextInput, TextInputProps & { className?: string }>(
-  function TextArea({ className, ...props }, ref) {
-    return (
-      <View
-        className={cn(
-          "min-h-[92px] rounded-3xl border-hairline border-border bg-card px-5 py-4",
-          className,
-        )}
-      >
-        <TextInput
-          ref={ref}
-          multiline
-          textAlignVertical="top"
-          className="flex-1 font-sans text-base leading-6 text-foreground"
-          placeholderTextColor={palette.mutedForeground}
-          style={{ paddingVertical: 0, includeFontPadding: false }}
-          {...props}
-        />
-      </View>
-    );
+export const textAreaVariants = cva(
+  "min-h-[92px] rounded-3xl border-hairline border-border bg-card px-5 py-4",
+  {
+    variants: {
+      accent: { true: ACCENT_EDGE, false: "" },
+    },
+    defaultVariants: { accent: false },
   },
 );
+
+export const TextArea = forwardRef<
+  TextInput,
+  TextInputProps &
+    VariantProps<typeof textAreaVariants> & { className?: string }
+>(function TextArea({ className, accent, ...props }, ref) {
+  return (
+    <View className={cn(textAreaVariants({ accent }), className)}>
+      <TextInput
+        ref={ref}
+        multiline
+        textAlignVertical="top"
+        className="flex-1 font-sans text-base leading-6 text-foreground"
+        placeholderTextColor={palette.mutedForeground}
+        style={{ paddingVertical: 0, includeFontPadding: false }}
+        {...props}
+      />
+    </View>
+  );
+});

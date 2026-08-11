@@ -401,6 +401,7 @@ export default function ReportScreen() {
           <View>
             <FieldLabel>Număr de înmatriculare (opțional)</FieldLabel>
             <Input
+              accent
               placeholder="ex: B 123 ABC"
               autoCapitalize="characters"
               autoCorrect={false}
@@ -414,6 +415,7 @@ export default function ReportScreen() {
           <View>
             <FieldLabel>Detalii (opțional)</FieldLabel>
             <TextArea
+              accent
               placeholder="Cât blochează, de când, alte observații utile…"
               value={note}
               onChangeText={setNote}

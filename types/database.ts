@@ -13,12 +13,57 @@
  */
 
 import type {
+  AccountRole,
   ReportCategory,
   SpotAccess,
   SpotKind,
   SpotSource,
   SpotStatus,
 } from "./index.ts";
+
+/**
+ * A row of `profiles`: what a person says about themselves.
+ *
+ * Public, and trusted by nobody. Note what is absent and where it lives
+ * instead: the email, the phone and the second-factor enrolment are in
+ * `auth.users`, which the API does not expose at all. A column added here is a
+ * decision to publish it.
+ */
+export interface ProfileRow {
+  id: string;
+  display_name: string | null;
+  is_trader: boolean;
+  /** Stamped by a trigger when the answer changes, never sent by a client. */
+  trader_declared_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * What a person may change about themselves.
+ *
+ * Deliberately not `Partial<ProfileRow>`: the id, the dates and the trader
+ * stamp are refused or overwritten by the trigger on the table, and a type
+ * that let them be typed here would only postpone the error to the network.
+ */
+export type ProfileUpdate = Partial<
+  Pick<ProfileRow, "display_name" | "is_trader">
+>;
+
+/**
+ * A row of `user_roles`: what the project says about a person.
+ *
+ * Read-only from any client, and not by politeness -- `insert`, `update` and
+ * `delete` are revoked from `anon` and `authenticated` on the table itself, so
+ * there is no `UserRoleInsert` to write. See `0008_accounts_and_roles.sql`.
+ */
+export interface UserRoleRow {
+  user_id: string;
+  role: AccountRole;
+  granted_by: string | null;
+  granted_at: string;
+  note: string | null;
+}
 
 /** A row of `spots`. Note what is absent: status lives in `status_reports`. */
 export interface SpotRow {

@@ -1,7 +1,7 @@
 import { Search } from "lucide-react-native";
 import { Pressable, StyleProp, View, ViewStyle } from "react-native";
 
-import { fieldSurface } from "@/components/ui/input";
+import { fieldVariants } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { palette } from "@/constants/theme";
 import { cn } from "@/lib/utils";
@@ -33,14 +33,7 @@ export function SearchBar({
    * cast by a square parent around a round child is the wrong shape.
    */
   style?: StyleProp<ViewStyle>;
-  /**
-   * The brand colour on the field's edge, resting as well as active.
-   *
-   * A class rather than a `borderColor` in `style`, because `fieldSurface`
-   * already carries `border-border` and the two were fighting -- `cn` runs
-   * tailwind-merge, so the later class simply replaces the earlier one, which
-   * an inline colour could not be relied on to do.
-   */
+  /** The brand colour on the field's edge. See `fieldVariants`. */
   accent?: boolean;
 }) {
   return (
@@ -51,7 +44,7 @@ export function SearchBar({
       className={cn("flex-row items-center gap-3", className)}
     >
       <View
-        className={cn(fieldSurface, "flex-1", accent && "border-primary")}
+        className={cn(fieldVariants({ accent }), "flex-1")}
         style={style}
       >
         <Search size={20} color={accent ? palette.primary : palette.mutedForeground} />

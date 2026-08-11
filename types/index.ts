@@ -246,3 +246,90 @@ export const REPORT_CATEGORIES: {
     description: "Blochează banda de circulație",
   },
 ];
+
+/**
+ * What somebody may be.
+ *
+ * Four values, and only three are ever granted -- see `ACCOUNT_GRANTS` in
+ * lib/roles.ts. `user` is what you are for being signed in, so a grant saying
+ * so would carry no information and its absence would be ambiguous.
+ *
+ * The Postgres enum of the same name carries the same four for the same
+ * reason, so a value read out of `user_roles` maps across without translation.
+ */
+export type AccountRole = "user" | "host" | "resolver" | "admin";
+
+/**
+ * How strongly a session is authenticated.
+ *
+ * Supabase's own spelling, kept rather than renamed to something friendlier:
+ * it is what arrives in the token's `aal` claim and what
+ * `current_assurance_level` reads in SQL, and a second name for it would be a
+ * second thing to keep in step. `aal1` is a password; `aal2` is a password and
+ * a second factor.
+ */
+export type AssuranceLevel = "aal1" | "aal2";
+
+/**
+ * Who the app is acting as.
+ *
+ * Note what is absent. There is no "has enrolled a second factor" field, and
+ * that is deliberate rather than an omission: what every capability turns on
+ * is whether *this session* passed a challenge, not whether the account could
+ * have. A field saying the account owns an authenticator would be exactly the
+ * thing a future caller reached for to let a password-only session through.
+ *
+ * See lib/roles.ts for what any of it permits.
+ */
+export interface Account {
+  /**
+   * The uuid every foreign key in the schema already points at.
+   *
+   * Unchanged by signing up, which is the whole reason an anonymous driver
+   * loses nothing by making an account: `updateUser` attaches an email to the
+   * row that is already there rather than minting a second one.
+   */
+  id: string;
+  /**
+   * True while the person has no way back into their own account.
+   *
+   * An anonymous account is a full account in every respect that matters to
+   * the rest of the schema -- it owns reports, it holds a uuid -- and is not a
+   * person in the one respect that matters here: nobody can prove they are it.
+   * Whoever holds the phone is them, and if the phone goes, they go.
+   */
+  anonymous: boolean;
+  /** What has been granted, whether or not this session may exercise it. */
+  grants: AccountRole[];
+  assurance: AssuranceLevel;
+  /**
+   * Whether a confirmed authenticator exists on the account.
+   *
+   * Not a permission and never consulted as one -- `holds` turns on
+   * `assurance`, which is about this session. What this decides is which
+   * control to draw: somebody who enrolled a factor and signed in with only a
+   * password needs to be offered the challenge, and an "add one" button would
+   * be refused by the server and read as the app having lost their setup.
+   */
+  hasSecondFactor: boolean;
+  /**
+   * True between attaching an email and setting a password.
+   *
+   * The one state in which an account looks finished and is not: it has an
+   * address, so `anonymous` is false, and nothing to sign in with, so signing
+   * out would strand it. See `PENDING_PASSWORD_KEY` in lib/account.ts.
+   */
+  passwordPending: boolean;
+  /** What to call them on screen. Absent until they say. */
+  displayName?: string;
+  /** The address they signed up with. Absent while anonymous. */
+  email?: string;
+  /**
+   * ISO instant the profile row was made, which is the first time this device
+   * asked the server who it was. Absent with no project, and on a project that
+   * has not run `0008_accounts_and_roles.sql`.
+   */
+  since?: string;
+  /** Whether they have declared they are acting commercially. */
+  trader: boolean;
+}

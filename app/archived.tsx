@@ -4,5 +4,8 @@ import { WorkInProgress } from "@/components/wip";
 
 export default function ArchivedScreen() {
   const router = useRouter();
-  return <WorkInProgress title="Arhivă" onBack={() => router.back()} />;
+  /* "Salvate", not "Arhivă": that is what the button on the home header has
+     always been called and what the profile row calls it now. One thing with
+     two names is one name too many, and the screen was the odd one out. */
+  return <WorkInProgress title="Salvate" onBack={() => router.back()} />;
 }

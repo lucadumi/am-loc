@@ -1,14 +1,14 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import {
-  ArrowRight,
   ArrowUpRight,
   ChevronRight,
   History,
 } from "lucide-react-native";
 import { useCallback, useMemo, useState } from "react";
-import { Image, Pressable, ScrollView, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { Banner } from "@/components/banner";
 import { GreetingHeader } from "@/components/greeting-header";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import { SearchBar } from "@/components/search-bar";
@@ -17,11 +17,12 @@ import { SpotCard } from "@/components/spot-card";
 import { SpotImage } from "@/components/spot-image";
 import { Text } from "@/components/ui/text";
 import { VehicleChips } from "@/components/vehicle-chips";
-import { palette, scrim } from "@/constants/theme";
+import { palette } from "@/constants/theme";
 import { floatingTabBarInset } from "@/constants/layout";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { useLive } from "@/hooks/use-live";
 import { getSpots, rankNearby } from "@/lib/api";
+import { resolveAccount } from "@/lib/identity";
 import { withOffers, type OfferedSpot } from "@/lib/private-spots";
 import { spotName } from "@/lib/spot-name";
 import { ParkingSpot } from "@/types";
@@ -32,6 +33,12 @@ export default function HomeScreen() {
   const location = useCurrentLocation();
   const [spots, setSpots] = useState<OfferedSpot[] | null>(null);
   const [failed, setFailed] = useState(false);
+  /* What to call the driver. Absent until they set one, which is what
+     `GreetingHeader` already falls back on -- so this is loaded beside the
+     spots rather than being waited for: a greeting is not worth holding the
+     page open, and "Bine ai revenit, Șofer" is the honest line for somebody
+     who has not told us their name. */
+  const [name, setName] = useState<string | undefined>();
 
   // How much to believe a spot depends on who reported it, so the reporter
   // records have to load with the spots rather than after them.
@@ -59,6 +66,12 @@ export default function HomeScreen() {
       // the driver is looking at this screen takes the same path as one that
       // changed while they were away.
       load();
+      // On focus rather than on mount: this tab stays mounted for the life of
+      // the app, so a name set on the profile screen would otherwise not show
+      // here until the app was restarted.
+      resolveAccount()
+        .then((account) => setName(account.displayName))
+        .catch(() => {});
     }, [load]),
   );
 
@@ -151,6 +164,7 @@ export default function HomeScreen() {
         >
           <GreetingHeader
             onPrimary
+            {...(name ? { name } : {})}
             subtitle={headline}
             onProfile={() => router.push("/profile")}
             onNotifications={() => router.push("/notifications")}
@@ -212,26 +226,12 @@ export default function HomeScreen() {
             )}
           </View>
 
-          {/* Promo banner → find parking on the map */}
-          <Pressable onPress={() => router.push("/map")} className="mt-7">
-            <Image
-              source={require("../../assets/images/parking.jpg")}
-              style={{ width: "100%", height: 110 }}
-              resizeMode="cover"
-            />
-            <View
-              className="absolute inset-0"
-              style={{ backgroundColor: scrim.overlay }}
-            />
-            <View className="absolute inset-0 flex-row items-center px-5">
-              <Text className="flex-1 font-title text-lg leading-tight text-white">
-                Găsește parcare în câteva secunde
-              </Text>
-              <View className="ml-4 h-11 w-11 items-center justify-center rounded-full bg-primary">
-                <ArrowRight size={22} color={palette.primaryForeground} />
-              </View>
-            </View>
-          </Pressable>
+          <Banner
+            className="mt-7"
+            image={require("../../assets/images/parking.jpg")}
+            label="Găsește parcare în câteva secunde"
+            onPress={() => router.push("/map")}
+          />
 
           {last ? (
             <View className="mt-7 gap-3 px-5">
