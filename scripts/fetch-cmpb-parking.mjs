@@ -39,8 +39,18 @@
  * care operează" is forbidden in the next. This script therefore runs at build
  * time and not on drivers' phones, takes the file once rather than polling it,
  * and the generated constant names CMPB as the source on every screen that
- * draws it. Written permission from `parking@cmpb.ro` is the thing that would
- * settle it properly, and is worth asking for before this ships.
+ * draws it.
+ *
+ * PERMISSION HAS BEEN DRAFTED AND NOT YET GRANTED. `docs/cmpb-permission-request.md`
+ * is the letter, `docs/cmpb-data-inventory.md` is the measured account of what
+ * this script takes -- keep it true if you change what is read below, because
+ * it is what CMPB was told -- and `docs/cmpb-fallback.md` is what happens to
+ * the app if the answer is no.
+ *
+ * Three things would turn the defensible position above into an indefensible
+ * one, and none of them should be done without a written answer: raising the
+ * fetch frequency, fetching from drivers' phones, or selling anything built on
+ * this data.
  */
 
 import { writeFile } from "node:fs/promises";
