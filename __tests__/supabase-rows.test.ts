@@ -117,6 +117,7 @@ describe("the gate that decides which data layer runs", () => {
  * still blocked, or worse, the other way round.
  */
 const reportRowOf = (over: Partial<ReportRow> = {}): ReportRow => ({
+  photo_count: 0,
   id: "r_1",
   category: "sidewalk",
   latitude: 44.4319,

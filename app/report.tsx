@@ -30,7 +30,13 @@ import { Text } from "@/components/ui/text";
 import { reportCategoryColor, reportCategoryIcon } from "@/constants/reports";
 import { palette, scrim, shadow } from "@/constants/theme";
 import { useCurrentLocation } from "@/hooks/use-current-location";
-import { addReport, getReportById, updateReport } from "@/lib/api";
+import {
+  addReport,
+  getReportById,
+  signEvidence,
+  updateReport,
+} from "@/lib/api";
+import { isStoredPhoto } from "@/lib/evidence";
 import { BUCHAREST, formatCoords } from "@/lib/geo";
 import { mayFileAt } from "@/lib/report-place";
 import { haptics } from "@/lib/haptics";
@@ -80,6 +86,18 @@ export default function ReportScreen() {
   const [plate, setPlate] = useState("");
   const [note, setNote] = useState("");
   const [photos, setPhotos] = useState<string[]>([]);
+  /**
+   * What to draw for each photograph, keyed by what is stored.
+   *
+   * The two are no longer the same string. A picture just taken is a
+   * `file://` URI an `Image` can render directly; one already filed is a path
+   * into a private bucket, which renders as nothing until storage signs it.
+   * Keeping the map beside the list rather than replacing the list is what
+   * lets the form go on holding paths -- those are what gets saved, and a
+   * signed URL written back into the column would be a public URL with a
+   * slower fuse.
+   */
+  const [preview, setPreview] = useState<Record<string, string>>({});
   const [edited, setEdited] = useState<BlockerReport | null>(null);
   const [submitting, setSubmitting] = useState(false);
   /**
@@ -121,6 +139,37 @@ export default function ReportScreen() {
       alive = false;
     };
   }, [id]);
+
+  /* Signed on the way in and whenever the list changes, because a link has ten
+     minutes on it and a driver correcting a report can sit on this screen for
+     longer than that. Local URIs are left alone: they need no signature and
+     asking storage about one would be asking about a file it has never seen. */
+  useEffect(() => {
+    const unsigned = photos.filter(
+      (uri) => isStoredPhoto(uri) && !preview[uri],
+    );
+    if (!unsigned.length) return;
+
+    let alive = true;
+    signEvidence(unsigned)
+      .then((urls) => {
+        if (!alive) return;
+        setPreview((current) => {
+          const next = { ...current };
+          unsigned.forEach((path, index) => {
+            const url = urls[index];
+            if (url) next[path] = url;
+          });
+          return next;
+        });
+      })
+      // Not surfaced. A photograph that will not load is visible as a gap, and
+      // an alert over a form somebody is filling in is worse than the gap.
+      .catch((error) => console.error("Could not sign the photos", error));
+    return () => {
+      alive = false;
+    };
+  }, [photos, preview]);
 
   const room = MAX_PHOTOS - photos.length;
 
@@ -358,10 +407,13 @@ export default function ReportScreen() {
                 {photos.map((uri) => (
                   <View
                     key={uri}
-                    className="overflow-hidden rounded-lg border-hairline border-border"
+                    className="overflow-hidden rounded-lg border-hairline border-border bg-secondary"
                   >
+                    {/* A stored photograph draws nothing until its link
+                        arrives; the grey square underneath is what fills the
+                        space meanwhile, so the row does not jump. */}
                     <Image
-                      source={{ uri }}
+                      source={{ uri: preview[uri] ?? uri }}
                       style={{ width: 108, height: 108 }}
                       resizeMode="cover"
                     />

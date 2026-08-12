@@ -161,6 +161,7 @@ export function toBlockerReport(
     reportedBy: row.created_by,
     plate: optional(row.plate),
     photos: row.photos.length ? row.photos : undefined,
+    photoCount: row.photo_count,
     note: optional(row.note),
     address: optional(row.address),
     resolution:
