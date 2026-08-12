@@ -70,8 +70,16 @@ export interface SpotRow {
   id: string;
   title: string;
   kind: SpotKind;
-  /** Who may speak for this spot. A row that does not say is a public kerb. */
-  access: SpotAccess | null;
+  /**
+   * What kind of place this is.
+   *
+   * Typed as `string` rather than `SpotAccess` because it is not one until it
+   * has been read: rows written before `0010` still say `public` or `private`.
+   * `toSpotAccess` in lib/spot-rights.ts is the only thing that turns this
+   * column into the union, and typing it as the union here would let a caller
+   * skip that and compare against a value the row cannot hold.
+   */
+  access: string | null;
   source: SpotSource | null;
   /** The one account allowed to open and close this spot's windows. */
   owner_id: string | null;
