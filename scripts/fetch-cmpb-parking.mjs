@@ -180,7 +180,7 @@ async function main() {
       (lot) => `  {
     id: "cmpb_${lot.code}",
     title: ${JSON.stringify(lot.title)},
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: ${lot.latitude},

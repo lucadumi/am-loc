@@ -56,6 +56,7 @@
 import type { AvailabilityWindow, ParkingSpot } from "@/types";
 
 import { windowState } from "./bucharest-time.ts";
+import { isOwnedProperty } from "./spot-rights.ts";
 
 /** What an owner is currently offering, if anything. */
 export interface SpotOffer {
@@ -109,9 +110,17 @@ export function offeredAt(
  */
 export const NOT_OFFERED: SpotOffer = { open: false, window: null };
 
-/** Whether a spot is somebody's rather than everybody's. */
+/**
+ * Whether a spot is somebody's rather than everybody's.
+ *
+ * Now a thin name over `isOwnedProperty`, and worth keeping as one: half a
+ * dozen screens ask this question, and the answer moved when the access model
+ * grew a third value. Under the old two-value model "not public" and
+ * "property" were the same set; a residential permit is in the first and not
+ * the second, and every caller here means the second.
+ */
 export function isPrivate(spot: Pick<ParkingSpot, "access">): boolean {
-  return spot.access === "private";
+  return isOwnedProperty(spot);
 }
 
 /**
@@ -125,20 +134,7 @@ export function mayDeclare(
   spot: Pick<ParkingSpot, "access" | "ownerId">,
   identity: string,
 ): boolean {
-  return spot.access === "private" && !!spot.ownerId && spot.ownerId === identity;
-}
-
-/**
- * Whether anybody may file an observation about a spot.
- *
- * No identity parameter, and that is the point: on a public kerb everyone may
- * speak, and on a private space nobody may -- including the owner, who has a
- * better instrument than looking out of the window. Taking an identity here
- * would invite a future caller to special-case the owner back in, which would
- * put the same fact into two tables that can then disagree.
- */
-export function mayReport(spot: Pick<ParkingSpot, "access">): boolean {
-  return spot.access === "public";
+  return isOwnedProperty(spot) && !!spot.ownerId && spot.ownerId === identity;
 }
 
 /**

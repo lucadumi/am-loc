@@ -50,7 +50,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n1306581986",
     title: "Fabrica de Pâine",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.453833,
@@ -62,7 +62,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n1927117383",
     title: "B-dul 1 Decembrie 1918",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.430047,
@@ -73,7 +73,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n2405137558",
     title: "Parcare supraetajată",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.389291,
@@ -84,7 +84,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n2497264135",
     title: "Muzeul Satului",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.470545,
@@ -94,7 +94,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n2866066043",
     title: "Parcare Bloc A5, Sc. B-C",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.482003,
@@ -106,7 +106,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n3789863358",
     title: "Parcare Kaufland Pantelimon",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.44224,
@@ -117,7 +117,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n4090219208",
     title: "Parcare Subterana",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.380884,
@@ -127,7 +127,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n458746312",
     title: "Parcare Sala Polivalenta",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.405784,
@@ -137,7 +137,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n458746341",
     title: "Parcare Sala Polivalenta 2",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.404979,
@@ -147,7 +147,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n4621661072",
     title: "Parcare Promenada Mall",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.478383,
@@ -158,7 +158,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n567247284",
     title: "Parcare complex",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.482872,
@@ -168,7 +168,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n5868976736",
     title: "Parcare Ibis Styles",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.483854,
@@ -178,7 +178,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n587668981",
     title: "Parcare Sala Polivalenta 2",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.40442,
@@ -188,7 +188,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n6272992239",
     title: "Parcare rezidențială",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.391409,
@@ -198,7 +198,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n6272992240",
     title: "Parcare rezidențială",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.390975,
@@ -208,7 +208,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n6952582144",
     title: "Parcare vis-a-vis de Piața Progresul",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.392037,
@@ -218,7 +218,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n6960232997",
     title: "Parcare Mega Image",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.401957,
@@ -228,7 +228,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n6974620555",
     title: "Parcare Mega Image",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.476586,
@@ -239,7 +239,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n6974681272",
     title: "Parcare",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.476365,
@@ -250,7 +250,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n7124470376",
     title: "Parcare",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.390895,
@@ -260,7 +260,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n7124470380",
     title: "Parcare",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.391069,
@@ -270,7 +270,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_n7124581196",
     title: "Parcare",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.391382,
@@ -281,7 +281,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w1054204433",
     title: "Parcare subterană",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.42966,
@@ -294,7 +294,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w1154778693",
     title: "Parcare vizitatori",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.442228,
@@ -304,7 +304,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w1155808869",
     title: "Piața Gemeni",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.445143,
@@ -315,7 +315,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w1194682792",
     title: "Nicolae Caranfil",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.485612,
@@ -326,7 +326,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w1201025711",
     title: "Parcare, Strada George Constantinescu",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.479371,
@@ -338,7 +338,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w1257787974",
     title: "Parcare vizitatori",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.428184,
@@ -348,7 +348,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w129316969",
     title: "Parcarea Piața Universității",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.434976,
@@ -360,7 +360,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w1306282790",
     title: "Parcare",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.415133,
@@ -370,7 +370,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w1334758791",
     title: "Dizabilități",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.490058,
@@ -380,7 +380,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w1527302829",
     title: "Parcare E",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.479095,
@@ -392,7 +392,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w1534275559",
     title: "Parcare supraetajată",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.431898,
@@ -402,7 +402,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w184169515",
     title: "Parcare Unirea",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.428573,
@@ -413,7 +413,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w197738034",
     title: "Parcare cu plată",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.427857,
@@ -424,7 +424,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w198218844",
     title: "CAT 2475",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.459475,
@@ -434,7 +434,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w201015355",
     title: "Parcare supraetajată",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.415056,
@@ -444,7 +444,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w202691013",
     title: "Parcare D1",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.476326,
@@ -456,7 +456,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w202691019",
     title: "Parcare D2",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.477647,
@@ -468,7 +468,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w202691391",
     title: "Parcare C",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.474789,
@@ -480,7 +480,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w202693019",
     title: "Parcare B2",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.476226,
@@ -492,7 +492,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w202693022",
     title: "Parcare B1",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.475498,
@@ -504,7 +504,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w206980595",
     title: "Parcare Piața Obor",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.450442,
@@ -515,7 +515,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w215352124",
     title: "Parcare privata",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.388992,
@@ -525,7 +525,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w215353420",
     title: "Parcare Leroy Merlin",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.397232,
@@ -535,7 +535,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w219710325",
     title: "Piața Constituției",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.427299,
@@ -546,7 +546,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w220084862",
     title: "Parcare Ramada Hotel & Suites Bucharest North",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.486347,
@@ -556,7 +556,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w225503238",
     title: "Parcare supraetajată",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.416248,
@@ -566,7 +566,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w225503246",
     title: "Parcare supraetajată",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.416293,
@@ -576,7 +576,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w225503247",
     title: "Parcare supraetajată",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.416126,
@@ -586,7 +586,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w225505482",
     title: "Parcare supraetajată",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.419019,
@@ -596,7 +596,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w226044616",
     title: "Parcare supraetajată",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.42157,
@@ -607,7 +607,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w239206890",
     title: "Parcare Piața Revoluției",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.438258,
@@ -618,7 +618,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w239335338",
     title: "Parcare Subterană Piața Obor",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.450053,
@@ -629,7 +629,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w245153561",
     title: "Parcare SUUB",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.437218,
@@ -640,7 +640,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w289369482",
     title: "Parcare IDM",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.449444,
@@ -650,7 +650,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w294717388",
     title: "Parcare Citygo",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.43275,
@@ -661,7 +661,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w339179191",
     title: "Parcare Mega Image",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.420212,
@@ -671,7 +671,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w389242430",
     title: "Parcare, Calea Moșilor",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.436481,
@@ -683,7 +683,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w395019633",
     title: "Parcare Lidl",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.491369,
@@ -693,7 +693,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w405063050",
     title: "Parcare Lidl",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.410305,
@@ -704,7 +704,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w41337309",
     title: "Parcare Buzești 57",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.449897,
@@ -716,7 +716,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w414258561",
     title: "Parcare supraetajată",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.441043,
@@ -726,7 +726,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w426665177",
     title: "Parcare Mega Image",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.437503,
@@ -737,7 +737,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w43112614",
     title: "Parcare Sala Polivalenta",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.405796,
@@ -748,7 +748,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w494656610",
     title: "Parcare Centrul Comercial Huedin",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.383949,
@@ -758,7 +758,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w53178743",
     title: "Parcarea Penitenciarul Rahova",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.394714,
@@ -769,7 +769,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w572777932",
     title: "Parcare",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.388412,
@@ -779,7 +779,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w585021140",
     title: "Pridvorului",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.407861,
@@ -790,7 +790,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w603740402",
     title: "Parcare sosea",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.443275,
@@ -801,7 +801,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w621211529",
     title: "Parcare supraetajată",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.450622,
@@ -811,7 +811,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w623081850",
     title: "Parcare National Arena",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.435027,
@@ -822,7 +822,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w658281398",
     title: "Parcare Cocor",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.43024,
@@ -832,7 +832,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w675017438",
     title: "Parking Lot of Bl. 3",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.392209,
@@ -844,7 +844,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w675021381",
     title: "Parking Lot Bl. 2",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.392169,
@@ -856,7 +856,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w69562800",
     title: "Parcare Piața Operei",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.434419,
@@ -868,7 +868,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w735407075",
     title: "Parcare supraetajată",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.392515,
@@ -879,7 +879,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w762323740",
     title: "Parcare cu plată",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.490089,
@@ -890,7 +890,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w769890159",
     title: "Parcare Lidl",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.416503,
@@ -901,7 +901,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w837076382",
     title: "Parcare supraetajată",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.38626,
@@ -911,7 +911,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w858843383",
     title: "Parcare subterană",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.412976,
@@ -921,7 +921,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w941432422",
     title: "Parcare",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "street",
     latitude: 44.492913,
@@ -931,7 +931,7 @@ export const PUBLIC_PARKING: ParkingSpot[] = [
   {
     id: "osm_w95854777",
     title: "Parcare, Șoseaua Olteniței",
-    access: "public",
+    access: "public_facility",
     source: "osm",
     kind: "garage",
     latitude: 44.401032,

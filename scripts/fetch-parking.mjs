@@ -233,7 +233,7 @@ function toSpots(elements) {
     spots.push({
       id: `osm_${element.type[0]}${element.id}`,
       title,
-      access: "public",
+      access: "public_facility",
       source: "osm",
       kind: kindOf(tags),
       /* No observation exists, so this is not a claim that it is free. It is

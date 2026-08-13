@@ -102,13 +102,14 @@ async function main() {
 
   const spots = [...CMPB_PARKING, ...PUBLIC_PARKING];
 
-  /* Both layers are public records, and a row that claimed otherwise would be
-     a spot no stranger may report on -- silently removing it from the map's
-     only source of truth. Cheap to check, and the failure is invisible. */
-  const wrong = spots.filter((spot) => spot.access !== "public");
+  /* Both layers are registries of public road, and a row that claimed anything
+     else would be a car park somebody could be offered money for -- see the
+     header of lib/spot-rights.ts for why that is an offence rather than a
+     feature. Cheap to check, and the failure would otherwise be invisible. */
+  const wrong = spots.filter((spot) => spot.access !== "public_facility");
   if (wrong.length) {
     throw new Error(
-      `${wrong.length} imported car park(s) are not public: ${wrong
+      `${wrong.length} imported car park(s) are not public facilities: ${wrong
         .slice(0, 3)
         .map((s) => s.id)
         .join(", ")}`,
