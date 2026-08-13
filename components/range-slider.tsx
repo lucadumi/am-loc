@@ -10,6 +10,7 @@ import Animated, {
 
 import { Text } from "@/components/ui/text";
 import { haptics } from "@/lib/haptics";
+import { ADJUST_ACTIONS, spokenPriceRange, stepValue } from "@/lib/slider";
 
 const KNOB = 28;
 const SPRING = { damping: 24, stiffness: 220, overshootClamping: true };
@@ -28,10 +29,20 @@ function Grip() {
 
 /**
  * Dual-knob range slider. Drag either yellow knob to pick a `[low, high]`
- * window; each knob snaps to `step` increments with a haptic tick and can't
- * cross the other. Reports both values via onChange. External `low`/`high`
- * changes spring the idle knobs into place without fighting an active drag.
- * Mirrors IntervalSlider's single-knob mechanics.
+ * window; each snaps to `step` increments with a haptic tick and cannot cross
+ * the other. External changes spring the idle knob into place without fighting
+ * an active drag. Mirrors `IntervalSlider`'s single-knob mechanics.
+ *
+ * TWO ADJUSTABLE CONTROLS, NOT ONE. `IntervalSlider` makes its whole track the
+ * accessible element because it holds a single value; this holds two, and a
+ * reader's swipe can only mean one thing at a time. So each knob is its own
+ * `adjustable` with its own name -- "preț minim", "preț maxim" -- and a driver
+ * moves between them the way they move between any two controls.
+ *
+ * Each knob announces the pair rather than its own number, because a bound on
+ * its own is not the answer to what a filter is doing: "minim, 5 lei" tells
+ * you where one end is, "de la 5 lei până la 12 lei pe oră" tells you what you
+ * have asked for.
  */
 export function RangeSlider({
   low,
@@ -42,6 +53,7 @@ export function RangeSlider({
   step = 1,
   minLabel,
   maxLabel,
+  unbounded,
   className,
 }: {
   low: number;
@@ -52,6 +64,14 @@ export function RangeSlider({
   step?: number;
   minLabel?: string;
   maxLabel?: string;
+  /**
+   * The value at `max` that means "no upper bound", if there is one.
+   *
+   * The filter sheet's price range tops out at "any price" rather than at 20
+   * lei, and a control that announced "up to 20 lei" there would have a driver
+   * believe they had excluded the expensive half of the city.
+   */
+  unbounded?: number;
   className?: string;
 }) {
   const [trackW, setTrackW] = useState(0);
@@ -156,6 +176,43 @@ export function RangeSlider({
 
   const tickCount = steps > 12 ? 9 : steps + 1;
 
+  /* One step of whichever end the reader is on, clamped so the two cannot
+     cross -- the same rule the drag enforces, applied to the other input. */
+  const nudge = (end: "low" | "high", direction: 1 | -1) => {
+    haptics.selection();
+    if (end === "low") {
+      onChange(
+        Math.min(high, stepValue(low, direction, { min, max, step })),
+        high,
+      );
+    } else {
+      onChange(low, Math.max(low, stepValue(high, direction, { min, max, step })));
+    }
+  };
+
+  /* Said by both knobs. A bound on its own is not what a filter is doing. */
+  const spoken = spokenPriceRange([low, high], { unbounded: unbounded ?? max });
+
+  const adjustable = (end: "low" | "high") =>
+    ({
+      accessible: true,
+      accessibilityRole: "adjustable" as const,
+      accessibilityLabel: end === "low" ? "Preț minim" : "Preț maxim",
+      accessibilityValue: {
+        min,
+        max,
+        now: end === "low" ? low : high,
+        text: spoken,
+      },
+      accessibilityActions: ADJUST_ACTIONS,
+      onAccessibilityAction: (event: {
+        nativeEvent: { actionName: string };
+      }) => {
+        if (event.nativeEvent.actionName === "increment") nudge(end, 1);
+        if (event.nativeEvent.actionName === "decrement") nudge(end, -1);
+      },
+    }) as const;
+
   return (
     <View className={className}>
       <View
@@ -186,6 +243,7 @@ export function RangeSlider({
         {/* Low knob */}
         <GestureDetector gesture={panLow}>
           <Animated.View
+            {...adjustable("low")}
             style={[lowKnobStyle, KNOB_SIZE]}
             className="absolute left-0 items-center justify-center rounded-full border-4 border-background bg-primary"
           >
@@ -196,6 +254,7 @@ export function RangeSlider({
         {/* High knob */}
         <GestureDetector gesture={panHigh}>
           <Animated.View
+            {...adjustable("high")}
             style={[highKnobStyle, KNOB_SIZE]}
             className="absolute left-0 items-center justify-center rounded-full border-4 border-background bg-primary"
           >
