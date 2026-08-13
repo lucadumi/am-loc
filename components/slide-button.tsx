@@ -1,6 +1,6 @@
 import { ChevronsRight } from "lucide-react-native";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { LayoutChangeEvent, View } from "react-native";
+import { Alert, LayoutChangeEvent, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   interpolate,
@@ -11,8 +11,10 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
+import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
+import { useScreenReader } from "@/hooks/use-accessibility";
 import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
 
@@ -23,20 +25,42 @@ const KNOB = HEIGHT;
 const PAD = 0;
 
 /**
- * "Slide to confirm" control from the Safa Park reference. Drag the yellow knob
- * across the track; releasing past ~80% fires onComplete (with success haptic).
+ * "Slide to confirm": drag the yellow knob across the track; releasing past
+ * ~80% fires `onComplete`.
+ *
+ * The drag is the point rather than the decoration. Filing a blocker report
+ * names somebody's vehicle and sends a complaint to a sector hall, and a
+ * button that does that on one tap is a button that does it from a pocket.
+ *
+ * WHICH MAKES IT THE ONE CONTROL IN THE APP THAT CANNOT BE MADE ACCESSIBLE BY
+ * LABELLING IT. With VoiceOver or TalkBack running, a swipe is taken by the
+ * reader to move its own cursor -- it never reaches a pan handler, and no set
+ * of accessibility props changes that. So this draws a different control
+ * instead: a plain button that asks for confirmation. The deliberateness that
+ * the drag buys is preserved by the second step rather than by the gesture,
+ * which is the honest trade -- the alternative is a driver who cannot file a
+ * report at all.
+ *
+ * `Alert` rather than a custom sheet on purpose: the platform dialog is
+ * already focused, announced and dismissible by a screen reader, and a
+ * hand-built confirmation is one more thing to get those three wrong.
  */
 export function SlideButton({
   label,
   onComplete,
   disabled = false,
   className,
+  /** What the confirmation asks. Defaults to the label, which is a sentence. */
+  confirmLabel,
 }: {
   label: string;
   onComplete: () => void;
   disabled?: boolean;
   className?: string;
+  confirmLabel?: string;
 }) {
+  const colors = useColors();
+  const screenReader = useScreenReader();
   const [trackW, setTrackW] = useState(0);
   const x = useSharedValue(0);
   const done = useSharedValue(false);
@@ -114,6 +138,28 @@ export function SlideButton({
     opacity: interpolate(x.value, [0, maxX * 0.6], [1, 0]),
   }));
 
+  /* The whole control, replaced rather than annotated -- and after every hook,
+     because the rules of hooks do not bend for a good reason. The gesture and
+     the animated styles above are built either way and go unused here, which
+     costs a few objects and keeps this one component rather than two that
+     share a name and have to be kept in step. */
+  if (screenReader) {
+    return (
+      <Button
+        className={className}
+        label={label}
+        disabled={disabled}
+        accessibilityHint="Se cere o confirmare înainte de trimitere"
+        onPress={() =>
+          Alert.alert(confirmLabel ?? label, undefined, [
+            { text: "Renunț", style: "cancel" },
+            { text: "Confirmă", onPress: finish },
+          ])
+        }
+      />
+    );
+  }
+
   return (
     <View
       onLayout={(e: LayoutChangeEvent) => setTrackW(e.nativeEvent.layout.width)}
@@ -142,7 +188,7 @@ export function SlideButton({
         >
           <ChevronsRight
             size={26}
-            color={palette.primaryForeground}
+            color={colors.primaryForeground}
             strokeWidth={2.5}
           />
         </Animated.View>
