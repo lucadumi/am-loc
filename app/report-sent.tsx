@@ -5,7 +5,7 @@ import { View } from "react-native";
 import { Button } from "@/components/ui/button";
 import { Screen } from "@/components/ui/screen";
 import { Text } from "@/components/ui/text";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 
 /**
  * What happens after a blocker report is filed.
@@ -21,6 +21,7 @@ import { palette } from "@/constants/theme";
  * decide is broken.
  */
 export default function ReportSentScreen() {
+  const colors = useColors();
   const router = useRouter();
 
   return (
@@ -28,9 +29,9 @@ export default function ReportSentScreen() {
       <View className="flex-1 items-center justify-center gap-4">
         <View
           className="h-24 w-24 items-center justify-center rounded-full"
-          style={{ backgroundColor: palette.free + "22" }}
+          style={{ backgroundColor: colors.free + "22" }}
         >
-          <Check size={48} color={palette.free} strokeWidth={2.4} />
+          <Check size={48} color={colors.free} strokeWidth={2.4} />
         </View>
 
         <Text className="text-center font-title text-2xl text-foreground">
@@ -53,7 +54,7 @@ export default function ReportSentScreen() {
           label="Vezi pe hartă"
           onPress={() => router.replace("/map")}
           rightIcon={
-            <MapIcon size={18} color={palette.primaryForeground} strokeWidth={2.2} />
+            <MapIcon size={18} color={colors.primaryForeground} strokeWidth={2.2} />
           }
         />
         <Button

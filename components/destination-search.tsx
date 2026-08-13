@@ -18,7 +18,8 @@ import { ActivityIndicator, Pressable, TextInput, View } from "react-native";
 import { SpotCard } from "@/components/spot-card";
 import { fieldVariants } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
-import { palette, shadow } from "@/constants/theme";
+import { shadow } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { GEOCODER_ATTRIBUTION, type Place } from "@/lib/geocode";
 import { cn } from "@/lib/utils";
 import type { ParkingSpot } from "@/types";
@@ -35,6 +36,7 @@ export function DestinationField({
   onCancel: () => void;
   autoFocus?: boolean;
 }) {
+  const colors = useColors();
   return (
     <View className="flex-row items-center gap-2">
       {/* White and raised, not the grey it was: with the yellow band gone this
@@ -49,19 +51,20 @@ export function DestinationField({
         style={shadow.card}
         className="h-12 w-12 items-center justify-center rounded-full border-hairline border-border bg-card"
       >
-        <ArrowLeft size={20} color={palette.foreground} />
+        <ArrowLeft size={20} color={colors.foreground} />
       </Pressable>
 
       <View className={cn(fieldVariants({ accent: true }), "flex-1")}>
-        <Search size={20} color={palette.primary} />
+        <Search size={20} color={colors.primary} />
         <TextInput
           value={value}
           onChangeText={onChange}
           autoFocus={autoFocus}
           placeholder="Unde vrei să mergi?"
-          placeholderTextColor={palette.mutedForeground}
+          placeholderTextColor={colors.mutedForeground}
           returnKeyType="search"
           className="flex-1 font-sans text-foreground"
+          maxFontSizeMultiplier={1.4}
           style={{ fontSize: 16 }}
           accessibilityLabel="Destinația"
         />
@@ -72,7 +75,7 @@ export function DestinationField({
             accessibilityLabel="Șterge"
             hitSlop={8}
           >
-            <X size={18} color={palette.mutedForeground} />
+            <X size={18} color={colors.mutedForeground} />
           </Pressable>
         ) : null}
       </View>
@@ -98,6 +101,7 @@ export function DestinationHeader({
   onPress: () => void;
   onClear: () => void;
 }) {
+  const colors = useColors();
   return (
     <View className="flex-row items-center gap-3 px-5 pb-4">
       <Pressable
@@ -106,7 +110,7 @@ export function DestinationHeader({
         accessibilityLabel={`Schimbă destinația, acum ${place.name}`}
         className="flex-1 flex-row items-center gap-2.5"
       >
-        <MapPin size={18} color={palette.coral} strokeWidth={2.4} />
+        <MapPin size={18} color={colors.coral} strokeWidth={2.4} />
         <View className="flex-1">
           <Text numberOfLines={1} className="font-title text-base text-foreground">
             {place.name}
@@ -124,7 +128,7 @@ export function DestinationHeader({
         hitSlop={8}
         className="h-9 w-9 items-center justify-center rounded-full bg-secondary"
       >
-        <X size={18} color={palette.foreground} />
+        <X size={18} color={colors.foreground} />
       </Pressable>
     </View>
   );
@@ -132,6 +136,7 @@ export function DestinationHeader({
 
 /** One place the driver might mean. */
 function Suggestion({ place, onPress }: { place: Place; onPress: () => void }) {
+  const colors = useColors();
   return (
     <Pressable
       onPress={onPress}
@@ -139,7 +144,7 @@ function Suggestion({ place, onPress }: { place: Place; onPress: () => void }) {
       className="flex-row items-center gap-3 px-5 py-3.5"
     >
       <View className="h-9 w-9 items-center justify-center rounded-full bg-secondary">
-        <MapPin size={17} color={palette.coral} strokeWidth={2.2} />
+        <MapPin size={17} color={colors.coral} strokeWidth={2.2} />
       </View>
       <View className="flex-1">
         <Text numberOfLines={1} className="font-semi text-sm text-foreground">
@@ -183,6 +188,7 @@ export function SuggestionList({
   error: string | null;
   onPick: (place: Place) => void;
 }) {
+  const colors = useColors();
   if (error) {
     return <Hint>{error}</Hint>;
   }
@@ -194,7 +200,7 @@ export function SuggestionList({
   if (loading) {
     return (
       <View className="flex-row items-center gap-2.5 px-5 py-6">
-        <ActivityIndicator size="small" color={palette.mutedForeground} />
+        <ActivityIndicator size="small" color={colors.mutedForeground} />
         <Text className="font-mid text-sm text-muted-foreground">Caut…</Text>
       </View>
     );

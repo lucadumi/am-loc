@@ -27,7 +27,8 @@ import { SpotFilterSheet } from "@/components/spot-filter-sheet";
 import { IconButton } from "@/components/ui/icon-button";
 import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
-import { palette, shadow, statusColor } from "@/constants/theme";
+import { shadow, type Palette } from "@/constants/theme";
+import { useColors, useStatusColors, useTheme } from "@/hooks/use-theme";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { useLive } from "@/hooks/use-live";
 import { getReports, getSpots, rankNearby } from "@/lib/api";
@@ -42,6 +43,7 @@ import { floatingTabBarInset } from "@/constants/layout";
 import { BUCHAREST } from "@/lib/geo";
 import { GeocodeError, searchPlaces, type Place } from "@/lib/geocode";
 import { BlockerReport, SpotFilters } from "@/types";
+import type { SpotStatus } from "@/types";
 
 /** Square button beside the search bar; a yellow badge shows the active count. */
 function FilterButton({
@@ -51,6 +53,7 @@ function FilterButton({
   count: number;
   onPress: () => void;
 }) {
+  const colors = useColors();
   return (
     <IconButton
       size="lg"
@@ -58,7 +61,7 @@ function FilterButton({
       accessibilityLabel="Filtre"
       style={shadow.card}
     >
-      <SlidersHorizontal size={22} color={palette.foreground} />
+      <SlidersHorizontal size={22} color={colors.foreground} />
       {count > 0 ? (
         <View className="absolute -right-1 -top-1 h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1">
           <Text className="font-heavy text-[11px] text-primary-foreground">
@@ -79,8 +82,12 @@ function FilterButton({
  * those in a status colour would be a hundred confident claims nobody made, so
  * they are grey and hollow -- which is the true statement.
  */
-function pinColor(spot: OfferedSpot): string {
-  return spot.status ? statusColor[spot.status] : palette.mutedForeground;
+function pinColor(
+  spot: OfferedSpot,
+  colors: Palette,
+  statusColor: Record<SpotStatus, string>,
+): string {
+  return spot.status ? statusColor[spot.status] : colors.mutedForeground;
 }
 
 /**
@@ -105,6 +112,9 @@ function unreliable(spot: OfferedSpot): boolean {
 }
 
 export default function MapScreen() {
+  const colors = useColors();
+  const theme = useTheme();
+  const statusColor = useStatusColors();
   const mapRef = useRef<MapView>(null);
   const router = useRouter();
   const { height } = useWindowDimensions();
@@ -408,14 +418,14 @@ export default function MapScreen() {
         provider={PROVIDER_DEFAULT}
         style={{ flex: 1 }}
         initialRegion={BUCHAREST}
-        userInterfaceStyle="light"
+        userInterfaceStyle={theme}
         showsMyLocationButton={false}
         showsCompass={false}
         mapPadding={mapPadding}
       >
         {destination ? (
           /* Coral, and larger than a parking pin, because it is the one thing
-             on the map that is not a parking place. `palette.coral` is already
+             on the map that is not a parking place. `colors.coral` is already
              the app's "here is a location" colour -- see the note beside it in
              constants/theme.ts -- so a driver who has seen a spot card knows
              what this is without a legend. */
@@ -431,7 +441,7 @@ export default function MapScreen() {
             <View className="items-center justify-center">
               <View
                 className="h-11 w-11 items-center justify-center rounded-full border-[3px] border-background"
-                style={{ backgroundColor: palette.coral, ...shadow.card }}
+                style={{ backgroundColor: colors.coral, ...shadow.card }}
               >
                 <MapPin size={20} color="#FFFFFF" strokeWidth={2.4} />
               </View>
@@ -457,14 +467,14 @@ export default function MapScreen() {
               className="h-9 w-9 items-center justify-center rounded-full border-2 border-background"
               style={
                 unreliable(s)
-                  ? { backgroundColor: palette.background, borderColor: pinColor(s) }
-                  : { backgroundColor: pinColor(s) }
+                  ? { backgroundColor: colors.background, borderColor: pinColor(s, colors, statusColor) }
+                  : { backgroundColor: pinColor(s, colors, statusColor) }
               }
             >
               <Text
                 className="font-heavy text-sm"
                 style={{
-                  color: unreliable(s) ? pinColor(s) : palette.primaryForeground,
+                  color: unreliable(s) ? pinColor(s, colors, statusColor) : colors.primaryForeground,
                 }}
               >
                 P
@@ -492,11 +502,11 @@ export default function MapScreen() {
                     ? "h-11 w-11 items-center justify-center rounded-full border-4 border-primary"
                     : "h-8 w-8 items-center justify-center rounded-full border-2 border-background"
                 }
-                style={{ backgroundColor: palette.destructive }}
+                style={{ backgroundColor: colors.destructive }}
               >
                 <TriangleAlert
                   size={ringed ? 20 : 16}
-                  color={palette.primaryForeground}
+                  color={colors.primaryForeground}
                   strokeWidth={2.4}
                 />
               </View>
@@ -514,7 +524,8 @@ export default function MapScreen() {
             title="Locația ta"
             description={location.label}
           >
-            <View className="h-5 w-5 items-center justify-center rounded-full border-2 border-background bg-indigo-600">
+            <View style={{ backgroundColor: colors.accentSolid }}
+              className="h-5 w-5 items-center justify-center rounded-full border-2 border-background">
               <View className="h-2 w-2 rounded-full bg-background" />
             </View>
           </Marker>
@@ -578,7 +589,7 @@ export default function MapScreen() {
             entering={FadeInUp.duration(160)}
             exiting={FadeOutUp.duration(120)}
             className="mt-3 overflow-hidden rounded-2xl bg-card"
-            style={shadow.card}
+            style={[shadow.card, { backgroundColor: colors.accentSolid }]}
           >
             {/* Sized against the screen rather than a constant. 320px was
                 generous on a large phone and cut the fifth answer off on a
@@ -602,8 +613,11 @@ export default function MapScreen() {
         {activeCount > 0 && !searching ? (
           <Pressable
             onPress={() => setFilterOpen(true)}
-            className="mt-3 flex-row items-center gap-2 self-start rounded-full bg-indigo-600 px-3.5 py-1.5"
-            style={shadow.card}
+            accessibilityRole="button"
+            accessibilityLabel={`${spotCountLabel(shownCount)}, ${activeCount} filtre active`}
+            accessibilityHint="Deschide filtrele"
+            className="mt-3 flex-row items-center gap-2 self-start rounded-full px-3.5 py-1.5"
+            style={[shadow.card, { backgroundColor: colors.accentSolid }]}
           >
             <Text className="font-heavy text-xs text-card">
               {spotCountLabel(shownCount)}
@@ -618,17 +632,21 @@ export default function MapScreen() {
         className="absolute bottom-40 right-5 gap-3"
         pointerEvents="box-none"
       >
-        <FloatingControl onPress={() => zoom(1)}>
-          <Plus size={22} color={palette.foreground} />
+        <FloatingControl onPress={() => zoom(1)} accessibilityLabel="Apropie harta">
+          <Plus size={22} color={colors.foreground} />
         </FloatingControl>
-        <FloatingControl onPress={() => zoom(-1)}>
-          <Minus size={22} color={palette.foreground} />
+        <FloatingControl onPress={() => zoom(-1)} accessibilityLabel="Depărtează harta">
+          <Minus size={22} color={colors.foreground} />
         </FloatingControl>
-        <FloatingControl onPress={recenter} className="bg-primary border-primary">
+        <FloatingControl
+          onPress={recenter}
+          accessibilityLabel="Centrează pe poziția mea"
+          className="bg-primary border-primary"
+        >
           <Navigation
             size={20}
-            color={palette.primaryForeground}
-            fill={palette.primaryForeground}
+            color={colors.primaryForeground}
+            fill={colors.primaryForeground}
           />
         </FloatingControl>
       </View>

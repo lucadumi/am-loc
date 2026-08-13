@@ -13,7 +13,8 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Card } from "@/components/ui/card";
-import { palette, shadow } from "@/constants/theme";
+import { shadow } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { haptics } from "@/lib/haptics";
 
 const ICONS: Record<string, typeof House> = {
@@ -36,8 +37,6 @@ const LABELS: Record<string, string> = {
 // leave exactly as it fades in on the one you press (shared timing = in sync).
 const DURATION = 360;
 const EASING = Easing.inOut(Easing.cubic);
-// Transparent yellow, so the highlight fades straight to primary (no grey mid).
-const PRIMARY_TRANSPARENT = palette.primaryTransparent;
 
 /**
  * One icon-only tab. A single `progress` shared value (0 inactive → 1 active)
@@ -55,6 +54,7 @@ function TabItem({
   label: string;
   onPress: () => void;
 }) {
+  const colors = useColors();
   const progress = useSharedValue(focused ? 1 : 0);
 
   useEffect(() => {
@@ -68,7 +68,12 @@ function TabItem({
     backgroundColor: interpolateColor(
       progress.value,
       [0, 1],
-      [PRIMARY_TRANSPARENT, palette.primary],
+      /* Transparent *yellow*, not transparent black: interpolating from a
+         colourless transparent passes through grey on the way, and the
+         highlight would flash a dirty middle on every tab press. Read from
+         the theme rather than hoisted to module scope, which is where a
+         colour stops following the interface. */
+      [colors.primaryTransparent, colors.primary],
     ),
   }));
   const iconInactive = useAnimatedStyle(() => ({ opacity: 1 - progress.value }));
@@ -87,13 +92,13 @@ function TabItem({
       >
         <View className="h-6 w-6 items-center justify-center">
           <Animated.View style={iconInactive}>
-            <Icon size={22} color={palette.mutedForeground} strokeWidth={2.2} />
+            <Icon size={22} color={colors.mutedForeground} strokeWidth={2.2} />
           </Animated.View>
           <Animated.View
             style={iconActive}
             className="absolute inset-0 items-center justify-center"
           >
-            <Icon size={22} color={palette.primaryForeground} strokeWidth={2.2} />
+            <Icon size={22} color={colors.primaryForeground} strokeWidth={2.2} />
           </Animated.View>
         </View>
       </Animated.View>
@@ -115,6 +120,7 @@ function AddButton({
   label: string;
   onPress: () => void;
 }) {
+  const colors = useColors();
   const progress = useSharedValue(focused ? 1 : 0);
 
   useEffect(() => {
@@ -128,7 +134,7 @@ function AddButton({
     backgroundColor: interpolateColor(
       progress.value,
       [0, 1],
-      [palette.indigo[600], palette.primary],
+      [colors.accent, colors.primary],
     ),
   }));
   const plusIndigo = useAnimatedStyle(() => ({ opacity: 1 - progress.value }));
@@ -148,13 +154,13 @@ function AddButton({
         >
           <View className="h-7 w-7 items-center justify-center">
             <Animated.View style={plusIndigo}>
-              <Plus size={28} color={palette.card} strokeWidth={2.6} />
+              <Plus size={28} color={colors.card} strokeWidth={2.6} />
             </Animated.View>
             <Animated.View
               style={plusYellow}
               className="absolute inset-0 items-center justify-center"
             >
-              <Plus size={28} color={palette.primaryForeground} strokeWidth={2.6} />
+              <Plus size={28} color={colors.primaryForeground} strokeWidth={2.6} />
             </Animated.View>
           </View>
         </Animated.View>

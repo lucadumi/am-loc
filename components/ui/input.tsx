@@ -2,7 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { forwardRef } from "react";
 import { TextInput, View, type TextInputProps } from "react-native";
 
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 
 /**
@@ -85,12 +85,21 @@ export const Input = forwardRef<
   TextInput,
   TextInputProps & VariantProps<typeof fieldVariants> & { className?: string }
 >(function Input({ className, accent, ...props }, ref) {
+  const colors = useColors();
   return (
     <View className={cn(fieldVariants({ accent }), className)}>
       <TextInput
         ref={ref}
         className="flex-1 font-sans text-foreground"
-        placeholderTextColor={palette.mutedForeground}
+        placeholderTextColor={colors.mutedForeground}
+        /* Text scales with the system setting by default, which is right
+           nearly everywhere and is a trap in a control whose height is fixed:
+           at 200% the glyphs are simply cut off by the 56px pill, and clipped
+           text is worse than small text because it cannot be read at all.
+           Capped rather than switched off -- the field still grows with the
+           first two or three steps of the setting, which is where most people
+           who change it are. */
+        maxFontSizeMultiplier={1.4}
         style={{
           fontSize: 16,
           paddingVertical: 0,
@@ -128,6 +137,7 @@ export const TextArea = forwardRef<
   TextInputProps &
     VariantProps<typeof textAreaVariants> & { className?: string }
 >(function TextArea({ className, accent, ...props }, ref) {
+  const colors = useColors();
   return (
     <View className={cn(textAreaVariants({ accent }), className)}>
       <TextInput
@@ -135,7 +145,7 @@ export const TextArea = forwardRef<
         multiline
         textAlignVertical="top"
         className="flex-1 font-sans text-base leading-6 text-foreground"
-        placeholderTextColor={palette.mutedForeground}
+        placeholderTextColor={colors.mutedForeground}
         style={{ paddingVertical: 0, includeFontPadding: false }}
         {...props}
       />

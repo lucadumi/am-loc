@@ -20,6 +20,7 @@ import {
 import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { PlaceBySearch } from "@/components/place-by-search";
 import { ScreenHeader } from "@/components/screen-header";
 import { Screen } from "@/components/ui/screen";
 import { Spinner } from "@/components/ui/spinner";
@@ -28,7 +29,9 @@ import { Button } from "@/components/ui/button";
 import { Input, TextArea } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { reportCategoryColor, reportCategoryIcon } from "@/constants/reports";
-import { palette, scrim, shadow } from "@/constants/theme";
+import { scrim, shadow } from "@/constants/theme";
+import { useColors, useTheme } from "@/hooks/use-theme";
+import { useScreenReader } from "@/hooks/use-accessibility";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import {
   addReport,
@@ -59,9 +62,12 @@ function FieldLabel({ children }: { children: string }) {
 }
 
 export default function ReportScreen() {
+  const colors = useColors();
+  const theme = useTheme();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const location = useCurrentLocation();
+  const screenReader = useScreenReader();
   /* An id means this is a correction, not a new report. What that changes is
      mostly where the coordinates come from: an edit keeps the ones the report
      was filed with, because a report is a claim about a place at a time and
@@ -359,8 +365,8 @@ export default function ReportScreen() {
                          second signal and changed the tile's inner geometry
                          when selected, making the gallery visibly jump. */
                       borderWidth: active ? 0 : StyleSheet.hairlineWidth,
-                      borderColor: palette.border,
-                      backgroundColor: active ? color + "14" : palette.card,
+                      borderColor: colors.border,
+                      backgroundColor: active ? color + "14" : colors.card,
                     }}
                     accessibilityRole="button"
                     accessibilityLabel={`${c.label}. ${c.description}`}
@@ -404,9 +410,14 @@ export default function ReportScreen() {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{ gap: 10, paddingBottom: 12 }}
               >
-                {photos.map((uri) => (
+                {photos.map((uri, index) => (
                   <View
                     key={uri}
+                    /* Numbered, because a photograph has nothing a reader can
+                       describe: "fotografia 2 din 3" is the only thing that
+                       makes the delete button beside it unambiguous. */
+                    accessible
+                    accessibilityLabel={`Fotografia ${index + 1} din ${photos.length}`}
                     className="overflow-hidden rounded-lg border-hairline border-border bg-secondary"
                   >
                     {/* A stored photograph draws nothing until its link
@@ -425,9 +436,9 @@ export default function ReportScreen() {
                          exists separately from the map scrim. */
                       style={{ backgroundColor: scrim.control }}
                       accessibilityRole="button"
-                      accessibilityLabel="Elimină fotografia"
+                      accessibilityLabel={`Elimină fotografia ${index + 1}`}
                     >
-                      <X size={15} color={palette.card} strokeWidth={2.4} />
+                      <X size={15} color={colors.card} strokeWidth={2.4} />
                     </Pressable>
                   </View>
                 ))}
@@ -436,13 +447,13 @@ export default function ReportScreen() {
             {room > 0 ? (
               <View className="flex-row gap-3">
                 <Button variant="card" onPress={pickFromCamera} className="flex-1">
-                  <Camera size={20} color={palette.foreground} />
+                  <Camera size={20} color={colors.foreground} />
                   <Text className="font-semi text-sm text-foreground">
                     {photos.length ? "Încă o poză" : "Fă o poză"}
                   </Text>
                 </Button>
                 <Button variant="card" onPress={pickFromLibrary} className="flex-1">
-                  <ImageIcon size={20} color={palette.foreground} />
+                  <ImageIcon size={20} color={colors.foreground} />
                   <Text className="font-semi text-sm text-foreground">Galerie</Text>
                 </Button>
               </View>
@@ -494,6 +505,13 @@ export default function ReportScreen() {
               <View
                 style={{ height: 170 }}
                 pointerEvents={editing ? "none" : "auto"}
+                /* Hidden from a reader rather than labelled. There is nothing
+                   truthful to announce -- the marker is at a coordinate, not
+                   at an element -- and leaving it visible means a cursor that
+                   stops on a control it cannot operate before reaching the one
+                   it can. */
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
               >
                 <MapView
                   provider={PROVIDER_DEFAULT}
@@ -504,7 +522,7 @@ export default function ReportScreen() {
                     latitudeDelta: 0.006,
                     longitudeDelta: 0.006,
                   }}
-                  userInterfaceStyle="light"
+                  userInterfaceStyle={theme}
                   pitchEnabled={false}
                   rotateEnabled={false}
                   scrollEnabled={!editing}
@@ -541,13 +559,13 @@ export default function ReportScreen() {
                     <View
                       className="h-9 w-9 items-center justify-center rounded-full border-2 border-background"
                       style={{
-                        backgroundColor: palette.destructive,
+                        backgroundColor: colors.destructive,
                         ...shadow.marker,
                       }}
                     >
                       <TriangleAlert
                         size={17}
-                        color={palette.primaryForeground}
+                        color={colors.primaryForeground}
                         strokeWidth={2.4}
                       />
                     </View>
@@ -555,8 +573,16 @@ export default function ReportScreen() {
                 </MapView>
               </View>
               <View className="gap-1 px-4 py-3">
-                <View className="flex-row items-center gap-2">
-                  <MapPin size={18} color={palette.mutedForeground} />
+                <View
+                  className="flex-row items-center gap-2"
+                  /* One announcement rather than three fragments: the label,
+                     then the coordinates, then a hint, read as separate items
+                     is a reader saying "Strada Lipscani" and "44.43, 26.10"
+                     with no indication that the second describes the first. */
+                  accessible
+                  accessibilityLabel={`Locul sesizării: ${placeLabel}`}
+                >
+                  <MapPin size={18} color={colors.mutedForeground} />
                   <Text
                     className="flex-1 font-mid text-sm text-foreground"
                     numberOfLines={1}
@@ -572,8 +598,27 @@ export default function ReportScreen() {
                     ? "Locul nu se poate schimba. Dacă blocajul e în altă parte, trimite o sesizare nouă."
                     : placed
                       ? "Poți muta pinul din nou dacă nu e exact."
-                      : "Atinge harta sau trage pinul ca să marchezi locul exact."}
+                      : screenReader
+                        ? "Caută adresa ca să marchezi locul."
+                        : "Atinge harta sau trage pinul ca să marchezi locul exact."}
                 </Text>
+
+                {/* The map's own affordances -- tap and drag -- are both out
+                    of reach with a reader running, so the place is given a
+                    second way in entirely. Drawn only then: it is a worse
+                    control for anybody who can see the map, and a form with
+                    two ways to answer one question is a form that asks it
+                    twice. */}
+                {screenReader && !editing ? (
+                  <PlaceBySearch
+                    onPlaced={(found) => {
+                      setPlaced({
+                        latitude: found.latitude,
+                        longitude: found.longitude,
+                      });
+                    }}
+                  />
+                ) : null}
               </View>
             </View>
           </View>
@@ -585,14 +630,14 @@ export default function ReportScreen() {
             <View
               className="flex-row items-start gap-2.5 rounded-lg p-3.5"
               style={{
-                backgroundColor: palette.destructive + "14",
+                backgroundColor: colors.destructive + "14",
                 borderWidth: StyleSheet.hairlineWidth,
-                borderColor: palette.destructive + "40",
+                borderColor: colors.destructive + "40",
               }}
             >
               <TriangleAlert
                 size={18}
-                color={palette.destructive}
+                color={colors.destructive}
                 strokeWidth={2.2}
                 style={{ flexShrink: 0, marginTop: 1 }}
               />

@@ -13,7 +13,7 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Text } from "@/components/ui/text";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 
 const SPRING = { damping: 20, stiffness: 220 };
 
@@ -34,6 +34,7 @@ export function BottomSheet({
   title?: string;
   children: ReactNode;
 }) {
+  const colors = useColors();
   const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const portalName = useId();
@@ -129,7 +130,7 @@ export function BottomSheet({
                   accessibilityRole="button"
                   accessibilityLabel="Închide"
                 >
-                  <X size={18} color={palette.foreground} />
+                  <X size={18} color={colors.foreground} />
                 </Pressable>
               </View>
             ) : null}

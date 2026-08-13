@@ -5,7 +5,7 @@ import { Cone } from "@/components/ui/cone";
 import { IconButton } from "@/components/ui/icon-button";
 import { Screen } from "@/components/ui/screen";
 import { Text } from "@/components/ui/text";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 
 /**
  * Placeholder for screens that are not built yet. Stack/modal screens pass
@@ -18,12 +18,13 @@ export function WorkInProgress({
   title: string;
   onBack?: () => void;
 }) {
+  const colors = useColors();
   return (
     <Screen>
       {onBack ? (
         <View className="px-5 pt-2">
           <IconButton size="sm" onPress={onBack} accessibilityLabel="Înapoi">
-            <ArrowLeft size={20} color={palette.foreground} />
+            <ArrowLeft size={20} color={colors.foreground} />
           </IconButton>
         </View>
       ) : null}

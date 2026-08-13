@@ -20,7 +20,7 @@ import { useState } from "react";
 import { Pressable, View } from "react-native";
 
 import { Text } from "@/components/ui/text";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { addWindow, removeWindow } from "@/lib/availability-windows";
 import { bucharestDateKey } from "@/lib/bucharest-time";
 import { formatClock } from "@/lib/geo";
@@ -90,6 +90,7 @@ export function OwnerOffer({
   mine: boolean;
   onChanged: () => void;
 }) {
+  const colors = useColors();
   const [busy, setBusy] = useState(false);
   const today = bucharestDateKey(new Date());
   const listed = liveWindows(windows, today).sort(byStart);
@@ -127,7 +128,7 @@ export function OwnerOffer({
   return (
     <View className="mt-4 rounded-lg border-hairline border-border bg-card p-4">
       <View className="flex-row items-center gap-2">
-        <Clock size={16} color={palette.indigo[600]} />
+        <Clock size={16} color={colors.accent} />
         <Text className="flex-1 font-title text-sm text-foreground">
           {mine ? "Când îl oferi" : "Când e liber"}
         </Text>
@@ -171,7 +172,7 @@ export function OwnerOffer({
                   hitSlop={8}
                   disabled={busy}
                 >
-                  <X size={16} color={palette.mutedForeground} />
+                  <X size={16} color={colors.mutedForeground} />
                 </Pressable>
               ) : null}
             </View>
@@ -195,7 +196,7 @@ export function OwnerOffer({
               disabled={busy}
               className="flex-row items-center gap-1.5 rounded-full border-hairline border-border bg-background px-3 py-2"
             >
-              <Plus size={14} color={palette.foreground} />
+              <Plus size={14} color={colors.foreground} />
               <Text className="font-semi text-xs text-foreground">{preset.label}</Text>
             </Pressable>
           ))}

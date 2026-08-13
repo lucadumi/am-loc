@@ -4,7 +4,7 @@ import { View } from "react-native";
 
 import { IconButton } from "@/components/ui/icon-button";
 import { Text } from "@/components/ui/text";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 
 export function ScreenHeader({
@@ -14,6 +14,7 @@ export function ScreenHeader({
   title?: string;
   className?: string;
 }) {
+  const colors = useColors();
   const router = useRouter();
   return (
     <View
@@ -27,7 +28,7 @@ export function ScreenHeader({
         onPress={() => router.back()}
         accessibilityLabel="Înapoi"
       >
-        <ArrowLeft size={20} color={palette.foreground} />
+        <ArrowLeft size={20} color={colors.foreground} />
       </IconButton>
       {title ? (
         <Text className="font-title text-lg text-foreground">{title}</Text>

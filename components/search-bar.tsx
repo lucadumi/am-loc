@@ -3,7 +3,7 @@ import { Pressable, StyleProp, View, ViewStyle } from "react-native";
 
 import { fieldVariants } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 
 /**
@@ -36,6 +36,7 @@ export function SearchBar({
   /** The brand colour on the field's edge. See `fieldVariants`. */
   accent?: boolean;
 }) {
+  const colors = useColors();
   return (
     <Pressable
       onPress={onPress}
@@ -47,7 +48,7 @@ export function SearchBar({
         className={cn(fieldVariants({ accent }), "flex-1")}
         style={style}
       >
-        <Search size={20} color={accent ? palette.primary : palette.mutedForeground} />
+        <Search size={20} color={accent ? colors.primary : colors.mutedForeground} />
         {/* Sized through `style`, not `text-base`, for the same reason as
             `Input`: the utility carries a 24px line height that leaves the
             glyphs sitting low in their box. These two are the same shape and

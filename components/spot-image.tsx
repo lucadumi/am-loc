@@ -1,7 +1,7 @@
 import { Car, Warehouse } from "lucide-react-native";
 import { View } from "react-native";
 
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 import { SpotKind } from "@/types";
 
@@ -19,6 +19,7 @@ export function SpotImage({
   iconSize?: number;
   className?: string;
 }) {
+  const colors = useColors();
   const Icon = kind === "garage" ? Warehouse : Car;
   return (
     <View
@@ -27,7 +28,7 @@ export function SpotImage({
         className,
       )}
     >
-      <Icon size={iconSize} color={palette.mutedForeground} strokeWidth={1.3} />
+      <Icon size={iconSize} color={colors.mutedForeground} strokeWidth={1.3} />
     </View>
   );
 }

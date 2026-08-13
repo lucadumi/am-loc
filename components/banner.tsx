@@ -2,7 +2,8 @@ import { ArrowRight } from "lucide-react-native";
 import { Image, Pressable, View, type ImageSourcePropType } from "react-native";
 
 import { Text } from "@/components/ui/text";
-import { palette, scrim } from "@/constants/theme";
+import { scrim } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 
 /**
@@ -34,6 +35,7 @@ export function Banner({
   onPress: () => void;
   className?: string;
 }) {
+  const colors = useColors();
   return (
     <Pressable
       onPress={onPress}
@@ -55,7 +57,7 @@ export function Banner({
           {label}
         </Text>
         <View className="ml-4 h-11 w-11 items-center justify-center rounded-full bg-primary">
-          <ArrowRight size={22} color={palette.primaryForeground} />
+          <ArrowRight size={22} color={colors.primaryForeground} />
         </View>
       </View>
     </Pressable>
