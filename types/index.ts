@@ -13,23 +13,17 @@ export type SpotStatus = "free" | "taken";
 export type SpotKind = "street" | "garage";
 
 /**
- * Who controls a spot, and therefore who is allowed to say whether it is free.
+ * Who controls a spot, and therefore what may lawfully be done with it.
  *
- * This is the app's central distinction, not a label. A public kerb space
- * belongs to nobody, so what is known about it is what passers-by have claimed,
- * and the app no longer claims to know: nobody is asked, so it carries no
- * availability at all.
- *
- * A private space belongs to somebody. Its owner does not *observe* that it is
- * free, they *decide* it, and a stranger's opinion about it is worth nothing at
- * all -- not less, nothing. Running an owner's decision through a model built to
- * arbitrate between strangers would be a category error, and would let anyone
- * with the app mark somebody's garage occupied.
- *
- * So: `public` availability is believed, `private` availability is declared.
- * See lib/private-spots.ts.
+ * Three kinds, because Romanian law treats them as three, and re-exported from
+ * `lib/spot-rights.ts` rather than declared here: the reasoning that makes the
+ * distinction load-bearing is legal rather than structural, and it belongs
+ * beside the capabilities it decides. Ask `rightsOf` before drawing anything
+ * that lets somebody list, reserve or charge for a place.
  */
-export type SpotAccess = "public" | "private";
+import type { SpotAccess } from "@/lib/spot-rights.ts";
+
+export type { SpotAccess };
 
 /**
  * Where a spot came from, which is not the same as who may speak about it.
@@ -59,10 +53,10 @@ export interface ParkingSpot {
   /** Human label, e.g. a street name. */
   title: string;
   /**
-   * Who may say whether this is free. Required, and deliberately so: every
-   * place that builds a spot has to answer the question out loud, because the
-   * default that gets forgotten is the one that lets a stranger mark somebody's
-   * garage occupied.
+   * What kind of place this is. Required, and deliberately so: every place
+   * that builds a spot has to answer the question out loud, because the
+   * default that gets forgotten is the one that lets somebody put a stretch of
+   * public road up for rent.
    */
   access: SpotAccess;
   /**

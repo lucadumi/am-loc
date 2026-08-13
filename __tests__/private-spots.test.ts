@@ -22,7 +22,6 @@ import {
   isPrivate,
   liveWindows,
   mayDeclare,
-  mayReport,
   offeredAt,
 } from "../lib/private-spots.ts";
 import type { AvailabilityWindow, ParkingSpot } from "../types/index.ts";
@@ -43,7 +42,7 @@ const window = (over: Partial<AvailabilityWindow> = {}): AvailabilityWindow => (
 const privateSpot = (over: Partial<ParkingSpot> = {}): ParkingSpot => ({
   id: "p1",
   title: "Garaj, Str. Glinka 12",
-  access: "private",
+  access: "private_property",
   source: "owner",
   latitude: 44.465,
   longitude: 26.09,
@@ -55,7 +54,7 @@ const privateSpot = (over: Partial<ParkingSpot> = {}): ParkingSpot => ({
 const publicSpot = (over: Partial<ParkingSpot> = {}): ParkingSpot => ({
   id: "s1",
   title: "Strada Lipscani",
-  access: "public",
+  access: "public_facility",
   source: "community",
   latitude: 44.4319,
   longitude: 26.1015,
@@ -153,20 +152,19 @@ describe("who may speak", () => {
     assert.equal(mayDeclare(privateSpot({ ownerId: undefined }), "owner_1"), false);
   });
 
-  test("anyone may report on a public kerb; nobody on a private space", () => {
-    assert.equal(mayReport(publicSpot()), true);
-    assert.equal(mayReport(privateSpot()), false);
-  });
-
-  test("not even the owner reports on their own space", () => {
-    /* They have a better instrument than looking out of the window, and putting
-       the same fact in two tables is how the two come to disagree. */
-    assert.equal(mayReport(privateSpot({ ownerId: "owner_1" })), false);
-  });
-
   test("isPrivate is decided by access, not by having an owner", () => {
     assert.equal(isPrivate(privateSpot()), true);
     assert.equal(isPrivate(publicSpot()), false);
+  });
+
+  test("a residential permit is not a private space", () => {
+    /* The distinction the three-value model exists for. A permit holder may
+       park there and may not be declared for, because the ground is not
+       theirs -- under the old two-value model this spot had to be labelled one
+       or the other, and either label was a lie. */
+    const permit = publicSpot({ access: "residential_permit" });
+    assert.equal(isPrivate(permit), false);
+    assert.equal(mayDeclare({ ...permit, ownerId: "owner_1" }, "owner_1"), false);
   });
 });
 

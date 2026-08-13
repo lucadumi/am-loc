@@ -32,7 +32,7 @@ const M_PER_DEG_LAT = 111_320;
 const at = (id: string, metres: number, over: Partial<ParkingSpot> = {}): ParkingSpot => ({
   id,
   title: id,
-  access: "public",
+  access: "public_facility",
   latitude: ME.latitude + metres / M_PER_DEG_LAT,
   longitude: ME.longitude,
   ...over,

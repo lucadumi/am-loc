@@ -46,7 +46,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0101",
     title: "Academiei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43623962,
@@ -59,7 +59,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0144",
     title: "Lido",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.441887,
@@ -72,7 +72,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0194",
     title: "Ministerul Mediului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.425364,
@@ -85,7 +85,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0233",
     title: "Edgar Quinet",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43555092,
@@ -98,7 +98,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0249",
     title: "Batistei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.437846,
@@ -111,7 +111,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0302",
     title: "Sfanta Vineri Junior",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.427693,
@@ -124,7 +124,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0319",
     title: "Nicolae Balcescu 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.439989,
@@ -137,7 +137,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0449",
     title: "Nicolae Filipescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43991,
@@ -150,7 +150,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0484",
     title: "Calea Victoriei 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.451168,
@@ -163,7 +163,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0502",
     title: "Rosetti Gradinita",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44128,
@@ -176,7 +176,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0575",
     title: "Nicolae Balcescu 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.438545,
@@ -189,7 +189,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0578",
     title: "Rosetti Semafor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.441174,
@@ -202,7 +202,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0632",
     title: "Sfanta Vineri",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.428294,
@@ -215,7 +215,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0726",
     title: "Biserica Enei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43653018,
@@ -228,7 +228,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0756",
     title: "Traian Vuia",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43878,
@@ -241,7 +241,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0763",
     title: "Panipat",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42938,
@@ -254,7 +254,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0766",
     title: "Vasile Conta",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.439074,
@@ -267,7 +267,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0796",
     title: "Ion Campineanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4374768,
@@ -280,7 +280,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0862",
     title: "C.A. Rosetti",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.440774,
@@ -293,7 +293,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0928",
     title: "Unirea Panta",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.429495,
@@ -306,7 +306,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P0938",
     title: "Unirea Pasaj",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42938,
@@ -319,7 +319,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1000",
     title: "Mircea Voda",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.425172,
@@ -332,7 +332,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1006",
     title: "Alveola Nicolae Caranfil",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48243877,
@@ -345,7 +345,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1012",
     title: "Ritmului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44484,
@@ -358,7 +358,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1013",
     title: "Semicercului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.445428,
@@ -371,7 +371,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1017",
     title: "Felicia Racovita",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.431928,
@@ -384,7 +384,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1035",
     title: "Budila",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43481115,
@@ -397,7 +397,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1054",
     title: "Ripiceni",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46182833,
@@ -410,7 +410,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1062",
     title: "Ioan Bianu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44992008,
@@ -423,7 +423,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1077",
     title: "Calea 13 Septembrie 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.423632,
@@ -436,7 +436,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1088",
     title: "Adrian",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.421532,
@@ -449,7 +449,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1103",
     title: "Dragoslavele",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4506318,
@@ -462,7 +462,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1111",
     title: "Mendeleev",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.444458,
@@ -475,7 +475,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1117",
     title: "Candiano Popescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.414371,
@@ -488,7 +488,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1119",
     title: "Splai Exim Bank",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4308547,
@@ -501,7 +501,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1130",
     title: "Piata Victoriei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.452077,
@@ -514,7 +514,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1163",
     title: "Luterana",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44121837,
@@ -527,7 +527,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1165",
     title: "Brezoianu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43668213,
@@ -540,7 +540,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1177",
     title: "Cina",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.440368,
@@ -553,7 +553,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1188",
     title: "Calea Plevnei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.434015,
@@ -566,7 +566,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1190",
     title: "Gheorghe Demetriade",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45983328,
@@ -579,7 +579,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1214",
     title: "Teodor Iliescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45986387,
@@ -592,7 +592,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1218",
     title: "Terasa Sidney 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.451786,
@@ -605,7 +605,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1233",
     title: "Cec Marconi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.431686,
@@ -618,7 +618,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1244",
     title: "General Berthelot 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.442306,
@@ -631,7 +631,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1248",
     title: "Radu De La Afumati",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4502048,
@@ -644,7 +644,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1265",
     title: "Tache Ionescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.444135,
@@ -657,7 +657,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1268",
     title: "Vasile Lascar 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.437727,
@@ -670,7 +670,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1275",
     title: "Vox Maris",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.444862,
@@ -683,7 +683,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1279",
     title: "Andrei Muresanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46015154,
@@ -696,7 +696,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1307",
     title: "Dobrogei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.440987,
@@ -709,7 +709,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1310",
     title: "Maria Rosetti",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.441954,
@@ -722,7 +722,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1317",
     title: "Venezuela",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45835637,
@@ -735,7 +735,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1323",
     title: "Alexandru Philippide",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.447219,
@@ -748,7 +748,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1327",
     title: "Aura Buzescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43835371,
@@ -761,7 +761,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1328",
     title: "Splai Turn",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42978143,
@@ -774,7 +774,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1329",
     title: "Dimitrie Marinescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43766816,
@@ -787,7 +787,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1342",
     title: "Luntrei 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46257,
@@ -800,7 +800,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1346",
     title: "Barbu Delavrancea",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.457379,
@@ -813,7 +813,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1347",
     title: "Lido Terasa",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44090472,
@@ -826,7 +826,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1350",
     title: "Iancu De Hunedoara 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45209293,
@@ -839,7 +839,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1370",
     title: "Piata Gemeni",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.445196,
@@ -852,7 +852,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1372",
     title: "Piata Lahovari",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.445309,
@@ -865,7 +865,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1375",
     title: "Calea Plevnei 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.435605,
@@ -878,7 +878,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1380",
     title: "Thomas Masaryk",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.440896,
@@ -891,7 +891,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1388",
     title: "Calea Rahovei 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.409881,
@@ -904,7 +904,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1404",
     title: "Stirbei Voda 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.439832,
@@ -917,7 +917,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1413",
     title: "Anghel Saligny",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.433747,
@@ -930,7 +930,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1433",
     title: "Duiliu Zamfirescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.453694,
@@ -943,7 +943,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1440",
     title: "Calea Floreasca 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.458878,
@@ -956,7 +956,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1442",
     title: "Superb Go",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.438932,
@@ -969,7 +969,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1467",
     title: "Precupetii Vechi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44801907,
@@ -982,7 +982,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1475",
     title: "Mihai Bravu 5",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43664236,
@@ -995,7 +995,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1479",
     title: "George Enescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.442799,
@@ -1008,7 +1008,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1487",
     title: "Matei Millo",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.436503,
@@ -1021,7 +1021,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1491",
     title: "Bcu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.439307,
@@ -1034,7 +1034,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1493",
     title: "Vanatori",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4292667,
@@ -1047,7 +1047,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1503",
     title: "Luncani",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44492418,
@@ -1060,7 +1060,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1506",
     title: "General Berthelot 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.440901,
@@ -1073,7 +1073,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1514",
     title: "Operetei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42905265,
@@ -1086,7 +1086,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1522",
     title: "Splaiul Unirii 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.425427,
@@ -1099,7 +1099,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1523",
     title: "Domnita Ancuta",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44525005,
@@ -1112,7 +1112,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1525",
     title: "Capalna",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.483713,
@@ -1125,7 +1125,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1529",
     title: "Cameliei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4435182,
@@ -1138,7 +1138,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1556",
     title: "Atena",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45823941,
@@ -1151,7 +1151,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1571",
     title: "Virgil Madgearu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.484581,
@@ -1164,7 +1164,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1573",
     title: "Piata Constitutiei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42733845,
@@ -1177,7 +1177,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1582",
     title: "Peco Bariere",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.433056,
@@ -1190,7 +1190,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1590",
     title: "Calea 13 Septembrie 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4196,
@@ -1203,7 +1203,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1591",
     title: "Axinte Uricariul",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45445677,
@@ -1216,7 +1216,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1596",
     title: "Pastorului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4608648,
@@ -1229,7 +1229,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1602",
     title: "Cretulescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.438376,
@@ -1242,7 +1242,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1607",
     title: "Emile Zola",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46012142,
@@ -1255,7 +1255,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1611",
     title: "Dacia 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44621,
@@ -1268,7 +1268,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1618",
     title: "Dacia Monteoru",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.445219,
@@ -1281,7 +1281,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1645",
     title: "Matei Basarab 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43058353,
@@ -1294,7 +1294,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1656",
     title: "Tronson 2D",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.426,
@@ -1307,7 +1307,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1660",
     title: "Terasa Sidney",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.451679,
@@ -1320,7 +1320,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1661",
     title: "Victor Babes",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.429516,
@@ -1333,7 +1333,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1664",
     title: "Horoscop 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42533,
@@ -1346,7 +1346,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1667",
     title: "Rond Pescarus",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.47298585,
@@ -1359,7 +1359,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1677",
     title: "Nicolae Beldiceanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44952377,
@@ -1372,7 +1372,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1701",
     title: "Miron Costin",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45033402,
@@ -1385,7 +1385,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1707",
     title: "Peco Mi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43295,
@@ -1398,7 +1398,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1713",
     title: "Corneliu Botez",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.444207,
@@ -1411,7 +1411,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1716",
     title: "Sfintii Apostoli",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42790514,
@@ -1424,7 +1424,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1722",
     title: "Piata Victoriei Spring Time",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.452077,
@@ -1437,7 +1437,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1731",
     title: "Vasile Stroescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44000701,
@@ -1450,7 +1450,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1735",
     title: "Teiul Doamnei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46064776,
@@ -1463,7 +1463,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1747",
     title: "Gheorghe Bratianu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46114148,
@@ -1476,7 +1476,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1750",
     title: "Constantin Mille",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.435484,
@@ -1489,7 +1489,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1755",
     title: "Sfintii Voievozi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.446576,
@@ -1502,7 +1502,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1756",
     title: "Ion Atanasiu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.426622,
@@ -1515,7 +1515,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1757",
     title: "Putul Lui Zamfir",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.461007,
@@ -1528,7 +1528,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1760",
     title: "Caius Marcius Coriolan",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.421837,
@@ -1541,7 +1541,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1785",
     title: "Grigore Alexandrescu 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.450854,
@@ -1554,7 +1554,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1790",
     title: "Victor Eftimiu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43681667,
@@ -1567,7 +1567,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1794",
     title: "Barierei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44672671,
@@ -1580,7 +1580,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1797",
     title: "Piata Washington",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.455372,
@@ -1593,7 +1593,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1800",
     title: "Zalomit",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.435117,
@@ -1606,7 +1606,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1803",
     title: "Episcopiei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44144857,
@@ -1619,7 +1619,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1805",
     title: "Schitu Magureanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43748,
@@ -1632,7 +1632,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1808",
     title: "Arthur Verona 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.442655,
@@ -1645,7 +1645,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1813",
     title: "Clopotarii Vechi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4508493,
@@ -1658,7 +1658,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1817",
     title: "Marin Serghiescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.439806,
@@ -1671,7 +1671,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1819",
     title: "Amzei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.443746,
@@ -1684,7 +1684,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1824",
     title: "Sala Palatului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.438939,
@@ -1697,7 +1697,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1841",
     title: "Finlanda",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45360257,
@@ -1710,7 +1710,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1842",
     title: "Tokio",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45323929,
@@ -1723,7 +1723,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1843",
     title: "Termopile",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43879772,
@@ -1736,7 +1736,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1849",
     title: "Cec Judecatorie",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.432255,
@@ -1749,7 +1749,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1860",
     title: "Elie Radu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.434027,
@@ -1762,7 +1762,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1861",
     title: "Dacia",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.446875,
@@ -1775,7 +1775,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1872",
     title: "Eva",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.442961,
@@ -1788,7 +1788,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1874",
     title: "Afluentului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44718906,
@@ -1801,7 +1801,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1892",
     title: "Constantin Esarcu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.441598,
@@ -1814,7 +1814,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1897",
     title: "Nerva Traian",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.424999,
@@ -1827,7 +1827,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1898",
     title: "Constantin Miculescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.41622621,
@@ -1840,7 +1840,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1901",
     title: "Otetelesanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43586,
@@ -1853,7 +1853,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1904",
     title: "Octavian Goga 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42315,
@@ -1866,7 +1866,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1907",
     title: "Calea Plevnei 5",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.444894,
@@ -1879,7 +1879,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1909",
     title: "General Berthelot",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44140075,
@@ -1892,7 +1892,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1935",
     title: "Arcului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43833692,
@@ -1905,7 +1905,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1942",
     title: "Piata Valter Maracineanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.437482,
@@ -1918,7 +1918,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1948",
     title: "Peco Pompieri",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.433267,
@@ -1931,7 +1931,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1972",
     title: "George Folescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44129215,
@@ -1944,7 +1944,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1974",
     title: "Maria Ghiculeasa",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45960065,
@@ -1957,7 +1957,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1976",
     title: "Piata Revolutiei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4378,
@@ -1970,7 +1970,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P1990",
     title: "Aripilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48274703,
@@ -1983,7 +1983,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2003",
     title: "Constantin Budisteanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44327778,
@@ -1996,7 +1996,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2023",
     title: "Calusei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44363928,
@@ -2009,7 +2009,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2036",
     title: "I. L. Caragiale",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4408356,
@@ -2022,7 +2022,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2040",
     title: "Petre Herescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.429983,
@@ -2035,7 +2035,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2052",
     title: "Ronda",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43699409,
@@ -2048,7 +2048,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2065",
     title: "Ardeleni",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44722298,
@@ -2061,7 +2061,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2067",
     title: "Calea Grivitei 4",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.444309,
@@ -2074,7 +2074,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2095",
     title: "Cercului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44022488,
@@ -2087,7 +2087,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2115",
     title: "Ermil Pangrati",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45938369,
@@ -2100,7 +2100,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2121",
     title: "Georges Bizet 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46686222,
@@ -2113,7 +2113,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2147",
     title: "Viesparilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45103087,
@@ -2126,7 +2126,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2177",
     title: "Gara Parc",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.445661,
@@ -2139,7 +2139,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2181",
     title: "Piata Latina",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.437704,
@@ -2152,7 +2152,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2224",
     title: "Intrarea Sahia",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43928793,
@@ -2165,7 +2165,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2236",
     title: "Gafencu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48749627,
@@ -2178,7 +2178,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2247",
     title: "Soseaua Nordului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.484305,
@@ -2191,7 +2191,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2268",
     title: "Intrarea Rigas",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.436249,
@@ -2204,7 +2204,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2277",
     title: "Gheorghe Stalpeanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.465825,
@@ -2217,7 +2217,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2282",
     title: "Piata Spania",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.445836,
@@ -2230,7 +2230,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2307",
     title: "Mihail Sebastian",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.41982253,
@@ -2243,7 +2243,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2309",
     title: "Aviatiei 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48549174,
@@ -2256,7 +2256,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2336",
     title: "Stefan Burileanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4840963,
@@ -2269,7 +2269,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2338",
     title: "Iuliu Tetrat",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46316513,
@@ -2282,7 +2282,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2359",
     title: "Lunei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43759663,
@@ -2295,7 +2295,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2372",
     title: "Ion Marasescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46685096,
@@ -2308,7 +2308,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2376",
     title: "Park&ride Pantelimon",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44024871,
@@ -2321,7 +2321,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2396",
     title: "Zidurilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44545652,
@@ -2334,7 +2334,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2411",
     title: "Piata Constitutiei Autocare",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42727829,
@@ -2347,7 +2347,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2415",
     title: "Aviatorilor 2S",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46256677,
@@ -2360,7 +2360,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2435",
     title: "Expozitiei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.474829,
@@ -2373,7 +2373,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2436",
     title: "Piata Charles De Gaulle",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.465967,
@@ -2386,7 +2386,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2488",
     title: "Aviatorilor 2D",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.463482,
@@ -2399,7 +2399,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2491",
     title: "Polizu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.447924,
@@ -2412,7 +2412,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2505",
     title: "Piata Alba Iulia",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.425682,
@@ -2425,7 +2425,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2507",
     title: "Octavian Goga 5",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.423744,
@@ -2438,7 +2438,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2521",
     title: "Octav Cocarascu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45435623,
@@ -2451,7 +2451,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2525",
     title: "Vasile Lascar",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4403606,
@@ -2464,7 +2464,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2528",
     title: "Tronson 3S",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.426377,
@@ -2477,7 +2477,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2529",
     title: "Opera",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.434412,
@@ -2490,7 +2490,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2538",
     title: "Ion Maiorescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44628975,
@@ -2503,7 +2503,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2547",
     title: "Vasile Lascar 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.439287,
@@ -2516,7 +2516,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2566",
     title: "Maramures",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.441863,
@@ -2529,7 +2529,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2572",
     title: "Jean Louis Calderon 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.439931,
@@ -2542,7 +2542,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2573",
     title: "Gheorghe Marinescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.433842,
@@ -2555,7 +2555,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2575",
     title: "Piata Dorobanti",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.460258,
@@ -2568,7 +2568,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2584",
     title: "Haga",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.458028,
@@ -2581,7 +2581,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2590",
     title: "Anastasie Simu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44196149,
@@ -2594,7 +2594,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2599",
     title: "Lev Tolstoi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46628,
@@ -2607,7 +2607,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2631",
     title: "Serban Petrescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.463238,
@@ -2620,7 +2620,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2647",
     title: "George Vraca",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43674505,
@@ -2633,7 +2633,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2674",
     title: "Arthur Verona 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.442585,
@@ -2646,7 +2646,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2687",
     title: "Elizeu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44768785,
@@ -2659,7 +2659,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2689",
     title: "Bucur Obor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44951,
@@ -2672,7 +2672,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2694",
     title: "George Constantinescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.479313,
@@ -2685,7 +2685,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2704",
     title: "Constantin Aricescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.461361,
@@ -2698,7 +2698,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2710",
     title: "Helesteului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46909362,
@@ -2711,7 +2711,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2713",
     title: "Ankara",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.459264,
@@ -2724,7 +2724,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2718",
     title: "Alveola Cmn",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.434819,
@@ -2737,7 +2737,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2725",
     title: "Piata Garii De Nord",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44669095,
@@ -2750,7 +2750,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2728",
     title: "Popa Marin",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.464991,
@@ -2763,7 +2763,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2730",
     title: "Gara Ceas",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.446605,
@@ -2776,7 +2776,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2740",
     title: "Macedonia",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.441223,
@@ -2789,7 +2789,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2745",
     title: "Mihail Mirinescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.429947,
@@ -2802,7 +2802,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2752",
     title: "Thoma Ionescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43083437,
@@ -2815,7 +2815,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2756",
     title: "Ferdinand 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44232807,
@@ -2828,7 +2828,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2765",
     title: "Elena Vacarescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.489351,
@@ -2841,7 +2841,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2772",
     title: "Doamna Ghica 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.445997,
@@ -2854,7 +2854,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2773",
     title: "Louis Blanc",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.453501,
@@ -2867,7 +2867,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2793",
     title: "Pescarus",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.472493,
@@ -2880,7 +2880,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2795",
     title: "Petre Ispirescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.41307185,
@@ -2893,7 +2893,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2805",
     title: "Traian Vasile",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.47076369,
@@ -2906,7 +2906,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2830",
     title: "Raspantiilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45004374,
@@ -2919,7 +2919,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2834",
     title: "Calea Floreasca 5",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46877279,
@@ -2932,7 +2932,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2847",
     title: "Constantin Daniel",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.449366,
@@ -2945,7 +2945,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2848",
     title: "Lirei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44048978,
@@ -2958,7 +2958,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2857",
     title: "Alee Legatura Intre Intrarea Bitolia Si Intrtarea Teodor Iliescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46023918,
@@ -2971,7 +2971,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2861",
     title: "Piatra Morii",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4880811,
@@ -2984,7 +2984,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2872",
     title: "Caroteni",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4682388,
@@ -2997,7 +2997,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2880",
     title: "Aviatorilor 1D",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.469133,
@@ -3010,7 +3010,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2888",
     title: "Ficusului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.491356,
@@ -3023,7 +3023,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2910",
     title: "Slanic",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.434802,
@@ -3036,7 +3036,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2917",
     title: "Constantin Balescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.466216,
@@ -3049,7 +3049,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2929",
     title: "Aviatorilor 1S",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.468849,
@@ -3062,7 +3062,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2935",
     title: "Alveola 5S",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.426177,
@@ -3075,7 +3075,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2938",
     title: "Nicolae Tomescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42926,
@@ -3088,7 +3088,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2955",
     title: "Virgil Draghiceanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46135603,
@@ -3101,7 +3101,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2965",
     title: "Radu Beller",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.462195,
@@ -3114,7 +3114,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2972",
     title: "Pavilion H1 + H2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.475914,
@@ -3127,7 +3127,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P2990",
     title: "Schitul Darvari",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4428549,
@@ -3140,7 +3140,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3000",
     title: "Pietei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48490592,
@@ -3153,7 +3153,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3032",
     title: "Jean Monnet",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.467511,
@@ -3166,7 +3166,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3040",
     title: "Maguricea",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48158835,
@@ -3179,7 +3179,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3042",
     title: "Alexandru Campeanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45616724,
@@ -3192,7 +3192,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3045",
     title: "Circului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.454765,
@@ -3205,7 +3205,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3065",
     title: "Feroviarilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46641586,
@@ -3218,7 +3218,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3079",
     title: "Ernest Brosteanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44833204,
@@ -3231,7 +3231,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3102",
     title: "Ion Campineanu 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.437592,
@@ -3244,7 +3244,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3103",
     title: "Armeneasca",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4396,
@@ -3257,7 +3257,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3107",
     title: "Lebedei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45312768,
@@ -3270,7 +3270,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3128",
     title: "Piata Libertatii 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.418625,
@@ -3283,7 +3283,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3135",
     title: "Rasuri",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44838106,
@@ -3296,7 +3296,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3142",
     title: "Radu Mihaila",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45958486,
@@ -3309,7 +3309,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3147",
     title: "Clucerului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46181,
@@ -3322,7 +3322,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3149",
     title: "Hermann Oberth",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46644081,
@@ -3335,7 +3335,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3178",
     title: "Stanislav Cihoschi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44824327,
@@ -3348,7 +3348,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3218",
     title: "Constantin Buzdugan",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46464277,
@@ -3361,7 +3361,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3224",
     title: "Alexandrina",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46501966,
@@ -3374,7 +3374,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3227",
     title: "Corbeni",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.440085,
@@ -3387,7 +3387,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3233",
     title: "Dragos Voda",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44723336,
@@ -3400,7 +3400,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3255",
     title: "Christian Tell 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44545383,
@@ -3413,7 +3413,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3256",
     title: "Dragomir Hurmuzescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.41735864,
@@ -3426,7 +3426,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3277",
     title: "Dimitrie Orbescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44512304,
@@ -3439,7 +3439,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3288",
     title: "Doamnei 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43333091,
@@ -3452,7 +3452,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3292",
     title: "Ioan Cantacuzino",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.463343,
@@ -3465,7 +3465,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3297",
     title: "Ion Campineanu 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43777814,
@@ -3478,7 +3478,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3313",
     title: "Brezoianu 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.433585,
@@ -3491,7 +3491,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3314",
     title: "Ministerul Transporturilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44440636,
@@ -3504,7 +3504,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3316",
     title: "Strada Semilunei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.439007,
@@ -3517,7 +3517,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3327",
     title: "Mihai Ciuca",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.427301,
@@ -3530,7 +3530,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3331",
     title: "Arhiereu Calist",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43274706,
@@ -3543,7 +3543,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3348",
     title: "Serghei Rahmaninov",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46448186,
@@ -3556,7 +3556,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3371",
     title: "Copilului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46465341,
@@ -3569,7 +3569,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3381",
     title: "David Praporgescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43994145,
@@ -3582,7 +3582,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3384",
     title: "Sperantei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43779944,
@@ -3595,7 +3595,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3394",
     title: "Tuzla",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46490448,
@@ -3608,7 +3608,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3400",
     title: "Siriului 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48559855,
@@ -3621,7 +3621,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3407",
     title: "Piata Presei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.480691,
@@ -3634,7 +3634,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3438",
     title: "Pavlov",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46558412,
@@ -3647,7 +3647,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3442",
     title: "Stefan Stefanescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44370237,
@@ -3660,7 +3660,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3445",
     title: "Sofia",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45962778,
@@ -3673,7 +3673,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3451",
     title: "Frunzei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43473082,
@@ -3686,7 +3686,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3459",
     title: "Nicolae Minovici",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48438943,
@@ -3699,7 +3699,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3469",
     title: "Grigore Alexandrescu 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.451393,
@@ -3712,7 +3712,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3470",
     title: "Doamna Ghica 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.458736,
@@ -3725,7 +3725,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3476",
     title: "Izvor Cu Autocare",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43036112,
@@ -3738,7 +3738,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3483",
     title: "Leonida Varnali",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44868,
@@ -3751,7 +3751,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3485",
     title: "Baba Novac",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.427001,
@@ -3764,7 +3764,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3508",
     title: "Biserica Pantelimon",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44234044,
@@ -3777,7 +3777,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3513",
     title: "Avrig 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.443068,
@@ -3790,7 +3790,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3526",
     title: "Nicolae Golescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44268732,
@@ -3803,7 +3803,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3534",
     title: "Alexandru Constantinescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.467146,
@@ -3816,7 +3816,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3538",
     title: "Parcului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48123906,
@@ -3829,7 +3829,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3552",
     title: "Panait Iatropol",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.431434,
@@ -3842,7 +3842,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3557",
     title: "Hasdeu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.434234,
@@ -3855,7 +3855,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3560",
     title: "Costache Negri",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.432553,
@@ -3868,7 +3868,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3574",
     title: "Vespasian",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44518226,
@@ -3881,7 +3881,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3632",
     title: "Bd. Carol",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.437351,
@@ -3894,7 +3894,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3645",
     title: "Mircea Vulcanescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.441497,
@@ -3907,7 +3907,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3646",
     title: "Nicolae Grigorescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.427317,
@@ -3920,7 +3920,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3650",
     title: "Nasaud 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.41204117,
@@ -3933,7 +3933,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3652",
     title: "Pod Pipera 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.479566,
@@ -3946,7 +3946,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3670",
     title: "Theodor Neculuta",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4379781,
@@ -3959,7 +3959,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3683",
     title: "Nicolae Ionescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45925463,
@@ -3972,7 +3972,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3698",
     title: "Stefan Capsa",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.433011,
@@ -3985,7 +3985,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3702",
     title: "Polona",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.448465,
@@ -3998,7 +3998,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3742",
     title: "Carol Davila 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43133037,
@@ -4011,7 +4011,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3751",
     title: "Drobeta",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44695588,
@@ -4024,7 +4024,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3758",
     title: "Vergului 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43854489,
@@ -4037,7 +4037,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3765",
     title: "Popa Rusu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.439342,
@@ -4050,7 +4050,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3776",
     title: "Unirii Fantani",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.427099,
@@ -4063,7 +4063,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3778",
     title: "Ion Ghiulamila",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42649475,
@@ -4076,7 +4076,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3786",
     title: "Dorin Pavel",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46100498,
@@ -4089,7 +4089,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3797",
     title: "Lipova",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.441328,
@@ -4102,7 +4102,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3828",
     title: "Gina Patrichi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.449571,
@@ -4115,7 +4115,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3831",
     title: "Spatarului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.438957,
@@ -4128,7 +4128,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3851",
     title: "Crangului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46969145,
@@ -4141,7 +4141,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3863",
     title: "Fluviului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44766588,
@@ -4154,7 +4154,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3874",
     title: "Gheorghe Pop De Basesti",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44211985,
@@ -4167,7 +4167,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3880",
     title: "Arthur Verona 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.442889,
@@ -4180,7 +4180,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3898",
     title: "Grigore Cobalcescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.438128,
@@ -4193,7 +4193,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3912",
     title: "Mihai Bravu 6",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44261243,
@@ -4206,7 +4206,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3916",
     title: "Sevastopol",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.449823,
@@ -4219,7 +4219,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3923",
     title: "Calea Floreasca 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.461213,
@@ -4232,7 +4232,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3929",
     title: "Ion Inculet",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46480263,
@@ -4245,7 +4245,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3931",
     title: "Atanase Ionescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44030258,
@@ -4258,7 +4258,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3957",
     title: "Calea Plevnei 4",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44347,
@@ -4271,7 +4271,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3969",
     title: "Danielopolu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48623064,
@@ -4284,7 +4284,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3982",
     title: "Alexandru Beldiman",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43431647,
@@ -4297,7 +4297,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P3983",
     title: "Vaselor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44469574,
@@ -4310,7 +4310,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4004",
     title: "Calea Grivitei 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.445039,
@@ -4323,7 +4323,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4020",
     title: "Agricultori 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43434622,
@@ -4336,7 +4336,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4074",
     title: "Mihail Petrini",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.429917,
@@ -4349,7 +4349,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4080",
     title: "Paris 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4536927,
@@ -4362,7 +4362,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4082",
     title: "Petofi Sandor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46168456,
@@ -4375,7 +4375,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4086",
     title: "Toamnei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.445165,
@@ -4388,7 +4388,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4114",
     title: "Eroilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43209758,
@@ -4401,7 +4401,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4128",
     title: "Iancu Capitanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.442482,
@@ -4414,7 +4414,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4142",
     title: "Scoala Floreasca",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45814973,
@@ -4427,7 +4427,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4146",
     title: "Gopo",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42447157,
@@ -4440,7 +4440,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4159",
     title: "Temisana",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44188321,
@@ -4453,7 +4453,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4176",
     title: "Campia Libertatii",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.424758,
@@ -4466,7 +4466,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4187",
     title: "Saradei 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48580973,
@@ -4479,7 +4479,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4189",
     title: "Casa Doina",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45900948,
@@ -4492,7 +4492,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4203",
     title: "Pasaj Doamna Ghica",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.462089,
@@ -4505,7 +4505,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4206",
     title: "Avrig 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44650717,
@@ -4518,7 +4518,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4219",
     title: "Berna",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.454117,
@@ -4531,7 +4531,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4225",
     title: "Vasile Dorobantu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46213625,
@@ -4544,7 +4544,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4230",
     title: "Marcel Andreescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.458872,
@@ -4557,7 +4557,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4235",
     title: "Johann Sebastian Bach",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4634664,
@@ -4570,7 +4570,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4273",
     title: "Emanoil Porumbaru",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.463276,
@@ -4583,7 +4583,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4288",
     title: "Vergului 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43924928,
@@ -4596,7 +4596,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4294",
     title: "Ciobanasului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43559402,
@@ -4609,7 +4609,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4300",
     title: "Constantin Caracas",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45344817,
@@ -4622,7 +4622,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4309",
     title: "Gheorghe Sontu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46566514,
@@ -4635,7 +4635,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4328",
     title: "Izvor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42585,
@@ -4648,7 +4648,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4329",
     title: "Parintele Staniloaie",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43515794,
@@ -4661,7 +4661,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4344",
     title: "Horatiu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44354461,
@@ -4674,7 +4674,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4364",
     title: "Iancu De Hunedoara 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4524335,
@@ -4687,7 +4687,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4377",
     title: "Londra",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.455558,
@@ -4700,7 +4700,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4426",
     title: "Sfantul Spiridon",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44151985,
@@ -4713,7 +4713,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4429",
     title: "Libertatii 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43153242,
@@ -4726,7 +4726,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4447",
     title: "Parcalabul Baldovin",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4431962,
@@ -4739,7 +4739,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4453",
     title: "Biserica Amzei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44508822,
@@ -4752,7 +4752,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4474",
     title: "Georges Bizet 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46684695,
@@ -4765,7 +4765,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4482",
     title: "Andrei Popovici",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.462917,
@@ -4778,7 +4778,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4496",
     title: "Lisabona",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.456691,
@@ -4791,7 +4791,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4542",
     title: "Acvila",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4233213,
@@ -4804,7 +4804,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4544",
     title: "Scarlatescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45387019,
@@ -4817,7 +4817,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4548",
     title: "Calea Floreasca 4",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46484,
@@ -4830,7 +4830,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4555",
     title: "Nicolae Drossu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46797849,
@@ -4843,7 +4843,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4594",
     title: "Laurentiu Claudian",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44096539,
@@ -4856,7 +4856,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4599",
     title: "Aristide Demetriade",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.437015,
@@ -4869,7 +4869,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4605",
     title: "Putul Cu Plopi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.440538,
@@ -4882,7 +4882,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4629",
     title: "Tudor Vladimirescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.420125,
@@ -4895,7 +4895,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4640",
     title: "Franzelarilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.441041,
@@ -4908,7 +4908,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4643",
     title: "Aerogarii",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.49002275,
@@ -4921,7 +4921,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4654",
     title: "Daniel Rosenthal",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4657,
@@ -4934,7 +4934,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4661",
     title: "Aviatiei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48083861,
@@ -4947,7 +4947,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4665",
     title: "Luminei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44640812,
@@ -4960,7 +4960,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4715",
     title: "Petru Poni",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44925782,
@@ -4973,7 +4973,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4739",
     title: "Carausilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44617812,
@@ -4986,7 +4986,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4759",
     title: "Culmea Veche",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43379804,
@@ -4999,7 +4999,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4780",
     title: "Ionel Perlea",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43612,
@@ -5012,7 +5012,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4796",
     title: "Avram Iancu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43802337,
@@ -5025,7 +5025,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4805",
     title: "Jean Louis Calderon 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.442129,
@@ -5038,7 +5038,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4806",
     title: "Praga",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.456435,
@@ -5051,7 +5051,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4832",
     title: "Nicolae Manolescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.430237,
@@ -5064,7 +5064,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4859",
     title: "Ostasilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.437475,
@@ -5077,7 +5077,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4878",
     title: "Alexandru Ioan Cuza",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.450598,
@@ -5090,7 +5090,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4879",
     title: "Orzari",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4332318,
@@ -5103,7 +5103,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4884",
     title: "Baratiei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43034534,
@@ -5116,7 +5116,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4888",
     title: "Hristov Botev 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.435149,
@@ -5129,7 +5129,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4891",
     title: "Pompiliu Eliade",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43535023,
@@ -5142,7 +5142,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4898",
     title: "Nicolae Stratosescu Cucu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46106548,
@@ -5155,7 +5155,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4910",
     title: "Modrogan",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4576351,
@@ -5168,7 +5168,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4916",
     title: "Agricultori 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43912805,
@@ -5181,7 +5181,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4927",
     title: "Silexului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.41699049,
@@ -5194,7 +5194,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4951",
     title: "Joseph Lister",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.430543,
@@ -5207,7 +5207,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4954",
     title: "Negustori",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43484299,
@@ -5220,7 +5220,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4971",
     title: "Dionisie Fotino",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45710593,
@@ -5233,7 +5233,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4973",
     title: "Docentilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.462586,
@@ -5246,7 +5246,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4998",
     title: "Mecet",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4367243,
@@ -5259,7 +5259,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P4999",
     title: "Grigore Cerchez",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46128725,
@@ -5272,7 +5272,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5009",
     title: "Piata Regina Maria",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4216,
@@ -5285,7 +5285,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5010",
     title: "Muzeul Zambaccian",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46074353,
@@ -5298,7 +5298,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5024",
     title: "Tudor Stefan",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45961,
@@ -5311,7 +5311,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5029",
     title: "Lacul Tei 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45844839,
@@ -5324,7 +5324,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5033",
     title: "Alexandru Boicescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.432717,
@@ -5337,7 +5337,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5037",
     title: "Dimitrie Giurescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.448191,
@@ -5350,7 +5350,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5040",
     title: "Petru Tei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4614812,
@@ -5363,7 +5363,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5049",
     title: "Ghica Tei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46042358,
@@ -5376,7 +5376,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5054",
     title: "Felix 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44965943,
@@ -5389,7 +5389,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5075",
     title: "Panduri 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42451,
@@ -5402,7 +5402,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5087",
     title: "Traian 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44288566,
@@ -5415,7 +5415,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5089",
     title: "Alveola 4D",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.425489,
@@ -5428,7 +5428,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5091",
     title: "Aron Cotrus",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.485088,
@@ -5441,7 +5441,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5092",
     title: "Uranus",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.420854,
@@ -5454,7 +5454,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5099",
     title: "Ady Endre",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46038979,
@@ -5467,7 +5467,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5112",
     title: "Alexandru Donici",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.442653,
@@ -5480,7 +5480,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5134",
     title: "Maxim Gorki",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46667084,
@@ -5493,7 +5493,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5165",
     title: "Moraru Octavian",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46203283,
@@ -5506,7 +5506,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5200",
     title: "Herastrau",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4691046,
@@ -5519,7 +5519,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5222",
     title: "Aviatorilor 3S",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.455151,
@@ -5532,7 +5532,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5230",
     title: "Frederic Joliot Courie",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.429801,
@@ -5545,7 +5545,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5312",
     title: "Alexandru Romano",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43539678,
@@ -5558,7 +5558,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5319",
     title: "Carol Davila 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.434373,
@@ -5571,7 +5571,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5349",
     title: "Titu Maiorescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44597463,
@@ -5584,7 +5584,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5362",
     title: "Radu Calomfirescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43239178,
@@ -5597,7 +5597,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5399",
     title: "Daisoara",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.41724919,
@@ -5610,7 +5610,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5404",
     title: "Traian 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4375167,
@@ -5623,7 +5623,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5410",
     title: "Teleajen",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.435349,
@@ -5636,7 +5636,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5413",
     title: "Octavian Goga 4",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.423811,
@@ -5649,7 +5649,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5493",
     title: "Naum Ramniceanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45630359,
@@ -5662,7 +5662,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5511",
     title: "Barbu Delavrancea 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.460508,
@@ -5675,7 +5675,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5530",
     title: "Constantin Brancusi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.428815,
@@ -5688,7 +5688,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5531",
     title: "Paris",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.456825,
@@ -5701,7 +5701,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5553",
     title: "Arthur Vartejanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4530735,
@@ -5714,7 +5714,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5564",
     title: "Transilvaniei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4425236,
@@ -5727,7 +5727,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5571",
     title: "Madrid",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45436784,
@@ -5740,7 +5740,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5576",
     title: "Poiana Narciselor 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43885648,
@@ -5753,7 +5753,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5604",
     title: "Otetari",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43896,
@@ -5766,7 +5766,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5608",
     title: "Grigore Manolescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.456405,
@@ -5779,7 +5779,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5626",
     title: "Hagi Moscu Maria",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45464252,
@@ -5792,7 +5792,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5629",
     title: "Buestrului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45928126,
@@ -5805,7 +5805,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5631",
     title: "Ana Davila",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.433136,
@@ -5818,7 +5818,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5635",
     title: "Justinian",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44926856,
@@ -5831,7 +5831,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5664",
     title: "Piata Nicolae Dabija",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43667457,
@@ -5844,7 +5844,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5666",
     title: "George Calinescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46192,
@@ -5857,7 +5857,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5672",
     title: "Oborul Nou",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44298885,
@@ -5870,7 +5870,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5684",
     title: "Dr. Florea Teodorescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43120569,
@@ -5883,7 +5883,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5717",
     title: "Amman",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45578553,
@@ -5896,7 +5896,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5743",
     title: "Ivo Andric",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43456152,
@@ -5909,7 +5909,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5750",
     title: "Alexandru Radovici",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44950688,
@@ -5922,7 +5922,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5751",
     title: "Fainari",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44936388,
@@ -5935,7 +5935,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5758",
     title: "Stolnicului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4641213,
@@ -5948,7 +5948,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5766",
     title: "Brezoianu 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.438358,
@@ -5961,7 +5961,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5772",
     title: "Argentina",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.453809,
@@ -5974,7 +5974,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5774",
     title: "Sos. Iancului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44281801,
@@ -5987,7 +5987,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5780",
     title: "Liviu Rebreanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.423471,
@@ -6000,7 +6000,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5800",
     title: "Rafael Sanzio",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4380035,
@@ -6013,7 +6013,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5808",
     title: "Patriei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42967883,
@@ -6026,7 +6026,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5818",
     title: "Dumbrava Rosie",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.445132,
@@ -6039,7 +6039,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5849",
     title: "Constantin Arion",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44957593,
@@ -6052,7 +6052,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5852",
     title: "Armindenului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.468876,
@@ -6065,7 +6065,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5884",
     title: "Teodor Stefanescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43389263,
@@ -6078,7 +6078,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5891",
     title: "Stefan Iulian",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45548339,
@@ -6091,7 +6091,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5907",
     title: "Nicolae Turnescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.435024,
@@ -6104,7 +6104,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5919",
     title: "Sfintilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43539552,
@@ -6117,7 +6117,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5930",
     title: "Fuica Vasile",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.47089037,
@@ -6130,7 +6130,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P5941",
     title: "Gara Dealul Spirii",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42285916,
@@ -6143,7 +6143,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6036",
     title: "Vasile Cristescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43399548,
@@ -6156,7 +6156,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6039",
     title: "Strada Latina",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43913,
@@ -6169,7 +6169,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6045",
     title: "Ruschita",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43787873,
@@ -6182,7 +6182,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6082",
     title: "Piata Quito",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4569922,
@@ -6195,7 +6195,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6103",
     title: "Alexandru Cernat",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45146962,
@@ -6208,7 +6208,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6110",
     title: "Giuseppe Garibaldi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46522845,
@@ -6221,7 +6221,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6114",
     title: "Magura Vulturului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44151474,
@@ -6234,7 +6234,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6126",
     title: "Zece Mese",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44089334,
@@ -6247,7 +6247,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6135",
     title: "Rabat",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4589353,
@@ -6260,7 +6260,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6185",
     title: "Calea Plevnei 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.441702,
@@ -6273,7 +6273,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6286",
     title: "Siriului 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48430134,
@@ -6286,7 +6286,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6288",
     title: "Petre Cretu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4678224,
@@ -6299,7 +6299,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6304",
     title: "Caderea Bastiliei 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.451117,
@@ -6312,7 +6312,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6312",
     title: "Stefan Protopopescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46334049,
@@ -6325,7 +6325,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6349",
     title: "Ion Andreescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44116586,
@@ -6338,7 +6338,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6407",
     title: "Clunet",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.433143,
@@ -6351,7 +6351,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6425",
     title: "Lipscani 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.432263,
@@ -6364,7 +6364,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6429",
     title: "Lacul Tei 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46065985,
@@ -6377,7 +6377,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6430",
     title: "Alveola Niculae Staicovici",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42935162,
@@ -6390,7 +6390,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6445",
     title: "Tudor Vianu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45752677,
@@ -6403,7 +6403,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6447",
     title: "Danielopol",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42821568,
@@ -6416,7 +6416,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6448",
     title: "Alveola 4S",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.426352,
@@ -6429,7 +6429,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6449",
     title: "Iacob Negruzzi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4498308,
@@ -6442,7 +6442,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6457",
     title: "Alveola 2S",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42652,
@@ -6455,7 +6455,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6473",
     title: "Calea Mosilor 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43375975,
@@ -6468,7 +6468,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6485",
     title: "Caderea Bastiliei 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.448585,
@@ -6481,7 +6481,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6509",
     title: "Mircea Voda Parc Timpuri Noi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.418214,
@@ -6494,7 +6494,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6512",
     title: "Borsa",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48097189,
@@ -6507,7 +6507,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6551",
     title: "Roma",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.455846,
@@ -6520,7 +6520,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6580",
     title: "Washington",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.455648,
@@ -6533,7 +6533,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6591",
     title: "Valter Maracineanu Strada",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.437948,
@@ -6546,7 +6546,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6624",
     title: "Emil Balaban",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44804964,
@@ -6559,7 +6559,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6640",
     title: "Fluierului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44222112,
@@ -6572,7 +6572,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6678",
     title: "Scoalei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44098867,
@@ -6585,7 +6585,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6680",
     title: "Sos. Pantelimon",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4448142,
@@ -6598,7 +6598,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6689",
     title: "Sava Hentia",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4541786,
@@ -6611,7 +6611,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6734",
     title: "Aleea Alexandru",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45848461,
@@ -6624,7 +6624,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6739",
     title: "Ion Negulici",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.466054,
@@ -6637,7 +6637,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6740",
     title: "Bocsa",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44046,
@@ -6650,7 +6650,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6750",
     title: "Luceafarului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42309952,
@@ -6663,7 +6663,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6770",
     title: "Vasile Alecsandri",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45054539,
@@ -6676,7 +6676,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6780",
     title: "Dima Cristescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44341064,
@@ -6689,7 +6689,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6793",
     title: "Mihai Bravu 7",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44574241,
@@ -6702,7 +6702,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6797",
     title: "Turnul Eiffel",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46027945,
@@ -6715,7 +6715,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6801",
     title: "Pandele Tarusanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44870425,
@@ -6728,7 +6728,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6853",
     title: "Dimitrie Draghiescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.429414,
@@ -6741,7 +6741,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6868",
     title: "Ferdinand 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44627346,
@@ -6754,7 +6754,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6885",
     title: "Matasari",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44037969,
@@ -6767,7 +6767,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6894",
     title: "Sf. Constantin",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43633,
@@ -6780,7 +6780,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6896",
     title: "Fecioarei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45018673,
@@ -6793,7 +6793,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6899",
     title: "Siret",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46383183,
@@ -6806,7 +6806,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6906",
     title: "Nicolae Dona",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44227393,
@@ -6819,7 +6819,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6942",
     title: "Foisorul De Foc",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44047735,
@@ -6832,7 +6832,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6972",
     title: "Victor Manu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43885965,
@@ -6845,7 +6845,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P6973",
     title: "Boteanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.439838,
@@ -6858,7 +6858,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7016",
     title: "Viitorului 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.443781,
@@ -6871,7 +6871,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7017",
     title: "Luigi Cazzavilan",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.441751,
@@ -6884,7 +6884,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7018",
     title: "Alexandru Deparateanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45005609,
@@ -6897,7 +6897,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7047",
     title: "Mihail Georgescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43370741,
@@ -6910,7 +6910,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7083",
     title: "Atelierului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44565598,
@@ -6923,7 +6923,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7098",
     title: "Alexandru Vitzu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.427365,
@@ -6936,7 +6936,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7108",
     title: "Judetului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45775809,
@@ -6949,7 +6949,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7116",
     title: "Dimitrie Grecescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42831201,
@@ -6962,7 +6962,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7125",
     title: "Ancuta Baneasa",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.47046424,
@@ -6975,7 +6975,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7131",
     title: "Putul De Piatra",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45013473,
@@ -6988,7 +6988,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7134",
     title: "Scheiul De Sus",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45998658,
@@ -7001,7 +7001,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7139",
     title: "Iuliu Teodori",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.432212,
@@ -7014,7 +7014,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7149",
     title: "Mihail Butoianu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43303065,
@@ -7027,7 +7027,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7180",
     title: "Capitan Vijelie",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42756636,
@@ -7040,7 +7040,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7203",
     title: "Inisor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4365601,
@@ -7053,7 +7053,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7211",
     title: "Sala Palatului Autocare",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.439517,
@@ -7066,7 +7066,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7214",
     title: "Calea Mosilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.431007,
@@ -7079,7 +7079,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7222",
     title: "Louis Pasteur",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.431906,
@@ -7092,7 +7092,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7228",
     title: "Glinka Mihail",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46330142,
@@ -7105,7 +7105,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7240",
     title: "Silfidelor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43434706,
@@ -7118,7 +7118,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7250",
     title: "Neagu Florea",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46180459,
@@ -7131,7 +7131,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7255",
     title: "Chisinau",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43882819,
@@ -7144,7 +7144,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7259",
     title: "Popa Savu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.462814,
@@ -7157,7 +7157,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7275",
     title: "Olari",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43920471,
@@ -7170,7 +7170,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7278",
     title: "Luca Stroici",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.443045,
@@ -7183,7 +7183,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7308",
     title: "Ion Bogdan",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45072157,
@@ -7196,7 +7196,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7316",
     title: "Mihail Cioranu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.425075,
@@ -7209,7 +7209,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7346",
     title: "Bitolia",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46032835,
@@ -7222,7 +7222,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7351",
     title: "Hatmanul Arbore",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.454034,
@@ -7235,7 +7235,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7355",
     title: "Dumitru Sergiu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44979733,
@@ -7248,7 +7248,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7363",
     title: "Viitorului 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.445545,
@@ -7261,7 +7261,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7377",
     title: "Strada Garii De Nord 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.443464,
@@ -7274,7 +7274,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7394",
     title: "Constantin Sandu Aldea",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4687898,
@@ -7287,7 +7287,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7396",
     title: "Alveola Kiseleff",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.456187,
@@ -7300,7 +7300,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7400",
     title: "Banului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44326865,
@@ -7313,7 +7313,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7411",
     title: "Alveola 6S",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.425986,
@@ -7326,7 +7326,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7436",
     title: "Gheorghe Lazar",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.437097,
@@ -7339,7 +7339,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7441",
     title: "Primaverii",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.468064,
@@ -7352,7 +7352,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7449",
     title: "Serban Voda 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.40964,
@@ -7365,7 +7365,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7453",
     title: "Robert Koch",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.432522,
@@ -7378,7 +7378,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7489",
     title: "Duzilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43646858,
@@ -7391,7 +7391,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7490",
     title: "Calea Rahovei 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4196,
@@ -7404,7 +7404,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7530",
     title: "Piata Cantacuzino",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44446634,
@@ -7417,7 +7417,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7531",
     title: "Calea Ferentari",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4097163,
@@ -7430,7 +7430,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7557",
     title: "Aurel Vlaicu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.448803,
@@ -7443,7 +7443,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7593",
     title: "Gheorghe Bulugea",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46144938,
@@ -7456,7 +7456,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7620",
     title: "Piata Mihail Kogalniceanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.434639,
@@ -7469,7 +7469,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7622",
     title: "Felix 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.453584,
@@ -7482,7 +7482,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7638",
     title: "Constantin Disescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44927422,
@@ -7495,7 +7495,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7643",
     title: "Leonida",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.448151,
@@ -7508,7 +7508,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7648",
     title: "Stelea Spataru",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43158091,
@@ -7521,7 +7521,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7651",
     title: "Ion Movila",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44445465,
@@ -7534,7 +7534,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7652",
     title: "Morarilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43998175,
@@ -7547,7 +7547,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7653",
     title: "Balanescu Rosetti",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.459755,
@@ -7560,7 +7560,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7669",
     title: "Hristov Botev 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.433791,
@@ -7573,7 +7573,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7675",
     title: "Nicolae Constantinescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.462305,
@@ -7586,7 +7586,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7681",
     title: "Victor Poloni",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.429999,
@@ -7599,7 +7599,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7724",
     title: "I. C. Visarion",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44816129,
@@ -7612,7 +7612,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7730",
     title: "Piata Napoleon III",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45807115,
@@ -7625,7 +7625,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7731",
     title: "Alexandr Puskin",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.469486,
@@ -7638,7 +7638,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7753",
     title: "Pescarilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46353448,
@@ -7651,7 +7651,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7763",
     title: "Gheorghe Marasoiu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46379522,
@@ -7664,7 +7664,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7765",
     title: "Costache Aristia",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44378835,
@@ -7677,7 +7677,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7778",
     title: "Dobrota",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46042053,
@@ -7690,7 +7690,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7783",
     title: "Stefan Luchian",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4363017,
@@ -7703,7 +7703,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7795",
     title: "Primo Nebiolo",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4717356,
@@ -7716,7 +7716,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7842",
     title: "Ecaterina Teodoroiu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.446332,
@@ -7729,7 +7729,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7854",
     title: "Calea Mosilor 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44367813,
@@ -7742,7 +7742,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7874",
     title: "Ion Florescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43366686,
@@ -7755,7 +7755,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7879",
     title: "Cristea Buicliu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.437345,
@@ -7768,7 +7768,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7882",
     title: "Lia Manoliu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43502461,
@@ -7781,7 +7781,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7884",
     title: "Varsovia",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.457093,
@@ -7794,7 +7794,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7891",
     title: "Vergului 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43764796,
@@ -7807,7 +7807,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7894",
     title: "Muntii Tatra",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45088896,
@@ -7820,7 +7820,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7921",
     title: "Stefan Mihaileanu 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43462393,
@@ -7833,7 +7833,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7930",
     title: "Mircea Vulcanescu 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.443572,
@@ -7846,7 +7846,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7972",
     title: "Alveola 3D",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.425712,
@@ -7859,7 +7859,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P7995",
     title: "Colentina 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.450873,
@@ -7872,7 +7872,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8028",
     title: "Ioan Slavici",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.437054,
@@ -7885,7 +7885,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8033",
     title: "Sanmedru",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46692614,
@@ -7898,7 +7898,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8051",
     title: "Ferdinand 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43934703,
@@ -7911,7 +7911,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8069",
     title: "Dunarea Albastra",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43290726,
@@ -7924,7 +7924,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8080",
     title: "Inocentei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43910185,
@@ -7937,7 +7937,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8108",
     title: "Dumitru Tacu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.41505441,
@@ -7950,7 +7950,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8109",
     title: "Ion Slatineanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45060417,
@@ -7963,7 +7963,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8166",
     title: "Serban Voda 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.41159,
@@ -7976,7 +7976,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8179",
     title: "Corabeasca",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44067147,
@@ -7989,7 +7989,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8199",
     title: "Emanoil Bacaloglu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4388988,
@@ -8002,7 +8002,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8219",
     title: "Aprodul Purice",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44470734,
@@ -8015,7 +8015,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8228",
     title: "Intrarea Frunzei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43446356,
@@ -8028,7 +8028,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8239",
     title: "Nicolae Paulescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.430715,
@@ -8041,7 +8041,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8243",
     title: "Giacomo Puccini",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46410264,
@@ -8054,7 +8054,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8250",
     title: "Chile",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45492455,
@@ -8067,7 +8067,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8258",
     title: "Cristian Popisteanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.437893,
@@ -8080,7 +8080,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8263",
     title: "Eugen O. Iosif",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.428751,
@@ -8093,7 +8093,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8282",
     title: "Almas",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48458274,
@@ -8106,7 +8106,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8285",
     title: "Teodosie Rudeanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45390571,
@@ -8119,7 +8119,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8286",
     title: "Povernei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45028188,
@@ -8132,7 +8132,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8299",
     title: "Dimitrie Racovita",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43733961,
@@ -8145,7 +8145,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8300",
     title: "Calea Floreasca 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.455974,
@@ -8158,7 +8158,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8316",
     title: "Icoanei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.443807,
@@ -8171,7 +8171,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8356",
     title: "Pod Pipera 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.480553,
@@ -8184,7 +8184,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8361",
     title: "Calea Grivitei 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.445999,
@@ -8197,7 +8197,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8367",
     title: "Eugen Botez",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45933454,
@@ -8210,7 +8210,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8372",
     title: "Johannes Kepler",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46053445,
@@ -8223,7 +8223,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8379",
     title: "Barbu Vladoianu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45485328,
@@ -8236,7 +8236,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8381",
     title: "Constantin Cristescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43920568,
@@ -8249,7 +8249,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8391",
     title: "Bogdan Voda",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44597556,
@@ -8262,7 +8262,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8396",
     title: "Feleacu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4825059,
@@ -8275,7 +8275,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8404",
     title: "Theodor Aman",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44312464,
@@ -8288,7 +8288,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8405",
     title: "Tudor Arghezi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43887254,
@@ -8301,7 +8301,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8409",
     title: "Sfantul Elefterie",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43307,
@@ -8314,7 +8314,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8418",
     title: "Niculae Staicovici",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.431484,
@@ -8327,7 +8327,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8419",
     title: "Alveola 1D",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.426345,
@@ -8340,7 +8340,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8429",
     title: "Popa Tatu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.443212,
@@ -8353,7 +8353,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8455",
     title: "Ernest Juvara",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.438425,
@@ -8366,7 +8366,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8458",
     title: "Poiana Narciselor 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43959,
@@ -8379,7 +8379,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8461",
     title: "Mircea Zorileanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46828534,
@@ -8392,7 +8392,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8466",
     title: "Strada Garii De Nord 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.444918,
@@ -8405,7 +8405,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8483",
     title: "Tipografilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.484614,
@@ -8418,7 +8418,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8487",
     title: "Mantuleasa",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43567033,
@@ -8431,7 +8431,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8489",
     title: "Timpului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43700069,
@@ -8444,7 +8444,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8492",
     title: "Badea Cartan",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45116,
@@ -8457,7 +8457,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8493",
     title: "Pierre De Coubertin 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43956251,
@@ -8470,7 +8470,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8498",
     title: "Zefirului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43463056,
@@ -8483,7 +8483,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8499",
     title: "Eremia Grigorescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44482964,
@@ -8496,7 +8496,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8521",
     title: "Dimitrie Salmen",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44238506,
@@ -8509,7 +8509,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8572",
     title: "Constantin Coanda",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.450856,
@@ -8522,7 +8522,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8579",
     title: "Calea Plevnei 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.437068,
@@ -8535,7 +8535,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8581",
     title: "Belgrad",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.456348,
@@ -8548,7 +8548,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8602",
     title: "Colentina 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.454383,
@@ -8561,7 +8561,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8604",
     title: "Delfinului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4444609,
@@ -8574,7 +8574,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8617",
     title: "Ceaikovski",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46554715,
@@ -8587,7 +8587,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8626",
     title: "Horei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44107502,
@@ -8600,7 +8600,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8629",
     title: "Dianei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43745472,
@@ -8613,7 +8613,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8642",
     title: "Craciun",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.450362,
@@ -8626,7 +8626,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8644",
     title: "Johann Strauss",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46683145,
@@ -8639,7 +8639,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8647",
     title: "Dimitrie Brandza",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43849996,
@@ -8652,7 +8652,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8662",
     title: "Dacia 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.446302,
@@ -8665,7 +8665,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8663",
     title: "Alveola 1S",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4268,
@@ -8678,7 +8678,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8677",
     title: "Mihail Moxa",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44641,
@@ -8691,7 +8691,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8678",
     title: "Sirenelor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.423605,
@@ -8704,7 +8704,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8740",
     title: "Bolintineanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.434999,
@@ -8717,7 +8717,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8746",
     title: "Caimatei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43612674,
@@ -8730,7 +8730,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8764",
     title: "Calea 13 Septembrie 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.425041,
@@ -8743,7 +8743,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8808",
     title: "Eminescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.447214,
@@ -8756,7 +8756,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8817",
     title: "Viilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.41493569,
@@ -8769,7 +8769,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8820",
     title: "Petre Lintes",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.421621,
@@ -8782,7 +8782,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8821",
     title: "Calea Rahovei 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.422511,
@@ -8795,7 +8795,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8834",
     title: "Frederic Chopin",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46448484,
@@ -8808,7 +8808,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8843",
     title: "Episcopul Radu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44637294,
@@ -8821,7 +8821,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8849",
     title: "Gheorghe Duca",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44876,
@@ -8834,7 +8834,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8856",
     title: "Gradina Cu Cai",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4341,
@@ -8847,7 +8847,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8860",
     title: "Saradei 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48392993,
@@ -8860,7 +8860,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8880",
     title: "Astronomului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.440374,
@@ -8873,7 +8873,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8887",
     title: "Doamna Oltea",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45729483,
@@ -8886,7 +8886,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8912",
     title: "Stefan Mihaileanu 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43710032,
@@ -8899,7 +8899,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8950",
     title: "Oslo",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.453651,
@@ -8912,7 +8912,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8967",
     title: "Uruguay",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46499912,
@@ -8925,7 +8925,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P8969",
     title: "Ioan Voda Caragea",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44957138,
@@ -8938,7 +8938,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9000",
     title: "Popa Soare",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43508788,
@@ -8951,7 +8951,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9001",
     title: "Banul Antonache",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.460977,
@@ -8964,7 +8964,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9002",
     title: "Aleea Privighetorilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.515235,
@@ -8977,7 +8977,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9017",
     title: "Dimitrie Gerota",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43654734,
@@ -8990,7 +8990,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9050",
     title: "Austrului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43681388,
@@ -9003,7 +9003,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9052",
     title: "Banu Manta",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.455263,
@@ -9016,7 +9016,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9066",
     title: "Spiru Haret",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.440894,
@@ -9029,7 +9029,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9080",
     title: "Teheran",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46473,
@@ -9042,7 +9042,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9082",
     title: "Alexandru Xenopol",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.443314,
@@ -9055,7 +9055,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9095",
     title: "Elena Caragiani",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48170688,
@@ -9068,7 +9068,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9099",
     title: "Domnita Anastasia",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.433547,
@@ -9081,7 +9081,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9106",
     title: "Gheorghe Titeica",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.47206807,
@@ -9094,7 +9094,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9118",
     title: "Stirbei Voda 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43904753,
@@ -9107,7 +9107,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9125",
     title: "Dionisie Lupu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.443235,
@@ -9120,7 +9120,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9126",
     title: "Bibescu Voda",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42522,
@@ -9133,7 +9133,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9131",
     title: "Piata Eroilor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.431115,
@@ -9146,7 +9146,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9150",
     title: "Grigore Mora",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4631375,
@@ -9159,7 +9159,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9164",
     title: "Gheorghe Bals",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4627146,
@@ -9172,7 +9172,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9176",
     title: "Mihail Obedenaru",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.431884,
@@ -9185,7 +9185,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9240",
     title: "Calotesti",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43374979,
@@ -9198,7 +9198,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9250",
     title: "Paul Greceanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45175274,
@@ -9211,7 +9211,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9266",
     title: "Eforie",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43389,
@@ -9224,7 +9224,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9270",
     title: "Otelul Rosu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.41749599,
@@ -9237,7 +9237,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9274",
     title: "Doamna Ghica 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.463435,
@@ -9250,7 +9250,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9347",
     title: "Bruxelles",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45673136,
@@ -9263,7 +9263,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9384",
     title: "Ion Radovici",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43495723,
@@ -9276,7 +9276,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9401",
     title: "Sos Nordului Ambasada Chinei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.47538055,
@@ -9289,7 +9289,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9405",
     title: "Gutenberg",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.433693,
@@ -9302,7 +9302,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9440",
     title: "Petru Rares",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45094,
@@ -9315,7 +9315,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9446",
     title: "Ion Neculce",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45694468,
@@ -9328,7 +9328,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9447",
     title: "Constantin Kiritescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43591198,
@@ -9341,7 +9341,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9479",
     title: "Alexandru Savulescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4351291,
@@ -9354,7 +9354,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9487",
     title: "Tarmului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.47475252,
@@ -9367,7 +9367,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9491",
     title: "Smaranda Braescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.48283928,
@@ -9380,7 +9380,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9496",
     title: "Cenad",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.42149,
@@ -9393,7 +9393,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9510",
     title: "Pierre De Coubertin 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44212331,
@@ -9406,7 +9406,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9524",
     title: "Calea Victoriei 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44395312,
@@ -9419,7 +9419,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9525",
     title: "Calea Plevnei 6",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.446004,
@@ -9432,7 +9432,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9537",
     title: "Bacila",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46334672,
@@ -9445,7 +9445,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9551",
     title: "Jean Texier",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46386387,
@@ -9458,7 +9458,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9552",
     title: "Lascar Catargiu Hotel Minerva",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44921979,
@@ -9471,7 +9471,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9556",
     title: "Straulesti",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.49242588,
@@ -9484,7 +9484,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9557",
     title: "Pasului",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43869654,
@@ -9497,7 +9497,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9607",
     title: "Stefan Cel Mare 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45229034,
@@ -9510,7 +9510,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9614",
     title: "Mircea Eliade",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4673,
@@ -9523,7 +9523,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9615",
     title: "Coltei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.434354,
@@ -9536,7 +9536,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9621",
     title: "Natatiei",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4878286,
@@ -9549,7 +9549,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9640",
     title: "Pitar Mos",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.442278,
@@ -9562,7 +9562,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9642",
     title: "Str. Italiana",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43752493,
@@ -9575,7 +9575,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9648",
     title: "Athanasie Enescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46582457,
@@ -9588,7 +9588,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9685",
     title: "Ion Calin",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44900316,
@@ -9601,7 +9601,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9705",
     title: "Ermil Pangrati 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46419976,
@@ -9614,7 +9614,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9710",
     title: "Brazilia",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.455129,
@@ -9627,7 +9627,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9716",
     title: "Nicolae Caramfil",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.482144,
@@ -9640,7 +9640,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9726",
     title: "Barbu Iscovescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.465619,
@@ -9653,7 +9653,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9737",
     title: "Doina Cornea",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.438504,
@@ -9666,7 +9666,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9748",
     title: "Plantelor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43750637,
@@ -9679,7 +9679,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9753",
     title: "Fagaras",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.440316,
@@ -9692,7 +9692,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9757",
     title: "Nicolae Titulescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45208067,
@@ -9705,7 +9705,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9761",
     title: "Horoscop 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.425406,
@@ -9718,7 +9718,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9769",
     title: "Viitorului 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45139437,
@@ -9731,7 +9731,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9778",
     title: "Aviatorilor 4D",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4555225,
@@ -9744,7 +9744,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9786",
     title: "Virgiliu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.439926,
@@ -9757,7 +9757,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9811",
     title: "Grigore Romniceanu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.428688,
@@ -9770,7 +9770,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9812",
     title: "Leonte Anastasievici",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.436422,
@@ -9783,7 +9783,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9855",
     title: "Licurg",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43929405,
@@ -9796,7 +9796,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9869",
     title: "Calea Dorobanti",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.457028,
@@ -9809,7 +9809,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9874",
     title: "Nicolae Iorga 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.447645,
@@ -9822,7 +9822,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9879",
     title: "Paul Ionescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44990078,
@@ -9835,7 +9835,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9885",
     title: "Stefan Negulescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.459317,
@@ -9848,7 +9848,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9887",
     title: "Gheorghe Titeica 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.4640209,
@@ -9861,7 +9861,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9893",
     title: "Tirana",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.455996,
@@ -9874,7 +9874,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9900",
     title: "Str. Frumoasa",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44808,
@@ -9887,7 +9887,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9904",
     title: "Sabinelor",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.422173,
@@ -9900,7 +9900,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9907",
     title: "Stefan Cel Mare 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45296784,
@@ -9913,7 +9913,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9911",
     title: "Nasaud 2",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.41554236,
@@ -9926,7 +9926,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9912",
     title: "Tepes Voda",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.43531774,
@@ -9939,7 +9939,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9930",
     title: "Stockholm",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.45443965,
@@ -9952,7 +9952,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9953",
     title: "Luntrei 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.462041,
@@ -9965,7 +9965,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9954",
     title: "Posta Vitan 1",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.423138,
@@ -9978,7 +9978,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9969",
     title: "Stefan Sanatescu",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46647109,
@@ -9991,7 +9991,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9984",
     title: "Domnita Ruxandra",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.44890774,
@@ -10004,7 +10004,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9991",
     title: "Jean Louis Calderon 3",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.443573,
@@ -10017,7 +10017,7 @@ export const CMPB_PARKING: ParkingSpot[] = [
   {
     id: "cmpb_P9999",
     title: "Mahatma Gandhi",
-    access: "public",
+    access: "public_facility",
     source: "cmpb",
     kind: "street",
     latitude: 44.46299996,

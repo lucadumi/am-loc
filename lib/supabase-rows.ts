@@ -11,6 +11,7 @@
  * longer derives one for a public place -- see `SpotStatus` in @/types.
  */
 
+import { toSpotAccess } from "./spot-rights.ts";
 import type { AvailabilityWindow, BlockerReport, ParkingSpot } from "@/types";
 import type {
   AvailabilityWindowInsert,
@@ -36,10 +37,12 @@ const optional = <T>(value: T | null): T | undefined =>
  * from its owner's windows, in `applyDeclaration`.
  */
 export function toParkingSpot(row: SpotRow): ParkingSpot {
-  /* A row that does not say is a public kerb. Defaulting the other way would
-     turn anything unmarked into somebody's private property that nobody may
-     report on, and quietly empty the map. */
-  const access = row.access ?? "public";
+  /* Read through `toSpotAccess` rather than taken at face value, because rows
+     predating 0010 still say `public` or `private`. It also handles the null:
+     a row that does not say is a public facility, and defaulting the other way
+     would turn anything unmarked into somebody's property -- which under the
+     new model is the one kind that may be charged for. */
+  const access = toSpotAccess(row.access);
 
   return {
     id: row.id,
