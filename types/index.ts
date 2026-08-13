@@ -201,8 +201,24 @@ export interface BlockerReport {
   /** Who filed it. Only its author may edit or withdraw it. */
   reportedBy: string;
   plate?: string;
-  /** Local URIs of the photos attached, in the order they were taken. */
+  /**
+   * The evidence, in the order it was taken.
+   *
+   * Storage paths once a report has been filed, local URIs while it is being
+   * written, and absent entirely when the report is somebody else's -- the
+   * bucket is private and the view hands the paths only to their author. See
+   * lib/evidence.ts; `signEvidence` is what turns them into something an
+   * `Image` can render.
+   */
   photos?: string[];
+  /**
+   * How many photographs it carries, whoever is asking.
+   *
+   * Public where `photos` is not, and that split is the point: a complaint
+   * with four pictures behind it is a stronger complaint than one with none,
+   * and saying so gives nothing away.
+   */
+  photoCount?: number;
   note?: string;
   address?: string;
   /** Present once somebody has shown the blockage is gone. */
