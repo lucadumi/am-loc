@@ -17,6 +17,16 @@
  * A theme that flickered from light to dark a beat after launch would be worse
  * than not offering the setting: the flash is exactly what somebody sensitive
  * to brightness opened the setting to avoid.
+ *
+ * THIS DOES NOT WORK WITHOUT `"userInterfaceStyle": "automatic"` IN app.json,
+ * and the failure is silent. `setColorScheme` goes through React Native's
+ * `Appearance`, which the operating system overrides when the app declares a
+ * fixed style -- so the call returns, nothing throws, and the interface does
+ * not move. The app declared `"dark"` for a long time while looking light,
+ * because there was no dark stylesheet for the declaration to matter to; the
+ * moment there was one, the lock became the reason the setting did nothing.
+ *
+ * It is a native setting, so changing it needs a rebuild rather than a reload.
  */
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
