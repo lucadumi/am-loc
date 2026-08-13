@@ -36,7 +36,7 @@ before(() => {
 const spotRow = (over: Partial<SpotRow> = {}): SpotRow => ({
   id: "s_lipscani",
   title: "Strada Lipscani",
-  access: "public",
+  access: "public_facility",
   source: "community",
   owner_id: null,
   owner_name: null,
@@ -87,10 +87,28 @@ describe("mapping a spot row", () => {
     assert.equal(spot.availableCount, undefined);
   });
 
-  test("a row that does not say who owns it is a public kerb", () => {
+  test("a row that does not say what it is is a public facility", () => {
     // Defaulting the other way would turn anything unmarked into somebody's
-    // private property that nobody may speak for, and quietly empty the map.
-    assert.equal(toParkingSpot(spotRow({ access: null })).access, "public");
+    // property -- which under the rights model is the one kind that may be
+    // charged for.
+    assert.equal(
+      toParkingSpot(spotRow({ access: null })).access,
+      "public_facility",
+    );
+  });
+
+  test("rows written before the rights model still read correctly", () => {
+    /* `0010` widened the column and rewrote every row, but a client older than
+       it goes on writing the two old values. Both have exact readings:
+       `private` meant property, and `public` meant everything else. */
+    assert.equal(
+      toParkingSpot(spotRow({ access: "private" })).access,
+      "private_property",
+    );
+    assert.equal(
+      toParkingSpot(spotRow({ access: "public" })).access,
+      "public_facility",
+    );
   });
 
   test("maps a page of rows in one pass", () => {
@@ -117,6 +135,7 @@ describe("the gate that decides which data layer runs", () => {
  * still blocked, or worse, the other way round.
  */
 const reportRowOf = (over: Partial<ReportRow> = {}): ReportRow => ({
+  photo_count: 0,
   id: "r_1",
   category: "sidewalk",
   latitude: 44.4319,

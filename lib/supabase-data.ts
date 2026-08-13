@@ -29,6 +29,13 @@ import type {
 } from "@/types/database.ts";
 
 import { decodeDataUrl } from "./base64.ts";
+import {
+  PHOTO_BUCKET,
+  SIGNED_URL_TTL_S,
+  evidencePath,
+  isStoredPhoto,
+  reportOfPath,
+} from "./evidence.ts";
 import { SupabaseError, currentReporterId, supabase } from "./supabase.ts";
 import {
   toAvailabilityWindows,
@@ -140,9 +147,6 @@ function since(hours: number): string {
   return new Date(Date.now() - hours * 3_600_000).toISOString();
 }
 
-/** Where the photographs live. Public, because a forwarded complaint is text. */
-const PHOTO_BUCKET = "report-photos";
-
 /** How far back the Sesizări tab reads. A blockage is news, not an archive. */
 const REPORT_HISTORY_DAYS = 30;
 
@@ -155,8 +159,7 @@ const EXTENSIONS: Record<string, string> = {
   "image/webp": "webp",
 };
 
-/** A photo already on the internet needs no uploading. */
-const isUploaded = (uri: string) => /^https?:\/\//i.test(uri);
+
 
 /**
  * Read a local photo as bytes.
@@ -182,13 +185,17 @@ async function bytesOf(uri: string) {
 }
 
 /**
- * Put the photographs somewhere everybody can see them, and return the URLs.
+ * Put the photographs in the private bucket, and return their paths.
  *
- * Uploads land under the uploader's own uuid because the storage policy says
- * so: one driver cannot overwrite another's evidence by guessing a path.
- * Anything already served over http is passed through untouched, which is what
- * makes editing a report cheap — the photos that did not change are not
- * re-uploaded.
+ * Uploads land under the uploader's own uuid because the storage policies say
+ * so: since 0009 that is what decides who may read them back, as well as what
+ * stops one driver overwriting another's evidence by guessing a path.
+ *
+ * A photograph already in storage is passed through untouched, which is what
+ * makes correcting a report cheap — the pictures that did not change are not
+ * fetched and sent again. `isStoredPhoto` is what tells the two apart, and it
+ * asks whether the string has a scheme rather than whether it is http: paths
+ * have none, and a public URL is no longer a thing this app produces.
  */
 async function uploadPhotos(
   reportId: string,
@@ -196,11 +203,11 @@ async function uploadPhotos(
   ownerId: string,
 ): Promise<string[]> {
   const storage = client().storage.from(PHOTO_BUCKET);
-  const urls: string[] = [];
+  const paths: string[] = [];
 
   for (const [index, uri] of uris.entries()) {
-    if (isUploaded(uri)) {
-      urls.push(uri);
+    if (isStoredPhoto(uri)) {
+      paths.push(uri);
       continue;
     }
     const { bytes, contentType } = await bytesOf(uri);
@@ -211,13 +218,41 @@ async function uploadPhotos(
     if (!extension) {
       throw new Error(`Nu pot trimite o fotografie de tip ${contentType}`);
     }
-    const path = `${ownerId}/${reportId}/${Date.now()}-${index}.${extension}`;
+    const path = evidencePath(ownerId, reportId, extension, index);
     const { error } = await storage.upload(path, bytes, { contentType });
     if (error) throw new SupabaseError("Could not upload the photo", error);
-    urls.push(storage.getPublicUrl(path).data.publicUrl);
+    paths.push(path);
   }
 
-  return urls;
+  return paths;
+}
+
+/**
+ * Signed links to a report's photographs, in the order they were taken.
+ *
+ * Nothing renders a path. The bucket is private, so a picture is shown by
+ * asking storage for a link with a clock on it, and storage answers only for
+ * a caller its policies agree is the author — which means this returns an
+ * empty list for somebody else's report rather than failing, and the screen
+ * simply has no pictures to draw.
+ *
+ * Signed at the moment of display and never stored. A signed URL kept in a
+ * row, a cache or a log is a public URL with a slower fuse, which is the thing
+ * 0009 exists to get rid of.
+ */
+export async function signEvidence(paths: string[]): Promise<string[]> {
+  if (!paths.length) return [];
+  const { data, error } = await client()
+    .storage.from(PHOTO_BUCKET)
+    .createSignedUrls(paths, SIGNED_URL_TTL_S);
+  if (error) throw new SupabaseError("Could not open the photos", error);
+  /* A path storage would not sign is dropped rather than rendered as a broken
+     image. It means the file is gone -- retention took it, or a correction
+     replaced it -- and an empty frame says "this app lost your evidence" about
+     a picture that is simply no longer there. */
+  return (data ?? [])
+    .map((signed) => signed.signedUrl)
+    .filter((url): url is string => !!url);
 }
 
 async function reportEventRows(reportIds?: string[]): Promise<ReportEventRow[]> {
@@ -286,19 +321,26 @@ export async function insertReport(
   const author = await currentReporterId();
   const photos = await uploadPhotos(report.id, report.photos ?? [], author);
 
-  /* Every column except the plate, and named rather than `*`. The plate is
-     revoked on this table, so asking for it back would fail -- and there is
-     nothing to ask for: the caller supplied it a line ago. */
+  /* Named columns rather than `*`, and three of them deliberately missing.
+     `plate` and `photos` are revoked on this table -- personal data and the
+     only unaudited route to somebody's evidence -- so asking for either back
+     would fail outright, and `photo_count` belongs to the view. */
   const { data, error } = await client()
     .from("reports")
     .insert(toReportInsert({ ...report, photos }, author))
-    .select(
-      "id, category, latitude, longitude, address, note, photos, created_by, created_at",
-    )
-    .returns<Omit<ReportRow, "plate">[]>()
+    .select("id, category, latitude, longitude, address, note, created_by, created_at")
+    .returns<Omit<ReportRow, "plate" | "photos" | "photo_count">[]>()
     .single();
   if (error || !data) throw new SupabaseError("Could not file the report", error);
-  return toBlockerReport({ ...data, plate: report.plate ?? null });
+  /* Put back rather than read, and nothing is lost by that: the row was
+     written a line ago from exactly these values, so reading them again would
+     only be asking the database to confirm what this function just said. */
+  return toBlockerReport({
+    ...data,
+    plate: report.plate ?? null,
+    photos,
+    photo_count: photos.length,
+  });
 }
 
 /**
@@ -314,7 +356,20 @@ export async function updateReportRow(
 ): Promise<void> {
   const author = await currentReporterId();
   const patch: ReportUpdate = { ...edit };
-  if (edit.photos) patch.photos = await uploadPhotos(id, edit.photos, author);
+  if (edit.photos) {
+    /* Refused here rather than written. `photos` is a `text[]`, so Postgres
+       will accept any string at all -- including a path belonging to another
+       report, which would attach somebody else's evidence to this complaint
+       while leaving the storage policies perfectly happy, because the file is
+       still in its own author's folder. */
+    const stray = edit.photos.find(
+      (uri) => isStoredPhoto(uri) && reportOfPath(uri) !== id,
+    );
+    if (stray) {
+      throw new Error(`A photo from another report cannot be attached: ${stray}`);
+    }
+    patch.photos = await uploadPhotos(id, edit.photos, author);
+  }
 
   const { error } = await client().from("reports").update(patch).eq("id", id);
   if (error) throw new SupabaseError("Could not correct the report", error);

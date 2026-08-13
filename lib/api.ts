@@ -407,6 +407,25 @@ export function rankNearby<T extends ParkingSpot>(
     .slice(0, limit);
 }
 
+/**
+ * Links an `Image` can render, for photographs already filed.
+ *
+ * The seam the screens use, so none of them has to know whether there is a
+ * backend. With a project configured the bucket is private and this asks
+ * storage for links with a clock on them; without one the photographs never
+ * left the phone, so their `file://` URIs already are what an `Image` wants
+ * and they come straight back.
+ *
+ * Returned in the order given, so a caller can pair them with the paths it
+ * asked about.
+ */
+export async function signEvidence(paths: string[]): Promise<string[]> {
+  if (!paths.length) return [];
+  if (!isRemote()) return paths;
+  const { signEvidence: sign } = await import("@/lib/supabase-data.ts");
+  return sign(paths);
+}
+
 /** What one driver has actually done, for their own profile. */
 export interface ReportTally {
   /** Reports this identity filed. */

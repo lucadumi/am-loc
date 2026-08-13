@@ -70,8 +70,16 @@ export interface SpotRow {
   id: string;
   title: string;
   kind: SpotKind;
-  /** Who may speak for this spot. A row that does not say is a public kerb. */
-  access: SpotAccess | null;
+  /**
+   * What kind of place this is.
+   *
+   * Typed as `string` rather than `SpotAccess` because it is not one until it
+   * has been read: rows written before `0010` still say `public` or `private`.
+   * `toSpotAccess` in lib/spot-rights.ts is the only thing that turns this
+   * column into the union, and typing it as the union here would let a caller
+   * skip that and compare against a value the row cannot hold.
+   */
+  access: string | null;
   source: SpotSource | null;
   /** The one account allowed to open and close this spot's windows. */
   owner_id: string | null;
@@ -159,7 +167,19 @@ export interface ReportRow {
    */
   plate: string | null;
   note: string | null;
+  /**
+   * Storage paths in the private `report-photos` bucket, never URLs.
+   *
+   * Empty for anybody but the author, by the same mechanism as the plate: the
+   * view returns `'{}'` to a stranger. So an empty array here means either
+   * that the report has no pictures or that they are not yours, and the two
+   * are deliberately indistinguishable -- `photo_count` is the number that
+   * tells them apart, because how much evidence exists is public and the
+   * evidence is not.
+   */
   photos: string[];
+  /** How many photographs the report carries, whoever is asking. */
+  photo_count: number;
   created_by: string;
   created_at: string;
 }
@@ -174,8 +194,14 @@ export interface ReportEventRow {
   created_at: string;
 }
 
-/** Columns of `reports` a client is allowed to write. */
-export type ReportInsert = Omit<ReportRow, "created_at">;
+/**
+ * Columns of `reports` a client is allowed to write.
+ *
+ * `photo_count` is absent because it is not a column: the view derives it from
+ * the array, so there is nothing to send and nothing a client could disagree
+ * with it about.
+ */
+export type ReportInsert = Omit<ReportRow, "created_at" | "photo_count">;
 
 /**
  * Columns of `reports` an author may change afterwards.
