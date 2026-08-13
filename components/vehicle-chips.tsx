@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Pressable, View } from "react-native";
 
 import { Text } from "@/components/ui/text";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { haptics } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
 
@@ -16,9 +16,14 @@ const VEHICLES = [
 
 /** Decorative vehicle filter (mock). Mirrors the reference chip row. */
 export function VehicleChips({ className }: { className?: string }) {
+  const colors = useColors();
   const [active, setActive] = useState<string>("car");
   return (
-    <View className={cn("flex-row gap-2", className)}>
+    <View
+      accessibilityRole="radiogroup"
+      accessibilityLabel="Tipul vehiculului"
+      className={cn("flex-row gap-2", className)}
+    >
       {VEHICLES.map(({ key, label, Icon }) => {
         const on = key === active;
         return (
@@ -28,6 +33,9 @@ export function VehicleChips({ className }: { className?: string }) {
               haptics.selection();
               setActive(key);
             }}
+            accessibilityRole="radio"
+            accessibilityState={{ selected: on }}
+            accessibilityLabel={label}
             className={cn(
               "flex-1 items-center gap-2 rounded-lg border-hairline px-1.5 py-1.5",
               on ? "border-primary bg-primary" : "border-border bg-secondary",
@@ -35,7 +43,7 @@ export function VehicleChips({ className }: { className?: string }) {
           >
             <Icon
               size={26}
-              color={on ? palette.primaryForeground : palette.foreground}
+              color={on ? colors.primaryForeground : colors.foreground}
               strokeWidth={2}
             />
             <Text

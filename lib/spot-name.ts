@@ -19,6 +19,7 @@
  * presentation.
  */
 
+import { formatPrice } from "./geo.ts";
 import type { ParkingSpot } from "@/types";
 
 /**
@@ -48,4 +49,27 @@ export function spotName(spot: Pick<ParkingSpot, "title">): string {
   const title = spot.title.trim();
   if (!title) return "Parcare";
   return ALREADY_SAYS_SO.test(title) ? title : `Parcare ${title}`;
+}
+
+/**
+ * A car park, as one sentence, for a screen reader.
+ *
+ * A reader landing on a card reads six unrelated fragments otherwise --
+ * the name, a price, an area, a walk time, a rating -- with nothing saying
+ * they describe the same car park, and in an order decided by the layout
+ * rather than by what matters. Said as a sentence instead, cheapest fact
+ * first, and only what is actually known: a public car park carries no status
+ * and most carry no rating, so a template that always mentioned both would
+ * announce absences.
+ */
+export function spokenSpot(spot: ParkingSpot & { walkMin?: number }): string {
+  const parts = [spotName(spot)];
+  if (spot.area) parts.push(spot.area);
+  if (spot.walkMin !== undefined) parts.push(`${spot.walkMin} minute pe jos`);
+  parts.push(formatPrice(spot.pricePerHour, spot.paid));
+  if (spot.status) {
+    parts.push(spot.status === "free" ? "liber" : "ocupat");
+  }
+  if (spot.rating !== undefined) parts.push(`nota ${spot.rating} din 5`);
+  return parts.join(", ");
 }
