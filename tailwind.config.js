@@ -3,6 +3,10 @@ const { hairlineWidth } = require("nativewind/theme");
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
+  /* Follows the system setting rather than a class the app toggles: NativeWind
+     applies `.dark` from `Appearance` itself, so there is one source of truth
+     and it is the one the driver already set on their phone. */
+  darkMode: "class",
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
