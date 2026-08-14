@@ -2,7 +2,8 @@ import { View } from "react-native";
 
 import { Chip } from "@/components/ui/chip";
 import { Text } from "@/components/ui/text";
-import { palette, statusColor, statusLabel } from "@/constants/theme";
+import { statusLabel } from "@/constants/theme";
+import { useColors, useStatusColors } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 import { SpotStatus } from "@/types";
 
@@ -27,7 +28,9 @@ export function StatusBadge({
   unknown?: boolean;
   className?: string;
 }) {
-  const color = unknown ? palette.mutedForeground : statusColor[status];
+  const colors = useColors();
+  const statusColor = useStatusColors();
+  const color = unknown ? colors.mutedForeground : statusColor[status];
   const label = unknown ? "Nu se știe" : statusLabel[status];
 
   if (dotOnly) {
@@ -40,7 +43,7 @@ export function StatusBadge({
         )}
         style={
           unknown
-            ? { borderColor: color, backgroundColor: palette.background }
+            ? { borderColor: color, backgroundColor: colors.background }
             : { backgroundColor: color }
         }
       />
@@ -59,9 +62,13 @@ export function StatusBadge({
             : { backgroundColor: color }
         }
       />
-      <Text className="font-semi text-xs" style={{ color }}>
-        {label}
-      </Text>
+      {/* The word in the ordinary foreground, not in the status colour. The
+          greens and reds that make a good map pin are pale by design -- they
+          have to read against streets and parks -- and the same value as
+          12px text on a light chip is 1.6:1, which is not text anybody can
+          read. The dot beside it keeps the colour, and the colour is no
+          longer carrying the meaning on its own. */}
+      <Text className="font-semi text-xs text-foreground">{label}</Text>
     </Chip>
   );
 }

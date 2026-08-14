@@ -8,7 +8,7 @@ import { RangeSlider } from "@/components/range-slider";
 import { Segmented } from "@/components/segmented";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import {
   DISTANCE_MAX,
   DISTANCE_MIN,
@@ -81,6 +81,7 @@ export function SpotFilterSheet({
   resultCount: number;
   hasLocation: boolean;
 }) {
+  const colors = useColors();
   const { height } = useWindowDimensions();
   const set = (patch: Partial<SpotFilters>) => onChange({ ...filters, ...patch });
 
@@ -115,7 +116,7 @@ export function SpotFilterSheet({
           />
           {!hasLocation ? (
             <View className="flex-row items-center gap-1.5">
-              <MapPin size={13} color={palette.mutedForeground} />
+              <MapPin size={13} color={colors.mutedForeground} />
               <Text className="font-mid text-[11px] text-muted-foreground">
                 Activează localizarea pentru filtrarea după distanță.
               </Text>

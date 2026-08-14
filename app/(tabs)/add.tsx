@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Screen } from "@/components/ui/screen";
 import { Text } from "@/components/ui/text";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { floatingTabBarInset } from "@/constants/layout";
 import { haptics } from "@/lib/haptics";
 
@@ -24,7 +24,16 @@ type ActionCardProps = {
 
 function ActionCard({ image, icon, title, subtitle, reverse, onPress }: ActionCardProps) {
   return (
-    <Pressable onPress={onPress} className="flex-1 active:opacity-90">
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      /* Both halves, because the subtitle is what says which of the two cards
+         this is: "Raportează un blocaj" and "Adaugă un loc de parcare" are
+         distinct, but a reader landing on an image and a heading with no
+         relationship between them reads two fragments. */
+      accessibilityLabel={`${title}. ${subtitle}`}
+      className="flex-1 active:opacity-90"
+    >
       <View
         className={`flex-1 flex-row items-stretch gap-4 overflow-hidden rounded-lg border-hairline border-border bg-card p-3 ${
           reverse ? "flex-row-reverse" : ""
@@ -48,6 +57,7 @@ function ActionCard({ image, icon, title, subtitle, reverse, onPress }: ActionCa
 }
 
 export default function AddScreen() {
+  const colors = useColors();
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -59,7 +69,7 @@ export default function AddScreen() {
       >
         <ActionCard
           image={REPORT_IMAGE}
-          icon={<TriangleAlert size={26} color={palette.indigo[600]} />}
+          icon={<TriangleAlert size={26} color={colors.accent} />}
           title="Raportează un blocaj"
           subtitle="Mașini pe trotuar, rampă sau trecere."
           onPress={() => {
@@ -72,7 +82,7 @@ export default function AddScreen() {
             nobody owns. Public spaces come from datasets. */}
         <ActionCard
           image={SPOT_IMAGE}
-          icon={<KeyRound size={26} color={palette.indigo[600]} />}
+          icon={<KeyRound size={26} color={colors.accent} />}
           title="Adaugă un loc de parcare"
           subtitle="Locul tău, pe intervalele tale."
           reverse

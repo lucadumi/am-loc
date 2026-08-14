@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /*
- * AmLoc: "Yellow & Light" theme.
+ * AmLoc's two themes.
  * Light: a soft off-white canvas, white cards and near-black charcoal text,
  * with a single vivid yellow accent. Values are space-separated HSL channels
  * so `hsl(var(--x) / <alpha>)` and NativeWind opacity modifiers (e.g.
@@ -17,8 +17,13 @@
     --primary: 47 92% 53%; /* #F5C518 vivid yellow */
     --primary-foreground: 240 5% 8%; /* #141416 ink on yellow */
     --secondary: 240 5% 90%; /* #E4E4E7 light gray chips/panels */
-    --muted-foreground: 240 4% 46%; /* #71717A muted labels */
-    --destructive: 0 84% 60%; /* #EF4444 */
+    /* Kept in step with `palette` in constants/theme.ts by hand, because the
+       two are the same decision written twice -- these drive the Tailwind
+       classes, those drive the props that need a real colour string. Both were
+       darkened for contrast: see the notes on `mutedForeground` and
+       `destructive` there for the ratios. */
+    --muted-foreground: 240 5% 39%; /* #5F5F68 muted labels */
+    --destructive: 0 74% 42%; /* #B91C1C */
     --border: 240 6% 88%; /* #DDDDE1 hairline on light */
 
     /* Parking status */
@@ -27,5 +32,34 @@
     --taken: 0 91% 71%; /* #F87171 */
 
     --radius: 0.75rem;
+  }
+
+  /*
+   * The same tokens for a phone asking for a dark interface.
+   *
+   * NOT THE LIGHT SET INVERTED. `--destructive` and the indigo accents are
+   * lifted rather than reused: a red chosen to be dark enough for white text
+   * is 2.2:1 on a dark card, which is less readable than the one it replaced.
+   * See `darkPalette` in constants/theme.ts, where the same values live for
+   * the props that need a real colour string, and __tests__/contrast.test.ts,
+   * which holds both sets to the same thresholds.
+   *
+   * NativeWind applies `.dark` from the system setting once `darkMode` is set
+   * in tailwind.config.js; nothing in the app toggles a class by hand.
+   */
+  .dark:root {
+    --background: 240 8% 8%; /* #131316 */
+    --foreground: 240 5% 96%; /* #F4F4F5 */
+    --card: 240 7% 12%; /* #1C1C20 */
+    --primary: 47 92% 53%; /* #F5C518 — unchanged, and why it still looks like AmLoc */
+    --primary-foreground: 240 5% 8%; /* #141416 */
+    --secondary: 240 7% 18%; /* #2A2A30 */
+    --muted-foreground: 240 5% 65%; /* #A1A1AA */
+    --destructive: 0 91% 71%; /* #F87171 — lifted; see above */
+    --border: 240 8% 21%; /* #33333A */
+
+    --free: 158 64% 52%; /* #34D399 */
+    --leaving: 43 96% 56%; /* #FBBF24 */
+    --taken: 0 91% 71%; /* #F87171 */
   }
 }

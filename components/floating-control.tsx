@@ -1,3 +1,5 @@
+import type { ComponentProps } from "react";
+
 import { IconButton } from "@/components/ui/icon-button";
 
 /**
@@ -8,19 +10,14 @@ import { IconButton } from "@/components/ui/icon-button";
  * size. What it no longer does is spell the surface out for itself: that lives
  * in `IconButton`, so the four other round buttons in the app cannot drift
  * away from this one.
+ *
+ * Everything else is forwarded rather than enumerated. Naming three props was
+ * enough while the only questions were what it draws and what it does, and it
+ * quietly made the control impossible to label: `accessibilityLabel` was
+ * dropped on the floor, so the map's zoom and recentre buttons announced
+ * themselves to a reader as "button", three times, with nothing to tell them
+ * apart.
  */
-export function FloatingControl({
-  children,
-  onPress,
-  className,
-}: {
-  children: React.ReactNode;
-  onPress?: () => void;
-  className?: string;
-}) {
-  return (
-    <IconButton onPress={onPress} className={className}>
-      {children}
-    </IconButton>
-  );
+export function FloatingControl(props: ComponentProps<typeof IconButton>) {
+  return <IconButton {...props} />;
 }

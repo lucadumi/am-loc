@@ -20,6 +20,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Banner } from "@/components/banner";
 import { SectionHeader } from "@/components/section-header";
+import { Segmented } from "@/components/segmented";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Chip } from "@/components/ui/chip";
@@ -28,7 +29,13 @@ import { LoadingScreen } from "@/components/ui/loading-screen";
 import { Screen } from "@/components/ui/screen";
 import { Text } from "@/components/ui/text";
 import { floatingTabBarInset } from "@/constants/layout";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
+import {
+  THEME_CHOICES,
+  themeChoiceIcon,
+  themeChoiceLabel,
+  useThemeChoice,
+} from "@/hooks/use-theme-choice";
 import { getReports, tallyReports, type ReportTally } from "@/lib/api";
 import { resolveAccount } from "@/lib/identity";
 import { isRemote } from "@/lib/remote";
@@ -117,6 +124,7 @@ function SettingRow({
   right?: React.ReactNode;
   children?: React.ReactNode;
 }) {
+  const colors = useColors();
   const Chevron = open ? ChevronDown : ChevronRight;
 
   return (
@@ -141,7 +149,7 @@ function SettingRow({
           </Text>
         ) : null}
         {right ?? (
-          onPress ? <Chevron size={18} color={palette.mutedForeground} /> : null
+          onPress ? <Chevron size={18} color={colors.mutedForeground} /> : null
         )}
       </Pressable>
       {open && children ? (
@@ -167,11 +175,12 @@ const roleIcon: Record<AccountRole, typeof UserRound> = {
  * several parts looks like.
  */
 function RoleRow({ role }: { role: AccountRole }) {
+  const colors = useColors();
   const Icon = roleIcon[role];
   return (
     <View className="flex-row items-center gap-3 px-4 py-3.5">
       <View className="h-9 w-9 items-center justify-center rounded-full bg-secondary">
-        <Icon size={18} color={palette.foreground} />
+        <Icon size={18} color={colors.foreground} />
       </View>
       <Text className="flex-1 font-title text-sm">{roleLabel[role]}</Text>
     </View>
@@ -241,16 +250,17 @@ function Activity({
   /** Absent with no project, or before the profiles migration has been run. */
   since?: string;
 }) {
+  const colors = useColors();
   return (
     <View className="flex-row">
       <Figure
-        icon={<TriangleAlert size={18} color={palette.indigo[600]} />}
+        icon={<TriangleAlert size={18} color={colors.accent} />}
         value={String(tally.filed)}
         label={tally.filed === 1 ? "sesizare" : "sesizări"}
       />
       <View className="my-4 border-l-hairline border-border" />
       <Figure
-        icon={<CheckCheck size={18} color={palette.free} />}
+        icon={<CheckCheck size={18} color={colors.free} />}
         value={String(tally.resolved)}
         label="rezolvate"
       />
@@ -258,7 +268,7 @@ function Activity({
         <>
           <View className="my-4 border-l-hairline border-border" />
           <Figure
-            icon={<UserRound size={18} color={palette.mutedForeground} />}
+            icon={<UserRound size={18} color={colors.mutedForeground} />}
             value={monthOf(since)}
             label="din"
           />
@@ -272,6 +282,7 @@ function Activity({
 type Run = (what: () => Promise<Account | void>) => void;
 
 export default function ProfileScreen() {
+  const colors = useColors();
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const [account, setAccount] = useState<Account | null>(null);
@@ -343,7 +354,7 @@ export default function ProfileScreen() {
       <Screen>
         <View className="flex-1 items-center justify-center gap-4 px-10">
           <View className="h-20 w-20 items-center justify-center rounded-full bg-secondary">
-            <UserRound size={36} color={palette.mutedForeground} />
+            <UserRound size={36} color={colors.mutedForeground} />
           </View>
           <Text className="text-center font-title text-lg">
             Nu am putut încărca contul
@@ -387,7 +398,7 @@ export default function ProfileScreen() {
             left: 0,
             right: 0,
             height: 800,
-            backgroundColor: palette.primary,
+            backgroundColor: colors.primary,
           }}
         />
 
@@ -453,23 +464,31 @@ export default function ProfileScreen() {
           <View className="mt-7 px-5">
             <Card className="overflow-hidden">
               <SettingRow
-                icon={<TriangleAlert size={16} color={palette.foreground} />}
+                icon={<TriangleAlert size={16} color={colors.foreground} />}
                 title="Sesizările mele"
                 onPress={() => router.push("/reports")}
               />
               <Divider />
               <SettingRow
-                icon={<Bookmark size={16} color={palette.foreground} />}
+                icon={<Bookmark size={16} color={colors.foreground} />}
                 title="Salvate"
                 onPress={() => router.push("/archived")}
               />
               <Divider />
               <SettingRow
-                icon={<SquareParking size={16} color={palette.foreground} />}
+                icon={<SquareParking size={16} color={colors.foreground} />}
                 title="Locurile mele"
                 onPress={() => router.push("/my-spots")}
               />
             </Card>
+          </View>
+
+          {/* Above the account, and drawn for everybody. It is the one setting
+              here that is not about who you are -- an anonymous driver has as
+              much use for a dark map at night as a signed-in one. */}
+          <View className="mt-7 gap-3 px-5">
+            <SectionHeader title="Aspect" />
+            <ThemeSetting />
           </View>
 
           {/* A privileged grant this session cannot use comes before anything
@@ -517,6 +536,38 @@ export default function ProfileScreen() {
   );
 }
 
+
+/**
+ * Light, dark, or whatever the phone is doing.
+ *
+ * A segmented control rather than a switch, because there are three answers
+ * and "system" is one of them -- a two-state toggle would force a driver to
+ * pick a theme and stop following their own phone, which is the setting most
+ * of them want and none of them would choose from a list of two.
+ *
+ * `Segmented` already carries the radio roles and the selected state a reader
+ * needs; this only has to hand it the options.
+ */
+function ThemeSetting() {
+  const { choice, setChoice } = useThemeChoice();
+
+  /* Nothing until the stored answer is known. A control that drew "Sistem"
+     selected and corrected itself a beat later would be showing the driver a
+     setting they did not choose, in the one place they came to change it. */
+  if (!choice) return <View className="h-11" />;
+
+  return (
+    <Segmented
+      value={choice}
+      onChange={setChoice}
+      options={THEME_CHOICES.map((key) => ({
+        key,
+        label: themeChoiceLabel[key],
+        icon: themeChoiceIcon[key],
+      }))}
+    />
+  );
+}
 
 /** Signing up, or signing into an account made on another phone. */
 function Anonymous({
@@ -608,7 +659,11 @@ function StartSignUp({
         }
       />
 
-      <Pressable onPress={onHasAccount} className="pt-1">
+      <Pressable
+        onPress={onHasAccount}
+        accessibilityRole="button"
+        className="pt-1"
+      >
         <Text className="text-center font-mid text-sm text-muted-foreground">
           Am deja cont
         </Text>
@@ -637,6 +692,7 @@ function FinishSignUp({
   busy: boolean;
   run: Run;
 }) {
+  const colors = useColors();
   const [email, setEmail] = useState(account.email ?? "");
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
@@ -656,7 +712,7 @@ function FinishSignUp({
 
       {confirmed ? (
         <View className="flex-row items-center gap-2.5 rounded-full bg-secondary px-4 py-3">
-          <Mail size={16} color={palette.mutedForeground} />
+          <Mail size={16} color={colors.mutedForeground} />
           <Text numberOfLines={1} className="flex-1 font-title text-sm">
             {account.email ?? "—"}
           </Text>
@@ -710,6 +766,7 @@ function FinishSignUp({
 
       {confirmed ? null : (
         <Pressable
+          accessibilityRole="button"
           onPress={() =>
             run(async () => {
               const { startSignUp } = await import("@/lib/account");
@@ -792,7 +849,7 @@ function SignIn({
         disabled={!email.includes("@") || !password}
         onPress={confirm}
       />
-      <Pressable onPress={onCancel} className="pt-1">
+      <Pressable onPress={onCancel} accessibilityRole="button" className="pt-1">
         <Text className="text-center font-mid text-sm text-muted-foreground">
           Înapoi
         </Text>
@@ -817,6 +874,7 @@ function SignedIn({
   busy: boolean;
   run: Run;
 }) {
+  const colors = useColors();
   const [open, setOpen] = useState<"name" | "factor" | null>(null);
   const [name, setName] = useState(account.displayName ?? "");
   const [enrolment, setEnrolment] = useState<{
@@ -848,7 +906,7 @@ function SignedIn({
             answer to the only question this page is ever opened to check --
             which account am I signed in as. */}
         <SettingRow
-          icon={<Mail size={16} color={palette.foreground} />}
+          icon={<Mail size={16} color={colors.foreground} />}
           title="Email"
           value={account.email ?? "—"}
         />
@@ -856,7 +914,7 @@ function SignedIn({
         <Divider />
 
         <SettingRow
-          icon={<UserRound size={16} color={palette.foreground} />}
+          icon={<UserRound size={16} color={colors.foreground} />}
           title="Numele tău"
           value={account.displayName ?? "Nespus"}
           open={open === "name"}
@@ -895,7 +953,7 @@ function SignedIn({
             attaches at the moment of the declaration, and a host who was never
             asked cannot be told apart from one who said no. */}
         <SettingRow
-          icon={<Store size={16} color={palette.foreground} />}
+          icon={<Store size={16} color={colors.foreground} />}
           title="Închiriez ca profesionist"
           right={
             <Switch
@@ -907,8 +965,8 @@ function SignedIn({
                   return saveProfile({ is_trader });
                 })
               }
-              trackColor={{ true: palette.primary, false: palette.border }}
-              thumbColor={palette.card}
+              trackColor={{ true: colors.primary, false: colors.border }}
+              thumbColor={colors.card}
             />
           }
         />
@@ -916,13 +974,13 @@ function SignedIn({
         <Divider />
 
         <SettingRow
-          icon={<KeyRound size={16} color={palette.foreground} />}
+          icon={<KeyRound size={16} color={colors.foreground} />}
           title="Autentificare în doi pași"
           value={factorValue}
           {...(account.assurance === "aal2"
-            ? { tint: palette.free }
+            ? { tint: colors.free }
             : canPassSecondFactor(account)
-              ? { tint: palette.leaving }
+              ? { tint: colors.leaving }
               : {})}
           open={open === "factor"}
           /* No handler once it is on: there is nothing behind the row but the
@@ -1045,7 +1103,7 @@ function SignedIn({
           })
         }
       >
-        <LogOut size={16} color={palette.destructive} />
+        <LogOut size={16} color={colors.destructive} />
         <Text className="font-title text-sm text-destructive">
           Ieși din cont
         </Text>
@@ -1071,6 +1129,7 @@ function SecondFactorPrompt({
   busy: boolean;
   onSubmit: (code: string) => void;
 }) {
+  const colors = useColors();
   const [code, setCode] = useState("");
   /* The role names go in the heading rather than into a sentence under it.
      "Autoritate suspendată" is the entire message, and it is the one thing on
@@ -1080,7 +1139,7 @@ function SecondFactorPrompt({
   return (
     <Card className="gap-3 p-4">
       <View className="flex-row items-center gap-2">
-        <ShieldCheck size={20} color={palette.foreground} />
+        <ShieldCheck size={20} color={colors.foreground} />
         <Text className="flex-1 font-title text-base">
           {which} suspendat până confirmi
         </Text>

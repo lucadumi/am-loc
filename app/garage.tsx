@@ -32,7 +32,8 @@ import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { IconButton } from "@/components/ui/icon-button";
 import { Text } from "@/components/ui/text";
-import { palette, scrim, shadow, statusColor } from "@/constants/theme";
+import { scrim, shadow } from "@/constants/theme";
+import { useColors, useStatusColors, useTheme } from "@/hooks/use-theme";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { getSpotById } from "@/lib/api";
 import { resolveIdentity } from "@/lib/identity";
@@ -64,6 +65,9 @@ function openDirections(spot: ParkingSpot) {
 }
 
 export default function GarageScreen() {
+  const colors = useColors();
+  const theme = useTheme();
+  const statusColor = useStatusColors();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { height: screenH } = useWindowDimensions();
@@ -148,7 +152,7 @@ export default function GarageScreen() {
           <ScreenHeader title="Detalii" />
         </SafeAreaView>
         <View className="flex-1 items-center justify-center gap-3 px-8">
-          <MapPin size={40} color={palette.mutedForeground} strokeWidth={1.6} />
+          <MapPin size={40} color={colors.mutedForeground} strokeWidth={1.6} />
           <Text className="text-center font-title text-lg text-foreground">
             Locul nu a fost găsit
           </Text>
@@ -173,7 +177,7 @@ export default function GarageScreen() {
    */
   const pinColor = spot.status
     ? statusColor[spot.status]
-    : palette.mutedForeground;
+    : colors.mutedForeground;
   const dist = location
     ? distanceMeters(
         location.latitude,
@@ -232,7 +236,7 @@ export default function GarageScreen() {
                 latitudeDelta: OPEN_SPAN,
                 longitudeDelta: OPEN_SPAN,
               }}
-              userInterfaceStyle="light"
+              userInterfaceStyle={theme}
               scrollEnabled={false}
               zoomEnabled={false}
               pitchEnabled={false}
@@ -270,7 +274,7 @@ export default function GarageScreen() {
             surface="floating"
             className="absolute bottom-4 right-4"
           >
-            <Navigation size={13} color={palette.indigo[600]} strokeWidth={2.4} />
+            <Navigation size={13} color={colors.accent} strokeWidth={2.4} />
             <Text className="font-semi text-xs text-foreground">
               Deschide în Hărți
             </Text>
@@ -301,7 +305,7 @@ export default function GarageScreen() {
               <>
                 <MapPin
                   size={14}
-                  color={palette.coral}
+                  color={colors.coral}
                   strokeWidth={2.2}
                   style={{ flexShrink: 0 }}
                 />
@@ -320,7 +324,7 @@ export default function GarageScreen() {
                 <>
                   <Navigation
                     size={13}
-                    color={palette.indigo[600]}
+                    color={colors.accent}
                     strokeWidth={2.4}
                   />
                   <Text className="font-semi text-sm text-foreground">
@@ -335,7 +339,7 @@ export default function GarageScreen() {
                 <>
                   <SquareParking
                     size={14}
-                    color={palette.free}
+                    color={colors.free}
                     strokeWidth={2.2}
                   />
                   <Text className="font-semi text-sm text-foreground">
@@ -365,7 +369,7 @@ export default function GarageScreen() {
               whether that claim is still worth acting on. */}
           <View className="mt-3 flex-row flex-wrap items-center gap-2">
             <Chip>
-              <Banknote size={14} color={palette.mutedForeground} />
+              <Banknote size={14} color={colors.mutedForeground} />
               <Text className="font-semi text-sm text-foreground">
                 {formatPrice(spot.pricePerHour, spot.paid)}
               </Text>
@@ -408,7 +412,7 @@ export default function GarageScreen() {
             onPress={() => router.back()}
             accessibilityLabel="Înapoi"
           >
-            <ArrowLeft size={20} color={palette.foreground} />
+            <ArrowLeft size={20} color={colors.foreground} />
           </IconButton>
           {spot.status ? (
             <StatusBadge

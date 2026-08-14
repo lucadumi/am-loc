@@ -9,7 +9,7 @@ import Animated, {
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
 
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 
 /**
@@ -39,17 +39,22 @@ const TURN_MS = 1100;
 
 export function Spinner({
   size = 36,
-  /** The rim and spokes, which is the part whose turning you actually see. */
-  accent = palette.primary,
-  /** The tyre. */
-  color = palette.foreground,
+  /* Defaulted in the body: a parameter default cannot call a hook, and a
+     colour read at module load is the theme the app started in. */
+  accent,
+  color,
   className,
 }: {
   size?: number;
+  /** The rim and spokes, whose turning you actually see. */
   accent?: string;
+  /** The tyre. */
   color?: string;
   className?: string;
 }) {
+  const colors = useColors();
+  const rim = accent ?? colors.primary;
+  const tyre = color ?? colors.foreground;
   const turn = useSharedValue(0);
 
   useEffect(() => {
@@ -75,8 +80,8 @@ export function Spinner({
     >
       <Animated.View style={spin}>
         <Svg width={size} height={size} viewBox="0 0 100 100">
-          <Path d={SPOKES} fill={accent} />
-          <Path d={TYRE} fill={color} />
+          <Path d={SPOKES} fill={rim} />
+          <Path d={TYRE} fill={tyre} />
         </Svg>
       </Animated.View>
     </View>

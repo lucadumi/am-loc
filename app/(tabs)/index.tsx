@@ -17,17 +17,18 @@ import { SpotCard } from "@/components/spot-card";
 import { SpotImage } from "@/components/spot-image";
 import { Text } from "@/components/ui/text";
 import { VehicleChips } from "@/components/vehicle-chips";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { floatingTabBarInset } from "@/constants/layout";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { useLive } from "@/hooks/use-live";
 import { getSpots, rankNearby } from "@/lib/api";
 import { resolveAccount } from "@/lib/identity";
 import { withOffers, type OfferedSpot } from "@/lib/private-spots";
-import { spotName } from "@/lib/spot-name";
+import { spokenSpot, spotName } from "@/lib/spot-name";
 import { ParkingSpot } from "@/types";
 
 export default function HomeScreen() {
+  const colors = useColors();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const location = useCurrentLocation();
@@ -153,7 +154,7 @@ export default function HomeScreen() {
             left: 0,
             right: 0,
             height: 800,
-            backgroundColor: palette.primary,
+            backgroundColor: colors.primary,
           }}
         />
 
@@ -238,6 +239,8 @@ export default function HomeScreen() {
               <SectionHeader title="Ultima parcare" actionIcon={History} />
               <Pressable
                 onPress={() => openSpot(last)}
+                accessibilityRole="button"
+                accessibilityLabel={`Ultima parcare: ${spokenSpot(last)}`}
                 className="flex-row items-center gap-3 rounded-lg border-hairline border-border bg-card p-3"
               >
                 <SpotImage
@@ -258,7 +261,7 @@ export default function HomeScreen() {
                     {last.area ?? "Parcare publică"}
                   </Text>
                 </View>
-                <ChevronRight size={20} color={palette.mutedForeground} />
+                <ChevronRight size={20} color={colors.mutedForeground} />
               </Pressable>
             </View>
           ) : null}

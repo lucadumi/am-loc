@@ -22,7 +22,7 @@ import { Star } from "lucide-react-native";
 import { View } from "react-native";
 
 import { Text } from "@/components/ui/text";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 
 export function Rating({
   value,
@@ -32,6 +32,7 @@ export function Rating({
   value?: number;
   size?: number;
 }) {
+  const colors = useColors();
   const rated = value != null && value > 0;
 
   return (
@@ -44,8 +45,8 @@ export function Rating({
           about. */}
       <Star
         size={size}
-        color={palette.primary}
-        fill={rated ? palette.primary : "transparent"}
+        color={colors.primary}
+        fill={rated ? colors.primary : "transparent"}
         strokeWidth={rated ? 2 : 2.2}
         style={{ flexShrink: 0 }}
       />

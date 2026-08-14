@@ -8,9 +8,9 @@ import { IconRow } from "@/components/ui/icon-row";
 import { Text } from "@/components/ui/text";
 import { SpotImage } from "@/components/spot-image";
 import { StatusBadge } from "@/components/status-badge";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { formatPrice } from "@/lib/geo";
-import { spotName } from "@/lib/spot-name";
+import { spokenSpot, spotName } from "@/lib/spot-name";
 import { ParkingSpot } from "@/types";
 
 /**
@@ -48,10 +48,17 @@ export function SpotCard({
   /** No image and no button: a row to compare rather than a card to admire. */
   compact?: boolean;
 }) {
+  const colors = useColors();
   if (compact) return <CompactCard spot={spot} onPress={onPress} />;
 
   return (
-    <Pressable onPress={onPress} className={fullWidth ? "w-full" : "w-64"}>
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={spokenSpot(spot)}
+      accessibilityHint="Deschide detaliile parcării"
+      className={fullWidth ? "w-full" : "w-64"}
+    >
       <Card className="overflow-hidden">
         <View className="relative">
           <SpotImage kind={spot.kind} className="h-32 w-full" />
@@ -94,7 +101,7 @@ export function SpotCard({
             <IconRow
               truncate
               icon={
-                <MapPin size={13} color={palette.coral} strokeWidth={2.2} />
+                <MapPin size={13} color={colors.coral} strokeWidth={2.2} />
               }
             >
               {spot.area}
@@ -104,7 +111,7 @@ export function SpotCard({
           <View className="flex-row items-center justify-between gap-3">
             {spot.walkMin ? (
               <IconRow
-                icon={<Footprints size={13} color={palette.indigo[600]} />}
+                icon={<Footprints size={13} color={colors.accent} />}
                 textClassName="font-semi text-foreground"
               >
                 {`${spot.walkMin} min pe jos`}
@@ -118,7 +125,7 @@ export function SpotCard({
             size="sm"
             label="Vezi traseul"
             onPress={onPress}
-            rightIcon={<ArrowRight size={16} color={palette.primaryForeground} />}
+            rightIcon={<ArrowRight size={16} color={colors.primaryForeground} />}
             className="mt-1"
           />
         </View>
@@ -145,8 +152,15 @@ function CompactCard({
   spot: ParkingSpot & { walkMin?: number };
   onPress?: () => void;
 }) {
+  const colors = useColors();
   return (
-    <Pressable onPress={onPress} className="w-full">
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={spokenSpot(spot)}
+      accessibilityHint="Deschide detaliile parcării"
+      className="w-full"
+    >
       <Card className="flex-row items-center gap-3 px-3.5 py-3">
         <View className="flex-1 gap-1">
           <View className="flex-row items-center gap-2">
@@ -162,7 +176,7 @@ function CompactCard({
           <View className="flex-row items-center gap-3">
             {spot.walkMin ? (
               <IconRow
-                icon={<Footprints size={13} color={palette.indigo[600]} />}
+                icon={<Footprints size={13} color={colors.accent} />}
                 textClassName="font-semi text-foreground"
               >
                 {`${spot.walkMin} min`}
@@ -171,7 +185,7 @@ function CompactCard({
             {spot.area ? (
               <IconRow
                 truncate
-                icon={<MapPin size={13} color={palette.coral} strokeWidth={2.2} />}
+                icon={<MapPin size={13} color={colors.coral} strokeWidth={2.2} />}
               >
                 {spot.area}
               </IconRow>

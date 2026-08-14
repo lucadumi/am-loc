@@ -4,7 +4,7 @@ import { Pressable } from "react-native";
 
 import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
@@ -64,6 +64,7 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
+  const colors = useColors();
   const isDisabled = disabled || loading;
   return (
     <Pressable
@@ -82,10 +83,10 @@ export function Button({
         <Spinner
           size={24}
           color={
-            variant === "default" ? palette.primaryForeground : palette.foreground
+            variant === "default" ? colors.primaryForeground : colors.foreground
           }
           accent={
-            variant === "default" ? palette.primaryForeground : palette.primary
+            variant === "default" ? colors.primaryForeground : colors.primary
           }
         />
       ) : (

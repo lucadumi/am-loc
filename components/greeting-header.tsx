@@ -3,7 +3,7 @@ import { Pressable, View } from "react-native";
 
 import { IconRow } from "@/components/ui/icon-row";
 import { Text } from "@/components/ui/text";
-import { palette } from "@/constants/theme";
+import { useColors } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 
 /** Initials for the avatar, from however many words the name has. */
@@ -82,7 +82,8 @@ export function GreetingHeader({
   /** Style for placement over the yellow hero (dark elements on yellow). */
   onPrimary?: boolean;
 }) {
-  const actionColor = onPrimary ? palette.primaryForeground : palette.foreground;
+  const colors = useColors();
+  const actionColor = onPrimary ? colors.primaryForeground : colors.foreground;
 
   return (
     <View className="flex-row items-center justify-between">
@@ -102,7 +103,7 @@ export function GreetingHeader({
             icon={
               <SquareParking
                 size={13}
-                color={onPrimary ? palette.primaryForeground : palette.indigo[600]}
+                color={onPrimary ? colors.primaryForeground : colors.accent}
                 strokeWidth={2.2}
               />
             }

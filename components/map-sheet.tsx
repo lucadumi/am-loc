@@ -179,7 +179,16 @@ export function MapSheet({
       >
         <GestureDetector gesture={pan}>
           <View>
-            <View className="items-center pb-2 pt-3">
+            {/* The grab handle, hidden from a reader: it is draggable and
+                nothing else, and a reader's swipe never reaches the pan
+                handler. There is nothing lost -- the sheet's content is
+                reachable at any stop, and the stops exist to give the map room
+                rather than to hide anything. */}
+            <View
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
+              className="items-center pb-2 pt-3"
+            >
               <View className="h-1.5 w-10 rounded-full bg-border" />
             </View>
             {header}

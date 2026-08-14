@@ -10,16 +10,29 @@ import Animated, {
 
 import { Text } from "@/components/ui/text";
 import { haptics } from "@/lib/haptics";
+import { ADJUST_ACTIONS, spokenDuration, stepValue } from "@/lib/slider";
 
 const KNOB = 28;
 const SPRING = { damping: 24, stiffness: 220, overshootClamping: true };
 
 /**
- * Slick draggable duration picker. Drag the yellow knob to choose a parking
- * interval; it snaps to `step`-minute increments with a haptic tick on each
- * step and reports the value (minutes) via onChange. External changes to
- * `value` (e.g. preset chips) spring the knob into place, without fighting an
- * in-progress drag.
+ * A duration picker you drag, and step.
+ *
+ * The knob snaps to `step`-minute increments with a haptic tick on each, and
+ * external changes to `value` -- a preset chip -- spring it into place without
+ * fighting an in-progress drag.
+ *
+ * IT IS ALSO STEPPABLE, which is what makes it usable at all with a screen
+ * reader running. A swipe under VoiceOver or TalkBack moves the reader's own
+ * cursor and never reaches the pan handler, so `accessibilityRole="adjustable"`
+ * is the platform's way in: it turns swipe-up and swipe-down into the two
+ * actions handled below. Without them this control has exactly one input
+ * gesture and it is the one the reader has taken.
+ *
+ * The arithmetic lives in `lib/slider.ts` rather than here, because a step
+ * computed inside a gesture callback is a step no test can ask about -- and
+ * "does the last value remain reachable" is a question worth being able to
+ * ask.
  */
 export function IntervalSlider({
   value,
@@ -29,6 +42,7 @@ export function IntervalSlider({
   step = 15,
   minLabel = "15 min",
   maxLabel = "8 h",
+  label = "Durata parcării",
   className,
 }: {
   value: number;
@@ -38,6 +52,8 @@ export function IntervalSlider({
   step?: number;
   minLabel?: string;
   maxLabel?: string;
+  /** What the control is, for a reader. The visible heading is separate. */
+  label?: string;
   className?: string;
 }) {
   const [trackW, setTrackW] = useState(0);
@@ -61,6 +77,12 @@ export function IntervalSlider({
     haptics.selection();
     onChange(v);
   };
+
+  /* One step in either direction, for a reader's swipe. `stepValue` tidies a
+     value that arrived off the grid from a drag, so a slider left at 47
+     minutes steps to 60 rather than to 62 -- see lib/slider.ts. */
+  const nudge = (direction: 1 | -1) =>
+    report(stepValue(value, direction, { min, max, step }));
 
   const pan = useMemo(
     () =>
@@ -100,6 +122,25 @@ export function IntervalSlider({
       <View
         onLayout={(e: LayoutChangeEvent) => setTrackW(e.nativeEvent.layout.width)}
         style={{ height: KNOB, justifyContent: "center" }}
+        /* The whole track is the control, not the knob: a reader's cursor
+           lands on one element, and a 28px knob is also below the 44px target
+           anybody tapping with an unsteady hand needs. */
+        accessible
+        accessibilityRole="adjustable"
+        accessibilityLabel={label}
+        accessibilityValue={{
+          min,
+          max,
+          now: value,
+          /* Said instead of the number, not beside it. "90" leaves the
+             listener to do the division; "o oră și 30 de minute" does not. */
+          text: spokenDuration(value),
+        }}
+        accessibilityActions={ADJUST_ACTIONS}
+        onAccessibilityAction={(event) => {
+          if (event.nativeEvent.actionName === "increment") nudge(1);
+          if (event.nativeEvent.actionName === "decrement") nudge(-1);
+        }}
       >
         {/* Base track */}
         <View className="h-2 rounded-full bg-secondary" />
@@ -125,6 +166,11 @@ export function IntervalSlider({
         {/* Knob */}
         <GestureDetector gesture={pan}>
           <Animated.View
+            /* Hidden from the reader: the track above is the control, and a
+               knob announced separately would be a second thing to swipe past
+               that adjusts nothing. */
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
             style={[
               knobStyle,
               {
