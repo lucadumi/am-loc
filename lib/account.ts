@@ -413,6 +413,31 @@ export async function signOut(): Promise<void> {
   forgetAccount();
 }
 
+/**
+ * Leave the session behind after an erasure.
+ *
+ * `signOut` above refuses an anonymous account, and refuses one mid-sign-up,
+ * because in both cases leaving means losing everything filed from this
+ * telephone with no way back. Neither guard applies here: `erase_me` has
+ * already deleted it, on purpose, at the person's request. Refusing to sign
+ * them out would leave them holding a session for an account with no profile
+ * and no reports, being shown a stranger's idea of their own data.
+ *
+ * The error from Supabase is swallowed rather than raised, and that is the one
+ * decision in this function. The rows are gone by the time this runs; failing
+ * loudly here would report the erasure as unsuccessful when the only thing
+ * that did not happen is the tidying up of a token that now opens nothing.
+ */
+export async function abandonErasedSession(): Promise<void> {
+  try {
+    await client().auth.signOut();
+  } catch {
+    // Deliberately quiet. See above.
+  }
+  await clearPasswordPending();
+  forgetAccount();
+}
+
 // ---------------------------------------------------------------------------
 // The profile
 // ---------------------------------------------------------------------------

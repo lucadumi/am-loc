@@ -240,8 +240,16 @@ export interface BlockerReport {
   /** ISO timestamp. */
   createdAt: string;
   status: ReportStatus;
-  /** Who filed it. Only its author may edit or withdraw it. */
-  reportedBy: string;
+  /**
+   * Who filed it. Only its author may edit or withdraw it.
+   *
+   * Null for somebody else's report since `0012_privacy_lifecycle.sql`: the
+   * view hands the id back only to the person it names. Every question the app
+   * asks of this is "is this mine", so a null answers it correctly, and the
+   * alternative was a column that let anybody group the city's complaints by
+   * the person who filed them.
+   */
+  reportedBy: string | null;
   plate?: string;
   /**
    * The evidence, in the order it was taken.
