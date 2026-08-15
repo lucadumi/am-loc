@@ -33,6 +33,8 @@ import {
   isPrivileged,
   mayAdminister,
   mayBeGranted,
+  mayClearReport,
+  mayResolveReport,
   mayHost,
   mayResolveReports,
   needsSecondFactor,
@@ -41,6 +43,11 @@ import {
   type Account,
   type AccountRole,
 } from "../lib/roles.ts";
+import {
+  SECTOR_JURISDICTIONS,
+  type Jurisdiction,
+} from "../lib/jurisdiction.ts";
+import type { Organisation } from "../types/index.ts";
 
 /** A signed-up driver with nothing granted, at the weaker assurance level. */
 const account = (over: Partial<Account> = {}): Account => ({
@@ -251,5 +258,90 @@ describe("anonymousAccount", () => {
     assert.ok(!ghost.hasSecondFactor);
     assert.ok(!ghost.passwordPending);
     assert.ok(!ghost.trader);
+  });
+});
+
+describe("closing a report", () => {
+  const office = (over: Partial<Organisation> = {}): Organisation => ({
+    id: "ps2",
+    name: "Primăria Sectorului 2",
+    kind: "sector_hall",
+    jurisdiction: "sector_2",
+    ...over,
+  });
+
+  /** A warden who has passed their second factor and acts for an office. */
+  const warden = (over: Partial<Account> = {}): Account =>
+    account({
+      grants: ["resolver"],
+      assurance: "aal2",
+      organisation: office(),
+      ...over,
+    });
+
+  const at = (sector?: Jurisdiction) => ({ sector });
+
+  test("a driver may say a kerb is clear and may not resolve", () => {
+    /* The whole of #12's `Done when`, on the client side. Both halves matter:
+       taking the first away would leave a report open until an institution
+       moved, which for a city where no sector hall uses the app yet means
+       forever. */
+    const driver = account();
+    assert.ok(mayClearReport(driver));
+    assert.ok(!mayResolveReport(driver, at("sector_2")));
+  });
+
+  test("a warden resolves in their own sector", () => {
+    assert.ok(mayResolveReport(warden(), at("sector_2")));
+  });
+
+  test("and not in somebody else's", () => {
+    // A sector hall closing a complaint about another sector's pavement is not
+    // a resolution; it is a mistake nobody notices until the car is still
+    // there a month later.
+    assert.ok(!mayResolveReport(warden(), at("sector_5")));
+  });
+
+  test("a city-wide body reaches every sector", () => {
+    const mayoralty = warden({
+      organisation: office({ id: "pmb", jurisdiction: "city" }),
+    });
+    for (const sector of SECTOR_JURISDICTIONS) {
+      assert.ok(mayResolveReport(mayoralty, at(sector)), sector);
+    }
+  });
+
+  test("a report the app could not place is reachable by anybody entitled", () => {
+    /* Undefined is a real answer, and the safe direction is the permissive
+       one: a complaint nobody can be responsible for is worse than one two
+       people look at. The database agrees -- see `may_resolve` in 0011. */
+    assert.ok(mayResolveReport(warden(), at(undefined)));
+  });
+
+  test("a second factor is still required", () => {
+    // The office does not replace the rule from #11: a warden who signed in
+    // with only a password acts for nobody.
+    assert.ok(!mayResolveReport(warden({ assurance: "aal1" }), at("sector_2")));
+  });
+
+  test("a resolver with no office resolves nothing", () => {
+    /* Which is also how a suspended or expired organisation reads here:
+       `acting_organisation()` returns null for all three, so the account comes
+       back without one rather than with a dead one. */
+    assert.ok(
+      !mayResolveReport(warden({ organisation: undefined }), at("sector_2")),
+    );
+  });
+
+  test("an office without the grant is not authority", () => {
+    // A stray column is not permission. `holds` decides first.
+    const impostor = account({ organisation: office(), assurance: "aal2" });
+    assert.ok(!mayResolveReport(impostor, at("sector_2")));
+  });
+
+  test("an anonymous driver may still clear a kerb", () => {
+    // Reporting and clearing are both open to somebody who has not signed up:
+    // barring them would be barring the only people who walk past.
+    assert.ok(mayClearReport(anonymousAccount("me")));
   });
 });
