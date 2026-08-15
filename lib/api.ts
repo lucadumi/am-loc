@@ -408,6 +408,53 @@ export function rankNearby<T extends ParkingSpot>(
 }
 
 /**
+ * Record what somebody did about a report.
+ *
+ * Forwarding, saying a kerb is clear, or closing a complaint as an
+ * institution. Which of those the caller may actually do is the database's
+ * decision -- see the trigger in `0011_institutional_resolvers.sql` -- and its
+ * refusals are worth showing to a person unchanged, because "outside your
+ * jurisdiction" and "only a verified institution may resolve" are different
+ * problems.
+ *
+ * With no project configured this throws rather than pretending. Report events
+ * were never stored on the device: the whole point of one is that somebody
+ * other than the author can see it.
+ */
+export async function actOnReport(event: {
+  reportId: string;
+  kind: "forwarded" | "cleared" | "resolved";
+  photos?: string[];
+  note?: string;
+}): Promise<void> {
+  if (!isRemote()) {
+    throw new Error(
+      "Fără un proiect configurat, sesizările rămân pe telefon și nu pot fi preluate.",
+    );
+  }
+  const { insertReportEvent } = await import("@/lib/supabase-data.ts");
+  await insertReportEvent(event);
+  publish("reports");
+}
+
+/**
+ * Somebody else's evidence, for a resolver entitled to it.
+ *
+ * Separate from `signEvidence` on purpose, and the difference is not
+ * cosmetic. An author's own photographs arrive with the report and are signed;
+ * a resolver's have to be asked for by id, through a function that checks the
+ * office and writes down that the disclosure happened. Folding the two into
+ * one call would make the audit depend on which branch a screen took.
+ */
+export async function fetchEvidence(reportId: string): Promise<string[]> {
+  if (!isRemote()) return [];
+  const { fetchEvidencePaths, signEvidence: sign } = await import(
+    "@/lib/supabase-data.ts"
+  );
+  return sign(await fetchEvidencePaths(reportId));
+}
+
+/**
  * Links an `Image` can render, for photographs already filed.
  *
  * The seam the screens use, so none of them has to know whether there is a

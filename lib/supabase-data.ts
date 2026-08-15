@@ -375,6 +375,68 @@ export async function updateReportRow(
   if (error) throw new SupabaseError("Could not correct the report", error);
 }
 
+/**
+ * Record what somebody did about a report.
+ *
+ * Four things travel and one deliberately does not: the organisation. A
+ * resolution is filed *for* an office, and which office is stamped by the
+ * trigger in `0011_institutional_resolvers.sql` from the session rather than
+ * accepted from here -- otherwise a warden could close a report in another
+ * hall's name, and the attribution on screen would be a lie the database
+ * helped tell.
+ *
+ * The refusals also come from that trigger rather than from a check here, and
+ * the messages are worth passing through unchanged: "outside your
+ * jurisdiction" and "only a verified institution may resolve" are different
+ * problems with different fixes, and a client that flattened them into "could
+ * not save" would leave a warden guessing which.
+ */
+export async function insertReportEvent(event: {
+  reportId: string;
+  kind: ReportEventRow["kind"];
+  /** Local URIs. Required for anything that closes a report; see 0003's check. */
+  photos?: string[];
+  note?: string;
+}): Promise<void> {
+  const actor = await currentReporterId();
+
+  /* Uploaded under the actor's own uuid, which is what the storage policy
+     checks -- so a resolution's photographs belong to the warden who took
+     them, not to the driver who complained. */
+  const photos = event.photos?.length
+    ? await uploadPhotos(event.reportId, event.photos, actor)
+    : [];
+
+  const { error } = await client().from("report_events").insert({
+    report_id: event.reportId,
+    kind: event.kind,
+    photos,
+    actor,
+    note: event.note ?? null,
+  });
+  if (error) throw new SupabaseError("Nu am putut salva", error);
+}
+
+/**
+ * The paths of somebody else's evidence, for a resolver entitled to them.
+ *
+ * Goes through the `evidence_paths` function rather than reading the column,
+ * and that is the whole point of it: the column is revoked, the function
+ * checks the office and its jurisdiction, and it writes a row into
+ * `evidence_access` saying who looked. A route that did not log would make the
+ * audit a decoration.
+ *
+ * The author's own photographs do not come this way -- `reports_readable`
+ * hands those straight over -- so this is only ever the disclosure path.
+ */
+export async function fetchEvidencePaths(reportId: string): Promise<string[]> {
+  const { data, error } = await client().rpc("evidence_paths", {
+    wanted_report: reportId,
+  });
+  if (error) throw new SupabaseError("Nu ai acces la dovezi", error);
+  return (data as string[] | null) ?? [];
+}
+
 /** One spot by id, or undefined when there is no such row. */
 export async function fetchSpotById(id: string): Promise<ParkingSpot | undefined> {
   const { data, error } = await client()
