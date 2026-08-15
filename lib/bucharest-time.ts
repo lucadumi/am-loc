@@ -228,3 +228,54 @@ export function windowState<W extends WallClockWindow>(
     window: responsible,
   };
 }
+
+/**
+ * How long ago something happened, in words.
+ *
+ * For a list of complaints, where the exact minute is never the question and
+ * "acum 3 zile" is. Anything past a week gets a date instead: at that distance
+ * "acum 23 de zile" is a number somebody has to convert, and a date is the
+ * thing they were converting it to.
+ *
+ * ROMANIAN'S PLURAL RULE IS THE REASON THIS IS TESTED. The language has three
+ * agreement classes, not two, and the third catches everybody: from 20 upwards
+ * a number takes "de" before the noun -- "3 zile" but "20 de zile". Getting it
+ * wrong does not read as a bug, it reads as an app written by somebody who
+ * does not speak the language.
+ */
+export function sinceLabel(iso: string, now: Date = new Date()): string {
+  const then = new Date(iso);
+  const minutes = Math.floor((now.getTime() - then.getTime()) / 60_000);
+
+  /* Including anything in the future, which a clock a few seconds out will
+     produce. "Acum" is the honest answer for both, and a negative duration
+     rendered literally would say "acum -1 minute". */
+  if (minutes < 1) return "acum";
+  if (minutes < 60) return `acum ${minutes} ${plural(minutes, "minut", "minute")}`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `acum ${hours} ${plural(hours, "oră", "ore")}`;
+
+  const days = Math.floor(hours / 24);
+  if (days <= 7) return `acum ${days} ${plural(days, "zi", "zile")}`;
+
+  return then.toLocaleDateString("ro-RO", {
+    day: "numeric",
+    month: "short",
+    ...(then.getFullYear() === now.getFullYear() ? {} : { year: "numeric" }),
+  });
+}
+
+/**
+ * The noun that goes with a number, Romanian's three ways.
+ *
+ * One takes the singular. Two to nineteen take the plural bare. Twenty and up
+ * take "de" first, and so does anything whose last two digits are under 20 --
+ * 101 is "101 zile", 120 is "120 de zile". The rule is on the remainder rather
+ * than on the number itself, which is the part a hand-written version misses.
+ */
+function plural(count: number, one: string, many: string): string {
+  if (count === 1) return one;
+  const rest = count % 100;
+  return rest === 0 || rest >= 20 ? `de ${many}` : many;
+}

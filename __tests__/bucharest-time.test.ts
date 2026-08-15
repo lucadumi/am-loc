@@ -16,6 +16,7 @@ import {
   bucharestTime,
   covers,
   windowState,
+  sinceLabel,
 } from "../lib/bucharest-time.ts";
 
 const at = (iso: string) => new Date(iso);
@@ -155,5 +156,54 @@ describe("windowState", () => {
     const windows = [{ from: 540, to: 1020 }];
     assert.equal(covers(windows[0], at("2026-01-15T07:30:00Z")), true); // 09:30 EET
     assert.equal(covers(windows[0], at("2026-01-15T06:30:00Z")), false); // 08:30 EET
+  });
+});
+
+describe("how long ago, in words", () => {
+  const at = (iso: string) => new Date(iso);
+  const NOW = at("2026-08-15T12:00:00Z");
+
+  test("the last minute is just 'acum'", () => {
+    assert.equal(sinceLabel("2026-08-15T11:59:30Z", NOW), "acum");
+  });
+
+  test("a clock running fast does not produce a negative duration", () => {
+    // A device a few seconds ahead of the server is ordinary, and "acum -1
+    // minute" is how it would read.
+    assert.equal(sinceLabel("2026-08-15T12:00:30Z", NOW), "acum");
+  });
+
+  test("minutes, hours and days", () => {
+    assert.equal(sinceLabel("2026-08-15T11:45:00Z", NOW), "acum 15 minute");
+    assert.equal(sinceLabel("2026-08-15T09:00:00Z", NOW), "acum 3 ore");
+    assert.equal(sinceLabel("2026-08-12T12:00:00Z", NOW), "acum 3 zile");
+  });
+
+  test("one is singular", () => {
+    assert.equal(sinceLabel("2026-08-15T11:59:00Z", NOW), "acum 1 minut");
+    assert.equal(sinceLabel("2026-08-15T11:00:00Z", NOW), "acum 1 oră");
+    assert.equal(sinceLabel("2026-08-14T12:00:00Z", NOW), "acum 1 zi");
+  });
+
+  test("twenty and up take 'de'", () => {
+    /* Romanian's third agreement class, and the one everybody misses: "3
+       minute" but "20 de minute". Getting it wrong does not read as a bug, it
+       reads as an app written by somebody who does not speak the language. */
+    assert.equal(sinceLabel("2026-08-15T11:40:00Z", NOW), "acum 20 de minute");
+    assert.equal(sinceLabel("2026-08-15T11:15:00Z", NOW), "acum 45 de minute");
+  });
+
+  test("nineteen does not", () => {
+    assert.equal(sinceLabel("2026-08-15T11:41:00Z", NOW), "acum 19 minute");
+  });
+
+  test("past a week it becomes a date", () => {
+    // "acum 23 de zile" is a number somebody has to convert, and a date is the
+    // thing they were converting it to.
+    assert.match(sinceLabel("2026-07-20T12:00:00Z", NOW), /iul/i);
+  });
+
+  test("a date in another year says which", () => {
+    assert.match(sinceLabel("2025-07-20T12:00:00Z", NOW), /2025/);
   });
 });
