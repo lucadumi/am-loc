@@ -491,6 +491,15 @@ export default function MapScreen() {
               coordinate={{ latitude: r.latitude, longitude: r.longitude }}
               anchor={{ x: 0.5, y: 0.5 }}
               zIndex={ringed ? 10 : 1}
+              /* A red dot on a map that answers no question is a red dot
+                 nobody taps twice. The detail screen is what it was drawn
+                 for. */
+              onPress={() =>
+                router.push({
+                  pathname: "/report-detail",
+                  params: { id: r.id },
+                })
+              }
             >
               {/* The one arrived at from its report wears a brand ring, so a
                   driver who tapped a location lands on a pin they can find
