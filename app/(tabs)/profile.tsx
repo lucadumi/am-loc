@@ -3,8 +3,6 @@ import {
   Bookmark,
   Building2,
   CheckCheck,
-  ChevronDown,
-  ChevronRight,
   KeyRound,
   LogOut,
   Mail,
@@ -19,6 +17,7 @@ import { Alert, Pressable, ScrollView, Switch, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Banner } from "@/components/banner";
+import { Divider, SettingRow } from "@/components/setting-row";
 import { SectionHeader } from "@/components/section-header";
 import { Segmented } from "@/components/segmented";
 import { Button } from "@/components/ui/button";
@@ -81,83 +80,6 @@ import {
  *   present and unusable looks exactly like one that was taken away, and the
  *   person would ask why their access had gone instead of typing six digits.
  */
-
-/** The hairline between two rows, inset so it does not touch the card's edge. */
-function Divider() {
-  return <View className="mx-4 border-t-hairline border-border" />;
-}
-
-/**
- * A setting, as a row that opens where it stands.
- *
- * The shape the rest of the app already uses for "a thing with a current value
- * that you can go and change": an icon in a disc, what it is, what it says
- * right now, and a chevron. The home screen's "Ultima parcare" row is the same
- * object.
- *
- * IT OPENS INLINE RATHER THAN PUSHING A SCREEN, and that is the point of the
- * rewrite. Laid out flat, these three settings were three headings, two naked
- * text fields, a switch and four paragraphs of explanation -- a page of forms
- * for things a driver touches once a year, in front of the one fact they came
- * to check. Collapsed, the whole account is four rows deep, and the explaining
- * happens only where somebody has asked to read it.
- */
-function SettingRow({
-  icon,
-  title,
-  value,
-  tint,
-  open,
-  onPress,
-  right,
-  children,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  /** What it says right now. The reason the row is worth reading closed. */
-  value?: string;
-  /** Colours the value where it is a state that wants attention. */
-  tint?: string;
-  open?: boolean;
-  onPress?: () => void;
-  /** A control that belongs on the row itself, for a setting with two states. */
-  right?: React.ReactNode;
-  children?: React.ReactNode;
-}) {
-  const colors = useColors();
-  const Chevron = open ? ChevronDown : ChevronRight;
-
-  return (
-    <View>
-      <Pressable
-        onPress={onPress}
-        disabled={!onPress}
-        accessibilityRole={onPress ? "button" : undefined}
-        className="flex-row items-center gap-3 px-4 py-3.5 active:opacity-70"
-      >
-        <View className="h-9 w-9 items-center justify-center rounded-full bg-secondary">
-          {icon}
-        </View>
-        <Text className="flex-1 font-title text-sm">{title}</Text>
-        {value ? (
-          <Text
-            numberOfLines={1}
-            className="max-w-[45%] font-mid text-xs text-muted-foreground"
-            style={tint ? { color: tint } : undefined}
-          >
-            {value}
-          </Text>
-        ) : null}
-        {right ?? (
-          onPress ? <Chevron size={18} color={colors.mutedForeground} /> : null
-        )}
-      </Pressable>
-      {open && children ? (
-        <View className="gap-3 px-4 pb-4">{children}</View>
-      ) : null}
-    </View>
-  );
-}
 
 const roleIcon: Record<AccountRole, typeof UserRound> = {
   user: UserRound,
@@ -479,6 +401,16 @@ export default function ProfileScreen() {
                 icon={<SquareParking size={16} color={colors.foreground} />}
                 title="Locurile mele"
                 onPress={() => router.push("/my-spots")}
+              />
+              <Divider />
+              {/* Last, and in this card rather than beside the account fields.
+                  It is a list of the driver's own things, and what the app
+                  holds about them belongs with the rest of what is theirs --
+                  filed under settings it would read as administration. */}
+              <SettingRow
+                icon={<ShieldCheck size={16} color={colors.foreground} />}
+                title="Datele mele"
+                onPress={() => router.push("/privacy")}
               />
             </Card>
           </View>
