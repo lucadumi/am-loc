@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Check, Map as MapIcon } from "lucide-react-native";
+import { ArrowRight, Check } from "lucide-react-native";
 import { View } from "react-native";
 
 import { Button } from "@/components/ui/button";
@@ -50,11 +50,14 @@ export default function ReportSentScreen() {
       </View>
 
       <View className="gap-3">
+        {/* The list now exists, so this leads there rather than to a map with
+            one more red dot on it: what a driver wants after filing is to see
+            the thing they filed, and its status is on the card. */}
         <Button
-          label="Vezi pe hartă"
-          onPress={() => router.replace("/map")}
+          label="Vezi sesizarea"
+          onPress={() => router.replace("/reports")}
           rightIcon={
-            <MapIcon size={18} color={colors.primaryForeground} strokeWidth={2.2} />
+            <ArrowRight size={18} color={colors.primaryForeground} strokeWidth={2.2} />
           }
         />
         <Button

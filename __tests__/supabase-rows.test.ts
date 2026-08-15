@@ -298,3 +298,61 @@ describe("writing report rows", () => {
     assert.deepEqual(insert.photos, []);
   });
 });
+
+describe("a report's history", () => {
+  test("every event travels, newest first", () => {
+    /* The status is the newest event and the timeline is all of them. Both are
+       carried because deriving the status twice is how the badge and the
+       timeline come to disagree. */
+    const report = toBlockerReport(reportRowOf(), [
+      eventRow({ id: 2, kind: "resolved", photos: ["p.jpg"], organisation_id: "ps2" }),
+      eventRow({ id: 1, kind: "forwarded" }),
+    ]);
+    assert.equal(report.status, "resolved");
+    assert.deepEqual(report.history?.map((e) => e.kind), ["resolved", "forwarded"]);
+  });
+
+  test("an institution's note and office travel with its act", () => {
+    const report = toBlockerReport(reportRowOf(), [
+      eventRow({ kind: "forwarded", organisation_id: "ps2", note: "dosar 42" }),
+    ]);
+    assert.equal(report.history?.[0].organisation, "ps2");
+    assert.equal(report.history?.[0].note, "dosar 42");
+  });
+
+  test("a passer-by's sighting names no office", () => {
+    // The difference between `cleared` and `resolved` in one field: an
+    // official act is attributable to an office, an observation is not.
+    const report = toBlockerReport(reportRowOf(), [
+      eventRow({ kind: "cleared", photos: ["p.jpg"] }),
+    ]);
+    assert.equal(report.history?.[0].organisation, undefined);
+    assert.equal(report.resolution?.official, false);
+  });
+
+  test("a resolution is marked official and names its office", () => {
+    const report = toBlockerReport(reportRowOf(), [
+      eventRow({ kind: "resolved", photos: ["p.jpg"], organisation_id: "ps2" }),
+    ]);
+    assert.equal(report.resolution?.official, true);
+    assert.equal(report.resolution?.byOrganisation, "ps2");
+  });
+
+  test("a report nobody has touched has no history at all", () => {
+    // Absent rather than an empty array, so a screen can ask `if (history)`
+    // without drawing an empty card.
+    assert.equal(toBlockerReport(reportRowOf()).history, undefined);
+  });
+
+  test("the proof shown is the newest closing event", () => {
+    /* A report cleared by a passer-by and later resolved by the sector hall
+       shows the hall's photograph; one resolved and then cleared again shows
+       the later observation, because that is what somebody actually saw. */
+    const report = toBlockerReport(reportRowOf(), [
+      eventRow({ id: 2, kind: "cleared", photos: ["later.jpg"] }),
+      eventRow({ id: 1, kind: "resolved", photos: ["earlier.jpg"], organisation_id: "ps2" }),
+    ]);
+    assert.deepEqual(report.resolution?.photos, ["later.jpg"]);
+    assert.equal(report.resolution?.official, false);
+  });
+});

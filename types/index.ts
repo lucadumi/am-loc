@@ -211,6 +211,27 @@ export interface ReportResolution {
   official: boolean;
 }
 
+/**
+ * One thing somebody did about a report.
+ *
+ * The history is append-only and is the report's status: `toBlockerReport`
+ * derives "where it got to" from the newest of these rather than from a
+ * column, which is the one definition of "open" that cannot drift -- there is
+ * nothing to forget to update.
+ */
+export interface ReportEvent {
+  id: number;
+  kind: Exclude<ReportStatus, "open">;
+  /** Proof, for anything that closes a report. Empty for a forwarding. */
+  photos: string[];
+  /** The office, where an institution did it. Absent for a passer-by. */
+  organisation?: string;
+  /** An institution's own words. Absent for anything else. */
+  note?: string;
+  /** ISO timestamp. */
+  at: string;
+}
+
 export interface BlockerReport {
   id: string;
   category: ReportCategory;
@@ -250,6 +271,14 @@ export interface BlockerReport {
    * rather than by none -- see lib/jurisdiction.ts.
    */
   sector?: Jurisdiction;
+  /**
+   * Everything anybody did about it, newest first.
+   *
+   * The status above is the newest of these; both are carried because a screen
+   * usually wants the one and a detail screen wants all of them, and deriving
+   * the status twice is how the badge and the timeline come to disagree.
+   */
+  history?: ReportEvent[];
   /** Present once somebody has shown the blockage is gone. */
   resolution?: ReportResolution;
 }

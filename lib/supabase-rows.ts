@@ -176,6 +176,20 @@ export function toBlockerReport(
     note: optional(row.note),
     address: optional(row.address),
     sector: optional(row.sector),
+    ...(events.length
+      ? {
+          history: events.map((event) => ({
+            id: event.id,
+            kind: event.kind,
+            photos: event.photos,
+            at: event.created_at,
+            ...(event.organisation_id
+              ? { organisation: event.organisation_id }
+              : {}),
+            ...(event.note ? { note: event.note } : {}),
+          })),
+        }
+      : {}),
     resolution:
       closed && (latest?.kind === "resolved" || latest?.kind === "cleared")
         ? {
