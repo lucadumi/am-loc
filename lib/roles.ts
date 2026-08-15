@@ -17,7 +17,7 @@
  * Pure, with no runtime imports at all, so `node --test` loads it.
  */
 
-import type { Account, AccountRole } from "@/types";
+import type { Account, AccountRole, BlockerReport } from "@/types";
 
 /* Re-exported so a screen reasoning about permissions imports one module
    rather than two, and so `@/types` stays the leaf it is everywhere else. */
@@ -135,6 +135,56 @@ export function canEnrolSecondFactor(account: Account): boolean {
 /** Whether they may list a parking space of their own. */
 export function mayHost(account: Account): boolean {
   return holds(account, "host");
+}
+
+/**
+ * Whether this session may close a particular report as an institution.
+ *
+ * The client's copy of `may_resolve` in
+ * `supabase/migrations/0011_institutional_resolvers.sql`, and a copy for the
+ * same reason as everything else in this module: Postgres decides what a
+ * request is allowed to do, this decides what the app should offer. A screen
+ * that had to await a round trip before knowing whether to draw the resolve
+ * button would draw the wrong one first.
+ *
+ * Three conditions, and the third is the one #12 exists for:
+ *
+ *   1. The session may act as a resolver at all -- which `holds` already makes
+ *      mean "granted, not anonymous, and second factor passed".
+ *   2. An organisation came back with the account. It is absent when the
+ *      office is suspended or its mandate has expired, because
+ *      `acting_organisation()` folds those in.
+ *   3. The office's writ covers the place. A city-wide body reaches
+ *      everywhere; a sector hall reaches its own sector; and a report the app
+ *      could not place is reachable by anybody, because a complaint nobody can
+ *      be responsible for is worse than one two people look at.
+ */
+export function mayResolveReport(
+  account: Account,
+  report: Pick<BlockerReport, "sector">,
+): boolean {
+  if (!mayResolveReports(account)) return false;
+
+  const office = account.organisation;
+  if (!office) return false;
+
+  return (
+    office.jurisdiction === "city" ||
+    !report.sector ||
+    report.sector === office.jurisdiction
+  );
+}
+
+/**
+ * Whether anybody signed in may say this kerb is now clear.
+ *
+ * True for everybody, and stated as a function rather than left implicit
+ * because the two closing acts sit next to each other on a screen and the
+ * difference between them is the whole of #12. A passer-by clears; an
+ * institution resolves.
+ */
+export function mayClearReport(account: Account): boolean {
+  return holds(account, "user");
 }
 
 /**

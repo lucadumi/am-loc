@@ -136,6 +136,7 @@ describe("the gate that decides which data layer runs", () => {
  */
 const reportRowOf = (over: Partial<ReportRow> = {}): ReportRow => ({
   photo_count: 0,
+  sector: null,
   id: "r_1",
   category: "sidewalk",
   latitude: 44.4319,
@@ -150,6 +151,8 @@ const reportRowOf = (over: Partial<ReportRow> = {}): ReportRow => ({
 });
 
 const eventRow = (over: Partial<ReportEventRow> = {}): ReportEventRow => ({
+  organisation_id: null,
+  note: null,
   id: 1,
   report_id: "r_1",
   kind: "forwarded",

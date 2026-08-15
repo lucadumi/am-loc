@@ -39,6 +39,7 @@ import type { SupabaseClient, User } from "@supabase/supabase-js";
 
 import { forgetAccount, rememberAccount } from "./identity.ts";
 import type { Account, AssuranceLevel } from "./roles.ts";
+import type { Organisation } from "@/types";
 import { SupabaseError, currentReporterId, supabase } from "./supabase.ts";
 import type { ProfileRow, ProfileUpdate, UserRoleRow } from "@/types/database.ts";
 
@@ -152,9 +153,9 @@ export async function loadAccount(): Promise<Account> {
        have the app believe an administrator held every role anybody had. */
     supabaseClient
       .from("user_roles")
-      .select("role")
+      .select("role, organisation_id")
       .eq("user_id", id)
-      .returns<Pick<UserRoleRow, "role">[]>(),
+      .returns<Pick<UserRoleRow, "role" | "organisation_id">[]>(),
   ]);
 
   /* Neither query's error is raised, and the direction is deliberate: a
@@ -164,6 +165,32 @@ export async function loadAccount(): Promise<Account> {
      a profile screen that refuses to open at all because one of two optional
      rows was unavailable. */
   const user = session.user;
+
+  /* The office, read only where there is a resolver grant naming one. A second
+     query rather than a join, because it runs for the handful of accounts that
+     are resolvers and for nobody else -- and because the answer is public, so
+     it costs no policy.
+     
+     Note what this does *not* re-check: whether the organisation is suspended
+     or expired. `acting_organisation()` in SQL is what decides that, and it is
+     what every write goes through. Deciding it a second time here would be a
+     second copy of a rule, and the copy would be the one that goes stale
+     while a screen is open. */
+  const office = (grants.data ?? []).find(
+    (row) => row.role === "resolver" && row.organisation_id,
+  )?.organisation_id;
+
+  const organisation = office
+    ? (
+        await supabaseClient
+          .from("organisations")
+          .select("id, name, kind, jurisdiction")
+          .eq("id", office)
+          .returns<Organisation[]>()
+          .maybeSingle()
+      ).data
+    : null;
+
   return {
     id,
     anonymous: user ? isAnonymousUser(user) : true,
@@ -192,6 +219,7 @@ export async function loadAccount(): Promise<Account> {
       : {}),
     ...(profile.data?.created_at ? { since: profile.data.created_at } : {}),
     trader: profile.data?.is_trader ?? false,
+    ...(organisation ? { organisation } : {}),
   };
 }
 

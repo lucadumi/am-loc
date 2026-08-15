@@ -12,6 +12,8 @@
  *     is what keeps `null` from leaking into props that expect `undefined`.
  */
 
+import type { Jurisdiction } from "@/lib/jurisdiction.ts";
+import type { OrganisationKind } from "./index.ts";
 import type {
   AccountRole,
   ReportCategory,
@@ -57,9 +59,24 @@ export type ProfileUpdate = Partial<
  * `delete` are revoked from `anon` and `authenticated` on the table itself, so
  * there is no `UserRoleInsert` to write. See `0008_accounts_and_roles.sql`.
  */
+/** A row of `organisations`: a body entitled to close complaints, and where. */
+export interface OrganisationRow {
+  id: string;
+  name: string;
+  kind: OrganisationKind;
+  jurisdiction: Jurisdiction;
+  verified_at: string;
+  expires_on: string | null;
+  suspended_at: string | null;
+  note: string | null;
+  created_at: string;
+}
+
 export interface UserRoleRow {
   user_id: string;
   role: AccountRole;
+  /** The office a resolver acts for. Null on every other grant. */
+  organisation_id: string | null;
   granted_by: string | null;
   granted_at: string;
   note: string | null;
@@ -180,6 +197,15 @@ export interface ReportRow {
   photos: string[];
   /** How many photographs the report carries, whoever is asking. */
   photo_count: number;
+  /**
+   * Which sector administration answers for this place.
+   *
+   * Placed on the device when the report is filed, from bundled boundaries --
+   * see lib/jurisdiction.ts for why it is not asked for over the network. Null
+   * where the app could not place it: a point outside all six polygons, or a
+   * client older than the column.
+   */
+  sector: Jurisdiction | null;
   created_by: string;
   created_at: string;
 }
@@ -188,9 +214,22 @@ export interface ReportRow {
 export interface ReportEventRow {
   id: number;
   report_id: string;
-  kind: "forwarded" | "resolved";
+  /**
+   * What was done, and by whom it may be done.
+   *
+   * `cleared` and `resolved` are the same *claim* -- the blockage is gone --
+   * made by people with different standing, and they are separate because
+   * collapsing them meant either barring passers-by from keeping the map
+   * current or letting anybody close an official complaint. See the header of
+   * `0011_institutional_resolvers.sql`.
+   */
+  kind: "forwarded" | "cleared" | "resolved";
   photos: string[];
   actor: string;
+  /** The institution a resolution was filed for. Null for anything else. */
+  organisation_id: string | null;
+  /** An institution's own words about what it did. */
+  note: string | null;
   created_at: string;
 }
 
