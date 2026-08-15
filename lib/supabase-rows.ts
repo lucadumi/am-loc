@@ -11,6 +11,7 @@
  * longer derives one for a public place -- see `SpotStatus` in @/types.
  */
 
+import { sectorOf } from "./jurisdiction.ts";
 import { toSpotAccess } from "./spot-rights.ts";
 import type { AvailabilityWindow, BlockerReport, ParkingSpot } from "@/types";
 import type {
@@ -153,7 +154,14 @@ export function toBlockerReport(
   events: ReportEventRow[] = [],
 ): BlockerReport {
   const latest = events[0];
-  const resolved = events.find((event) => event.kind === "resolved");
+  /* The newest closing event of either kind, which is what the proof travels
+     with. A report cleared by a passer-by on Monday and resolved by the sector
+     hall on Tuesday shows Tuesday's photograph; one resolved and then cleared
+     again shows the later observation, because the later observation is what
+     somebody actually saw. */
+  const closed = events.find(
+    (event) => event.kind === "resolved" || event.kind === "cleared",
+  );
   return {
     id: row.id,
     category: row.category,
@@ -167,12 +175,17 @@ export function toBlockerReport(
     photoCount: row.photo_count,
     note: optional(row.note),
     address: optional(row.address),
+    sector: optional(row.sector),
     resolution:
-      resolved && latest?.kind === "resolved"
+      closed && (latest?.kind === "resolved" || latest?.kind === "cleared")
         ? {
-            photos: resolved.photos,
-            at: resolved.created_at,
-            by: resolved.actor,
+            photos: closed.photos,
+            at: closed.created_at,
+            by: closed.actor,
+            ...(closed.organisation_id
+              ? { byOrganisation: closed.organisation_id }
+              : {}),
+            official: closed.kind === "resolved",
           }
         : undefined,
   };
@@ -198,6 +211,11 @@ export function toReportInsert(
     latitude: report.latitude,
     longitude: report.longitude,
     address: report.address ?? null,
+    /* Placed here rather than by the database, which cannot test a point
+       against a polygon without PostGIS. Null when the app could not place it,
+       which the schema treats as reachable by every resolver rather than by
+       none -- see lib/jurisdiction.ts. */
+    sector: sectorOf(report.latitude, report.longitude) ?? null,
     plate: report.plate ?? null,
     note: report.note ?? null,
     photos: report.photos ?? [],

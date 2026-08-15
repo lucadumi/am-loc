@@ -21,6 +21,7 @@ export type SpotKind = "street" | "garage";
  * beside the capabilities it decides. Ask `rightsOf` before drawing anything
  * that lets somebody list, reserve or charge for a place.
  */
+import type { Jurisdiction } from "@/lib/jurisdiction.ts";
 import type { SpotAccess } from "@/lib/spot-rights.ts";
 
 export type { SpotAccess };
@@ -171,7 +172,16 @@ export type ReportCategory =
   | "bikelane"
   | "doublepark";
 
-export type ReportStatus = "open" | "forwarded" | "resolved";
+/**
+ * Where a report got to, derived from its newest event.
+ *
+ * `cleared` and `resolved` are the same claim -- the blockage is gone -- with
+ * different standing behind it. A passer-by photographs a clear kerb; a sector
+ * hall closes the file. Both are worth showing and they are not the same news,
+ * which is why the app carries four values rather than folding the first into
+ * the second. See `0011_institutional_resolvers.sql`.
+ */
+export type ReportStatus = "open" | "forwarded" | "cleared" | "resolved";
 
 /**
  * What was filed to close a report: proof the car has gone.
@@ -188,6 +198,17 @@ export interface ReportResolution {
   at: string;
   /** Who says it is clear. */
   by: string;
+  /**
+   * The institution that closed it, where one did.
+   *
+   * Absent for a passer-by's `cleared`, which is the whole difference between
+   * the two: an official resolution is attributable to an office, and a
+   * screen that named a uuid instead would be attributing a public act to a
+   * private person.
+   */
+  byOrganisation?: string;
+  /** True when a verified institution closed it, rather than a passer-by. */
+  official: boolean;
 }
 
 export interface BlockerReport {
@@ -221,6 +242,14 @@ export interface BlockerReport {
   photoCount?: number;
   note?: string;
   address?: string;
+  /**
+   * Which sector administration answers for this place.
+   *
+   * Placed on the device when the report is filed. Absent where the app could
+   * not place it, which the schema treats as reachable by every resolver
+   * rather than by none -- see lib/jurisdiction.ts.
+   */
+  sector?: Jurisdiction;
   /** Present once somebody has shown the blockage is gone. */
   resolution?: ReportResolution;
 }
@@ -342,4 +371,41 @@ export interface Account {
   since?: string;
   /** Whether they have declared they are acting commercially. */
   trader: boolean;
+  /**
+   * The institution a resolver acts for, where they are one.
+   *
+   * Absent for everybody else, and absent for a resolver whose organisation is
+   * suspended or whose mandate has expired -- the same three ways to be unable
+   * to act that `acting_organisation()` folds into one answer in SQL. A screen
+   * that has this may draw the resolver's tools; one that does not, may not.
+   */
+  organisation?: Organisation;
 }
+
+/**
+ * A body entitled to close complaints, and where.
+ *
+ * Public, and it has to be: a resolved report names the office that resolved
+ * it, and a name nobody can look up is not attribution.
+ */
+export interface Organisation {
+  id: string;
+  name: string;
+  kind: OrganisationKind;
+  jurisdiction: Jurisdiction;
+}
+
+/**
+ * What sort of body it is.
+ *
+ * `police` is never set for anything but an actual police authority, and the
+ * label on screen turns on it: calling a contractor "Poliția" is a claim about
+ * power over a driver that nobody made. Everything verified and unclassified
+ * is `other`, which reads as "Cont instituțional verificat".
+ */
+export type OrganisationKind =
+  | "sector_hall"
+  | "local_police"
+  | "police"
+  | "city_hall"
+  | "other";
