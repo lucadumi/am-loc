@@ -3,6 +3,7 @@ import {
   Bookmark,
   Building2,
   CheckCheck,
+  FileText,
   KeyRound,
   LogOut,
   Mail,
@@ -411,6 +412,16 @@ export default function ProfileScreen() {
                 icon={<ShieldCheck size={16} color={colors.foreground} />}
                 title="Datele mele"
                 onPress={() => router.push("/privacy")}
+              />
+              <Divider />
+              {/* Under it, and not above: "Datele mele" is the driver's own
+                  things and this is the app explaining itself. Somebody who
+                  wants the second usually got there by wondering about the
+                  first. */}
+              <SettingRow
+                icon={<FileText size={16} color={colors.foreground} />}
+                title="Cum îți folosim datele"
+                onPress={() => router.push("/privacy-notice")}
               />
             </Card>
           </View>
