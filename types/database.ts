@@ -206,7 +206,8 @@ export interface ReportRow {
    * client older than the column.
    */
   sector: Jurisdiction | null;
-  created_by: string;
+  /** Null unless the reader is the author; see 0012 and `reports_readable`. */
+  created_by: string | null;
   created_at: string;
 }
 
@@ -240,7 +241,18 @@ export interface ReportEventRow {
  * the array, so there is nothing to send and nothing a client could disagree
  * with it about.
  */
-export type ReportInsert = Omit<ReportRow, "created_at" | "photo_count">;
+/**
+ * Columns an insert into `reports` supplies.
+ *
+ * `created_by` is narrowed back to non-null, which `ReportRow` no longer is.
+ * The difference is real and worth the two lines: the column is `not null` on
+ * the table, so every insert names an author -- what `0012` changed is who may
+ * *read* it back, and a type that let the reading shape loosen the writing one
+ * would make a report with no author expressible.
+ */
+export type ReportInsert = Omit<ReportRow, "created_at" | "photo_count" | "created_by"> & {
+  created_by: string;
+};
 
 /**
  * Columns of `reports` an author may change afterwards.
@@ -252,3 +264,29 @@ export type ReportInsert = Omit<ReportRow, "created_at" | "photo_count">;
 export type ReportUpdate = Partial<
   Pick<ReportRow, "category" | "plate" | "note" | "photos">
 >;
+
+/**
+ * A row of `parkings`: where a driver said they left the car.
+ *
+ * `spot_id` is text and references nothing, which is not an oversight -- most
+ * of the map is bundled in the client and has never been imported into any
+ * project, so a foreign key would refuse the one insert that matters. The
+ * title is a snapshot beside it for the same reason: the row it names may not
+ * exist here at all, and a history of ids is not a history a person can read.
+ */
+export interface ParkingRow {
+  id: number;
+  driver: string;
+  spot_id: string;
+  spot_title: string | null;
+  parked_at: string;
+}
+
+/**
+ * Columns an insert into `parkings` supplies.
+ *
+ * `parked_at` is defaulted by Postgres and `id` is generated, so neither is
+ * offered here; the driver comes from the session in `insertParking`, never
+ * from a caller.
+ */
+export type ParkingInsert = Omit<ParkingRow, "id" | "parked_at">;

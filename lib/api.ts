@@ -10,6 +10,7 @@ import {
 } from "@/lib/geo.ts";
 import { currentIdentity, LOCAL_IDENTITY, resolveIdentity } from "@/lib/identity.ts";
 import { publish } from "@/lib/live.ts";
+import type { DataExport, ErasureReceipt } from "@/lib/privacy.ts";
 import { isRemote } from "@/lib/remote.ts";
 // `import type`, not a plain import: `@/types` is types only, so a value
 // import of it survives Node's type stripping and asks for exports that do not
@@ -502,6 +503,49 @@ export function tallyReports(
     filed: mine.length,
     resolved: mine.filter((report) => report.status === "resolved").length,
   };
+}
+
+/**
+ * Everything the project holds about the person, as one document.
+ *
+ * Undefined without a backend rather than an empty export, and the difference
+ * matters on the screen: on a build with no project nothing was ever sent
+ * anywhere, so there is no document to hand over and saying "here is your
+ * data: none" would be answering a question nobody could have asked.
+ *
+ * The identity is resolved first, exactly as `getReports` does. `export_my_data`
+ * is keyed on `auth.uid()` and raises when there is nobody -- so a driver whose
+ * first screen after a cold start is "Datele mele" would otherwise be told the
+ * export failed, when what happened is that nothing had signed them in yet.
+ */
+export async function exportMyData(): Promise<DataExport | undefined> {
+  if (!isRemote()) return undefined;
+  const [, { exportMyData: run }] = await Promise.all([
+    resolveIdentity(),
+    import("@/lib/supabase-data.ts"),
+  ]);
+  return run();
+}
+
+/**
+ * Erase the person, as far as anything here can.
+ *
+ * Undefined without a backend, for the same reason: there is no account to
+ * close. What comes back when there is one is deliberately a receipt and not a
+ * boolean -- see `receiptLines` in lib/privacy.ts for why a screen must not
+ * round it to "done".
+ *
+ * Identity first here too, and for a worse failure than the export's: `erase_me`
+ * with no session raises, and the screen would report that deleting the account
+ * did not work while the account sat there, untouched and unexplained.
+ */
+export async function eraseMe(): Promise<ErasureReceipt | undefined> {
+  if (!isRemote()) return undefined;
+  const [, { eraseMe: run }] = await Promise.all([
+    resolveIdentity(),
+    import("@/lib/supabase-data.ts"),
+  ]);
+  return run();
 }
 
 /** Resolve a single spot by id, across everything the app can see. */

@@ -16,11 +16,13 @@
 import type {
   AvailabilityWindow,
   BlockerReport,
+  Parking,
   ParkingSpot,
   SpotStatus,
 } from "@/types";
 import type {
   AvailabilityWindowRow,
+  ParkingRow,
   ReportEventRow,
   ReportRow,
   ReportUpdate,
@@ -36,12 +38,16 @@ import {
   isStoredPhoto,
   reportOfPath,
 } from "./evidence.ts";
+import type { DataExport, ErasureReceipt } from "./privacy.ts";
 import { SupabaseError, currentReporterId, supabase } from "./supabase.ts";
 import {
   toAvailabilityWindows,
   toWindowInsert,
   toBlockerReport,
   toBlockerReports,
+  toParking,
+  toParkingInsert,
+  toParkings,
   toParkingSpot,
   toParkingSpots,
   toReportInsert,
@@ -321,15 +327,17 @@ export async function insertReport(
   const author = await currentReporterId();
   const photos = await uploadPhotos(report.id, report.photos ?? [], author);
 
-  /* Named columns rather than `*`, and three of them deliberately missing.
+  /* Named columns rather than `*`, and four of them deliberately missing.
      `plate` and `photos` are revoked on this table -- personal data and the
      only unaudited route to somebody's evidence -- so asking for either back
-     would fail outright, and `photo_count` belongs to the view. */
+     would fail outright, `photo_count` belongs to the view, and `created_by`
+     was revoked by 0012 for the same reason as the other two. It is supplied
+     below from `author`, which is where the insert got it a line ago. */
   const { data, error } = await client()
     .from("reports")
     .insert(toReportInsert({ ...report, photos }, author))
-    .select("id, category, latitude, longitude, address, note, created_by, created_at")
-    .returns<Omit<ReportRow, "plate" | "photos" | "photo_count">[]>()
+    .select("id, category, latitude, longitude, address, note, created_at")
+    .returns<Omit<ReportRow, "plate" | "photos" | "photo_count" | "created_by">[]>()
     .single();
   if (error || !data) throw new SupabaseError("Could not file the report", error);
   /* Put back rather than read, and nothing is lost by that: the row was
@@ -340,6 +348,7 @@ export async function insertReport(
     plate: report.plate ?? null,
     photos,
     photo_count: photos.length,
+    created_by: author,
   });
 }
 
@@ -437,6 +446,39 @@ export async function fetchEvidencePaths(reportId: string): Promise<string[]> {
   return (data as string[] | null) ?? [];
 }
 
+/**
+ * Everything the database holds about the person using the app.
+ *
+ * Articles 15 and 20 in one call. Goes through `export_my_data` rather than a
+ * set of selects for a reason the client could not otherwise satisfy: the
+ * caller's own `plate` and photo paths are hidden by `reports_readable` from
+ * everybody, the author included, so a query would come back with the two
+ * columns that matter most to them blanked out. The function is `security
+ * definer` and keyed on `auth.uid()`, which is why it takes no argument -- one
+ * that named a user would be a missing check away from exporting somebody else.
+ */
+export async function exportMyData(): Promise<DataExport> {
+  const { data, error } = await client().rpc("export_my_data");
+  if (error) throw new SupabaseError("Nu am putut exporta datele", error);
+  return data as DataExport;
+}
+
+/**
+ * Delete the caller, as far as the database can.
+ *
+ * Returns a receipt rather than nothing, and the receipt is honest about being
+ * partial: the photographs are bytes in a private bucket and the login is a
+ * row in `auth`, neither of which a client key can touch. `erase_me` records
+ * what it could not reach in `erasure_requests`, a job with the service key
+ * finishes it, and `login_and_photos_pending` on the way back is what stops the
+ * screen from claiming the account is gone at a moment when it is not.
+ */
+export async function eraseMe(): Promise<ErasureReceipt> {
+  const { data, error } = await client().rpc("erase_me");
+  if (error) throw new SupabaseError("Nu am putut șterge contul", error);
+  return data as ErasureReceipt;
+}
+
 /** One spot by id, or undefined when there is no such row. */
 export async function fetchSpotById(id: string): Promise<ParkingSpot | undefined> {
   const { data, error } = await client()
@@ -447,4 +489,48 @@ export async function fetchSpotById(id: string): Promise<ParkingSpot | undefined
     .maybeSingle();
   if (error) throw new SupabaseError("Could not read spot", error);
   return data ? toParkingSpot(data) : undefined;
+}
+
+// ---------------------------------------------------------------------------
+// Parkings
+// ---------------------------------------------------------------------------
+
+/**
+ * Where this driver has parked, newest first.
+ *
+ * No filter on the driver, and that is not a missing `eq`. The select policy
+ * scopes the statement to the caller's own rows, so this returns theirs and
+ * nothing else -- and a client-side filter would be a second, weaker copy of a
+ * rule Postgres already enforces, which is the pattern the rest of this file
+ * follows for exactly the same reason.
+ */
+export async function fetchParkings(): Promise<Parking[]> {
+  const { data, error } = await client()
+    .from("parkings")
+    .select("*")
+    .order("parked_at", { ascending: false })
+    .returns<ParkingRow[]>();
+  if (error) throw new SupabaseError("Nu am putut încărca parcările", error);
+  return toParkings(data ?? []);
+}
+
+/** Write down that the car is here. The driver comes from the session. */
+export async function insertParking(parking: Parking): Promise<Parking> {
+  const driver = await currentReporterId();
+  const { data, error } = await client()
+    .from("parkings")
+    .insert(toParkingInsert(parking, driver))
+    .select()
+    .returns<ParkingRow[]>();
+  if (error) throw new SupabaseError("Nu am putut salva parcarea", error);
+  /* The row back rather than the one sent: `id` and `parked_at` are the
+     database's to decide, and a list keyed on a locally invented id would
+     duplicate the entry the moment it reloaded. */
+  return data?.[0] ? toParking(data[0]) : parking;
+}
+
+/** Forget one. Scoped to the caller by the delete policy, as above. */
+export async function deleteParking(id: string): Promise<void> {
+  const { error } = await client().from("parkings").delete().eq("id", id);
+  if (error) throw new SupabaseError("Nu am putut șterge parcarea", error);
 }

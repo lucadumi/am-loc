@@ -22,10 +22,12 @@ import { floatingTabBarInset } from "@/constants/layout";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { useLive } from "@/hooks/use-live";
 import { getSpots, rankNearby } from "@/lib/api";
+import { sinceLabel } from "@/lib/bucharest-time";
 import { resolveAccount } from "@/lib/identity";
+import { lastParking } from "@/lib/parkings";
 import { withOffers, type OfferedSpot } from "@/lib/private-spots";
 import { spokenSpot, spotName } from "@/lib/spot-name";
-import { ParkingSpot } from "@/types";
+import { Parking, ParkingSpot } from "@/types";
 
 export default function HomeScreen() {
   const colors = useColors();
@@ -40,6 +42,8 @@ export default function HomeScreen() {
      page open, and "Bine ai revenit, Șofer" is the honest line for somebody
      who has not told us their name. */
   const [name, setName] = useState<string | undefined>();
+  /** The newest "Am parcat aici", or null once we know there is none. */
+  const [lastPark, setLastPark] = useState<Parking | null>(null);
 
   // How much to believe a spot depends on who reported it, so the reporter
   // records have to load with the spots rather than after them.
@@ -73,6 +77,11 @@ export default function HomeScreen() {
       resolveAccount()
         .then((account) => setName(account.displayName))
         .catch(() => {});
+      /* On focus too: a driver parks, comes back to this tab, and the row has
+         to be about the car they have just left rather than the one before. */
+      lastParking()
+        .then((parking) => setLastPark(parking ?? null))
+        .catch(() => setLastPark(null));
     }, [load]),
   );
 
@@ -128,7 +137,17 @@ export default function HomeScreen() {
       : `${around.length} parcări în apropiere`;
   }, [spots, location]);
 
-  const last = spots?.find((s) => s.kind === "garage") ?? spots?.[0];
+  /* The real one, or none at all.
+     
+     This used to be `spots?.find(s => s.kind === "garage") ?? spots?.[0]` --
+     the first car park in the list, drawn under the words "Ultima parcare" on
+     a screen a driver reads to remember where the car is. It was not a stale
+     answer, it was somebody else's, and now that `parkings` exists there is a
+     true one to give: the newest thing they actually pressed "Am parcat aici"
+     on, matched back to the place if the app still knows it. */
+  const last = lastPark
+    ? spots?.find((s) => s.id === lastPark.spotId)
+    : undefined;
 
   /* The whole screen waits, rather than the list inside it. Everything on this
      page is downstream of the spots -- the greeting's subtitle counts them,
@@ -234,17 +253,24 @@ export default function HomeScreen() {
             onPress={() => router.push("/map")}
           />
 
-          {last ? (
+          {lastPark ? (
             <View className="mt-7 gap-3 px-5">
               <SectionHeader title="Ultima parcare" actionIcon={History} />
               <Pressable
-                onPress={() => openSpot(last)}
+                onPress={() =>
+                  router.push({
+                    pathname: "/garage",
+                    params: { id: lastPark.spotId },
+                  })
+                }
                 accessibilityRole="button"
-                accessibilityLabel={`Ultima parcare: ${spokenSpot(last)}`}
+                accessibilityLabel={`Ultima parcare: ${
+                  last ? spokenSpot(last) : (lastPark.spotTitle ?? "loc fără nume")
+                }, ${sinceLabel(lastPark.at)}`}
                 className="flex-row items-center gap-3 rounded-lg border-hairline border-border bg-card p-3"
               >
                 <SpotImage
-                  kind={last.kind}
+                  kind={last?.kind}
                   iconSize={22}
                   className="h-14 w-14 rounded-md"
                 />
@@ -253,12 +279,14 @@ export default function HomeScreen() {
                     numberOfLines={1}
                     className="font-title text-base text-foreground"
                   >
-                    {spotName(last)}
+                    {/* The place if the app still knows it, and the name it had
+                        when they tapped if it does not: half the map is bundled
+                        and a spot can go, but their note about it should not
+                        turn into a row with no words on it. */}
+                    {last ? spotName(last) : (lastPark.spotTitle ?? "Loc fără nume")}
                   </Text>
-                  {/* The area is absent on every imported car park, and a
-                          bare "· Fără raportări" reads as a missing word. */}
                   <Text className="font-mid text-xs text-muted-foreground">
-                    {last.area ?? "Parcare publică"}
+                    {sinceLabel(lastPark.at)}
                   </Text>
                 </View>
                 <ChevronRight size={20} color={colors.mutedForeground} />

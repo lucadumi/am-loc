@@ -3,12 +3,15 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   ArrowLeft,
   Banknote,
+  CarFront,
+  Check,
   MapPin,
   Navigation,
   SquareParking,
 } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
 import {
+  Alert,
   Linking,
   Platform,
   Pressable,
@@ -43,7 +46,8 @@ import {
   formatPrice,
 } from "@/lib/geo";
 import { haptics } from "@/lib/haptics";
-import { AvailabilityWindow, ParkingSpot } from "@/types";
+import { forgetParking, recordParking } from "@/lib/parkings";
+import { AvailabilityWindow, Parking, ParkingSpot } from "@/types";
 
 /** Where the hero map opens: a neighbourhood, like the list behind it. */
 const OPEN_SPAN = 0.03;
@@ -394,6 +398,8 @@ export default function GarageScreen() {
               onChanged={reload}
             />
           ) : null}
+
+          <ParkedHere spot={spot} />
         </View>
       </ScrollView>
 
@@ -423,5 +429,88 @@ export default function GarageScreen() {
         </View>
       </SafeAreaView>
     </View>
+  );
+}
+
+/**
+ * "Am parcat aici", and the note it leaves behind.
+ *
+ * ONE TAP, AND IT SAYS NOTHING TO ANYBODY ELSE. The map does not change, no
+ * spot goes from free to taken, no count moves: one driver saying where they
+ * left the car is not a survey of the car park, and turning it into one would
+ * put a made-up occupancy on 865 imported places. It is a private note, and
+ * `parkings` in `0012` is readable by its author and by nobody else at all.
+ *
+ * The undo is not politeness. This is the button most likely to be pressed by
+ * accident -- it sits under the price on a screen people open to look at a car
+ * park -- and a stray tap writes a line into the one history in this app that
+ * says where somebody was. So it can be taken back where it stands, without
+ * going to find it in another screen.
+ */
+function ParkedHere({ spot }: { spot: ParkingSpot }) {
+  const colors = useColors();
+  const [saved, setSaved] = useState<Parking | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  async function save() {
+    setBusy(true);
+    try {
+      haptics.selection();
+      setSaved(await recordParking(spot));
+    } catch (error) {
+      Alert.alert(
+        "Nu am putut salva",
+        error instanceof Error ? error.message : "Încearcă din nou.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function undo() {
+    if (!saved) return;
+    setBusy(true);
+    try {
+      await forgetParking(saved.id);
+      setSaved(null);
+    } catch (error) {
+      Alert.alert(
+        "Nu am putut șterge",
+        error instanceof Error ? error.message : "Încearcă din nou.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (saved) {
+    return (
+      <View className="mt-5 flex-row items-center gap-3 rounded-xl border-hairline border-border bg-card p-4">
+        <Check size={18} color={colors.free} strokeWidth={2.4} />
+        <Text className="flex-1 font-mid text-sm text-foreground">
+          Salvat în parcările tale
+        </Text>
+        <Pressable
+          onPress={undo}
+          disabled={busy}
+          accessibilityRole="button"
+          className="active:opacity-70"
+        >
+          <Text className="font-title text-sm" style={{ color: colors.accent }}>
+            Anulează
+          </Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  return (
+    <Button
+      className="mt-5"
+      label="Am parcat aici"
+      rightIcon={<CarFront size={20} color={colors.primaryForeground} />}
+      onPress={save}
+      loading={busy}
+    />
   );
 }

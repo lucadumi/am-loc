@@ -273,8 +273,13 @@ export function sinceLabel(iso: string, now: Date = new Date()): string {
  * take "de" first, and so does anything whose last two digits are under 20 --
  * 101 is "101 zile", 120 is "120 de zile". The rule is on the remainder rather
  * than on the number itself, which is the part a hand-written version misses.
+ *
+ * Exported, and living in a module about time only because that is where a
+ * number first needed a noun. `lib/privacy.ts` counts reports and spots with
+ * it rather than writing the rule a second time, which is how the second
+ * version comes to disagree with this one about 120.
  */
-function plural(count: number, one: string, many: string): string {
+export function plural(count: number, one: string, many: string): string {
   if (count === 1) return one;
   const rest = count % 100;
   return rest === 0 || rest >= 20 ? `de ${many}` : many;
