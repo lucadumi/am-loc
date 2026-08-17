@@ -151,6 +151,13 @@ usefully, what it could not.
 - **Erasure (Art. 17)** — `erase_me()`, from the same screen.
 - **Rectification (Art. 16)** — a report's text and plate are editable by its
   author; its place, moment and author are not, by trigger.
+- **Information (Art. 13)** — *Contul meu → Cum îți folosim datele*, built from
+  `lib/privacy-notice.ts`. Purposes, bases, recipients, retention, rights and
+  the supervisory authority. A test asserts that every category in
+  `DATA_CATEGORIES` is explained by some purpose there, so a table added to the
+  register cannot stay unmentioned to the person it is about. The controller
+  and contact are deliberately blank until this app has one, and the screen
+  says so rather than implying otherwise.
 
 **Identifying the requester is unsolved for anonymous accounts.** Most accounts
 here are anonymous: `signInAnonymously` has been minting them since `0001`, and

@@ -214,6 +214,18 @@ export default function PrivacyScreen() {
         contentContainerClassName="gap-4 px-4 pb-10"
         showsVerticalScrollIndicator={false}
       >
+        {/* First, and a link rather than a paragraph: this screen is what the
+            app has of yours, and what it does with it is a separate answer
+            that used to be printed here as a register nobody had asked for. */}
+        <Text
+          onPress={() => router.push("/privacy-notice")}
+          accessibilityRole="link"
+          className="px-1 font-mid text-xs"
+          style={{ color: colors.accent }}
+        >
+          Cum îți folosim datele
+        </Text>
+
         {remote ? (
           <Card className="gap-3 p-4">
             <Button

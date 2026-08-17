@@ -215,6 +215,7 @@ choice to make and the reason the bin is one tap away rather than in a menu.
 | The moment a report claims is the moment it arrived | `0013`, trigger |
 | No uploads once an erasure is pending | `0013`, storage policies |
 | Proof of an erasure expires at three years | `0013` |
+| What is held, why and on whose say-so, said in the app | `lib/privacy-notice.ts`, `app/privacy-notice.tsx` |
 | Every table has a purpose, basis, retention and deletion rule | `0012`, enforced by `unregistered_tables()` |
 
 ## 5. What is not done
@@ -232,11 +233,13 @@ Stated plainly, because a DPIA that lists only what was built is a brochure.
 - **No moderation.** R2 is unmitigated beyond attribution. Issue #22.
 - **Nobody reviews the disclosure log.** The subject can export it; no admin is
   expected to read it and nothing alerts on a pattern.
-- **No privacy notice in the app.** "Datele mele" lists what a person filed and
-  offers export and erasure; nothing on it states what is held or for how long.
-  That register lives in `data_inventory` and in `data-retention.md`. There is
-  no Article 13 notice anywhere in the app, and none of it names a controller,
-  a contact or a supervisory authority.
+- **The Article 13 notice names no controller.** *Contul meu → Cum îți folosim
+  datele* now says what is held, why, on what basis, who else sees it, for how
+  long, what may be demanded and where to complain — everything the article
+  asks for except the first thing it asks for. `CONTROLLER` in
+  `lib/privacy-notice.ts` is deliberately empty and the screen says so in a red
+  box where the name would be, because an address nobody reads is worse than a
+  blank. Two lines to fix, and it cannot be published without them.
 - **No processor agreements beyond Supabase's standard DPA.** Data is hosted by
   Supabase; the region should be confirmed as EU before any real launch.
 - **Not tested on a device.** Every measure above is asserted by a test harness
@@ -245,10 +248,11 @@ Stated plainly, because a DPIA that lists only what was built is a brochure.
 ## 6. Conclusion
 
 The residual risks are acceptable for a pre-launch project with no public
-users. **One must be closed before real drivers use it:** an Article 13 privacy
-notice naming a controller. The retention schedule that §5 used to head this
-list is in `0013`; what remains of it is that nobody has watched it work. R2
-and R6 should be reassessed at launch.
+users. **One line must be filled in before real drivers use it:** the
+controller and the contact address in `lib/privacy-notice.ts`. The Article 13
+notice around them is written and in the app; the retention schedule that §5
+once headed this list with is in `0013`, and what remains of that is that
+nobody has watched it work. R2 and R6 should be reassessed at launch.
 
 **Review:** on the next change to any table holding personal data, or when the
 app is first published, whichever comes first.
