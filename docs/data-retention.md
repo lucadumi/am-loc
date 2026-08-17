@@ -18,6 +18,7 @@ right and this document is out of date.
 | `report_events` | Whoever acted | With its report | Actor severed, act survives |
 | `profiles` | Every account holder | Life of the account | Deleted |
 | `user_roles` | Holders of a grant | While the grant stands | Deleted |
+| `parkings` | The driver who parked | Until they delete it | Deleted |
 | `evidence_access` | The looker, and the reporter | 24 months | Exempt while retained |
 | `organisations` | Nobody | Indefinite | Not deleted |
 | `official_resolutions` | Nobody, once severed | Indefinite | Kept, de-identified |
@@ -27,7 +28,8 @@ right and this document is out of date.
 ## The two that survive an erasure
 
 Everything a person filed is deleted when they ask. Two things are not, and
-both are listed to them on the privacy screen before they press the button.
+both are listed to them in the confirmation dialog before they press the
+button — `whatErasureKeeps()` in `lib/privacy.ts` is what that dialog reads.
 
 **`official_resolutions`** records that a sector hall closed a case: the
 category, the sector, the two dates and which office acted. It never held the
@@ -88,7 +90,10 @@ of an erasure.
 - **Access and portability (Art. 15, 20)** — `export_my_data()`, reachable from
   *Contul meu → Datele mele → Descarcă datele mele*. It returns the caller's
   own plate and photo paths, which `reports_readable` hides from everybody
-  including them, and the log of who opened their evidence.
+  including them, and the log of who opened their evidence. The export is the
+  only route a subject has to that log: `evidence_access` is readable by admins
+  alone, and "Datele mele" deliberately does not draw it — a screen of your own
+  things is the wrong place to read about somebody else's conduct.
 - **Erasure (Art. 17)** — `erase_me()`, from the same screen.
 - **Rectification (Art. 16)** — a report's text and plate are editable by its
   author; its place, moment and author are not, by trigger.

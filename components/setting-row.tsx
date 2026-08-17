@@ -25,10 +25,10 @@ export function Divider() {
  * check. Collapsed, a whole account is four rows deep, and the explaining
  * happens only where somebody has asked to read it.
  *
- * Lives here rather than in the account screen because the privacy screen
- * wants the same row for the same reason: a retention rule is a setting a
- * person reads once, and the alternative to sharing this was a second copy
- * that would drift a little further from this one with every touch.
+ * Lives here rather than in the account screen because it is a shape worth
+ * having once: "a thing with a current value that you can go and change" turns
+ * up wherever settings do, and a second copy would drift a little further from
+ * this one with every touch.
  */
 export function SettingRow({
   icon,

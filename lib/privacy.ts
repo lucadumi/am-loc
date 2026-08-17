@@ -1,5 +1,5 @@
 /**
- * What the app holds about a person, for how long, and what leaving does to it.
+ * What leaving does to everything the app holds about a person.
  *
  * The client half of `0012_privacy_lifecycle.sql`. Like `lib/roles.ts` against
  * `has_role`, this is a deliberate copy rather than a shared source: the
@@ -11,15 +11,28 @@
  *
  * ---
  *
- * WHY EVERY CATEGORY CARRIES A FATE. The interesting half of a privacy screen
- * is not the deleting, it is the not-deleting. An app that lists what it
- * erases and stays quiet about the rest has told the truth and left the wrong
- * impression, and the person finds out what survived at the worst possible
- * moment -- when they see it, after they were told it was gone.
+ * WHY EVERY CATEGORY CARRIES A FATE. The interesting half of an erasure is not
+ * the deleting, it is the not-deleting. An app that lists what it erases and
+ * stays quiet about the rest has told the truth and left the wrong impression,
+ * and the person finds out what survived at the worst possible moment -- when
+ * they see it, after they were told it was gone.
  *
  * So `fate` is a closed union over three outcomes and every category has to
  * pick one. `severed` is the one that would otherwise go unsaid: the row
  * stays, the name comes off, and that is neither deletion nor retention.
+ *
+ * WHY THERE IS NO RETENTION PROSE HERE ANY MORE. There used to be, a sentence
+ * per category about how long each table is kept, and "Datele mele" printed
+ * all nine of them as a list. It was the schema talking to somebody who had
+ * come to see their own things, and it has gone back to where it belongs --
+ * `data_inventory` and docs/data-retention.md, which are read by the people
+ * who maintain the promise rather than recited at the person it is made to.
+ * What is left is the one thing that has to be said out loud at the moment it
+ * matters, in the confirmation before an irreversible button.
+ *
+ * The other half of this module is the export: what came back and how to
+ * count it, including the log of who opened somebody's photographs -- which
+ * the screen no longer draws and the document still carries.
  *
  * Pure, with no runtime imports beyond a sibling, so `node --test` loads it.
  */
@@ -42,86 +55,77 @@ export type ErasureFate =
 
 export interface DataCategory {
   key: string;
-  /** What it is, in the words of the person it is about. */
-  what: string;
-  /** How long it is held, and on what clock. */
-  kept: string;
   fate: ErasureFate;
-  /** What erasure does to it, said plainly enough to be checked afterwards. */
+  /**
+   * What erasure does to it, said plainly enough to be checked afterwards.
+   *
+   * A whole sentence, naming its own subject. These are read as bullets in a
+   * dialog with nothing above them to lean on, and "Rămân, fără numele tău" is
+   * not an answer to anything if the reader has to guess what "they" are.
+   */
   onErasure: string;
 }
 
 /**
  * Every kind of personal data this app holds, in the order a person cares.
  *
- * Their own complaints first -- that is what they came to the screen about --
- * and the two categories that survive them last, where they read as the
- * exceptions they are rather than as small print above the button.
+ * Their own complaints first -- that is what they came for -- and the two
+ * categories that survive them last, where they read as the exceptions they
+ * are rather than as small print above the button.
  */
 export const DATA_CATEGORIES: readonly DataCategory[] = [
   {
     key: "reports",
-    what: "Sesizările tale: locul, ora, ce ai scris și pozele.",
-    kept: "Numărul de înmatriculare și pozele se șterg automat după 12 luni. Sesizarea rămâne și după.",
     fate: "deleted",
-    onErasure: "Se șterg complet, cu poze cu tot.",
+    onErasure: "Sesizările tale se șterg, cu poze cu tot.",
   },
   {
     key: "profile",
-    what: "Contul: numele afișat și dacă ai spus că ești firmă.",
-    kept: "Cât timp ai contul.",
     fate: "deleted",
-    onErasure: "Se șterge.",
+    onErasure: "Contul și numele tău se șterg.",
   },
   {
     key: "windows",
-    what: "Intervalele în care ți-ai oferit locul.",
-    kept: "Până le retragi.",
     fate: "deleted",
-    onErasure: "Se șterg.",
+    onErasure: "Intervalele pe care le-ai oferit se șterg.",
   },
   {
     key: "private_spots",
-    what: "Locurile care sunt proprietatea ta, ca un garaj.",
-    kept: "Cât timp le ții listate.",
     fate: "deleted",
-    onErasure: "Se șterg de pe hartă.",
+    onErasure: "Locurile tale private dispar de pe hartă.",
+  },
+  {
+    key: "parkings",
+    fate: "deleted",
+    onErasure: "Istoricul parcărilor tale se șterge.",
   },
   {
     key: "public_spots",
-    what: "Locurile publice pe care le-ai adăugat pe hartă.",
-    kept: "Cât timp există locul.",
     fate: "severed",
-    onErasure: "Rămân pe hartă, fără numele tău. Locul e al străzii, nu al tău.",
+    onErasure:
+      "Locurile publice adăugate de tine rămân pe hartă, fără numele tău.",
   },
   {
     key: "actions",
-    what: "Ce ai făcut la sesizările altora: trimis mai departe, marcat eliberat.",
-    kept: "Cât timp există sesizarea la care ai lucrat.",
     fate: "severed",
-    onErasure: "Rămân, fără numele tău.",
+    onErasure: "Ce ai făcut la sesizările altora rămâne, fără numele tău.",
   },
   {
     key: "evidence_access",
-    what: "Cine ți-a deschis pozele și pe ce temei.",
-    kept: "24 de luni.",
     fate: "deleted",
-    onErasure: "Se șterge odată cu sesizarea la care se referă.",
+    onErasure: "Lista cu cine ți-a deschis pozele se șterge cu sesizarea.",
   },
   {
     key: "official_resolutions",
-    what: "Că o primărie de sector a închis o sesizare de-a ta.",
-    kept: "Nelimitat, dar fără nicio legătură cu tine după ce pleci.",
     fate: "kept",
     onErasure:
-      "Rămâne doar atât: ce fel de problemă, în ce sector, la ce dată și ce instituție a rezolvat-o. Nu și că era a ta.",
+      "Sesizările închise de o primărie rămân la ea, fără nicio legătură cu tine.",
   },
   {
     key: "erasure_requests",
-    what: "Că ai cerut ștergerea și când a fost făcută.",
-    kept: "3 ani.",
     fate: "kept",
-    onErasure: "Rămâne. E singura dovadă că cererea ta a fost respectată.",
+    onErasure:
+      "Rămâne dovada că ai cerut ștergerea și că s-a făcut.",
   },
 ];
 
@@ -146,6 +150,7 @@ export interface ErasureReceipt {
   reports_deleted: number;
   availability_windows_deleted: number;
   private_spots_deleted: number;
+  parkings_deleted: number;
   actions_kept_unattributed: number;
   storage_prefix: string;
   login_and_photos_pending: boolean;
@@ -167,6 +172,13 @@ export function receiptLines(receipt: ErasureReceipt): string[] {
   if (receipt.reports_deleted > 0) {
     lines.push(
       `${receipt.reports_deleted} ${plural(receipt.reports_deleted, "sesizare ștearsă", "sesizări șterse")}.`,
+    );
+  }
+  // Before the spots and the windows, because it is the line worth reading:
+  // a log of where somebody parks is the most sensitive thing this app keeps.
+  if (receipt.parkings_deleted > 0) {
+    lines.push(
+      `${receipt.parkings_deleted} ${plural(receipt.parkings_deleted, "parcare ștearsă", "parcări șterse")}.`,
     );
   }
   if (receipt.private_spots_deleted > 0) {
@@ -195,7 +207,7 @@ export function receiptLines(receipt: ErasureReceipt): string[] {
   return lines;
 }
 
-/** What `export_my_data()` returns. Only the parts the screen counts. */
+/** What `export_my_data()` returns. Only the parts the screen reads. */
 export interface DataExport {
   exported_at: string;
   account: { id: string };
@@ -205,8 +217,24 @@ export interface DataExport {
   actions_on_reports: unknown[];
   spots: unknown[];
   availability_windows: unknown[];
-  who_opened_my_evidence: unknown[];
+  parkings: unknown[];
+  who_opened_my_evidence: EvidenceLook[];
   erasure_requests: unknown[];
+}
+
+/**
+ * One time somebody who did not file a report opened its photographs.
+ *
+ * The shape `export_my_data()` builds out of `evidence_access`, and notably
+ * not the whole row: the export hands back the role it was done under and the
+ * moment, never `looked_by`. A driver is owed the disclosure; naming the
+ * individual warden would turn an accountability log into a way of finding out
+ * which person at the sector hall to be angry at.
+ */
+export interface EvidenceLook {
+  report_id: string;
+  as_role: string;
+  looked_at: string;
 }
 
 export interface ExportLine {
@@ -226,6 +254,7 @@ export function summariseExport(dump: DataExport): ExportLine[] {
   const lines: ExportLine[] = [
     { label: "sesizări", count: dump.reports?.length ?? 0 },
     { label: "locuri", count: dump.spots?.length ?? 0 },
+    { label: "parcări", count: dump.parkings?.length ?? 0 },
     { label: "intervale", count: dump.availability_windows?.length ?? 0 },
     {
       label: "acțiuni la sesizările altora",
@@ -245,6 +274,7 @@ export function exportLineLabel(line: ExportLine): string {
   const nouns: Record<string, [string, string]> = {
     sesizări: ["sesizare", "sesizări"],
     locuri: ["loc", "locuri"],
+    parcări: ["parcare", "parcări"],
     intervale: ["interval", "intervale"],
     "acțiuni la sesizările altora": [
       "acțiune la sesizările altora",

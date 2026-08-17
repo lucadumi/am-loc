@@ -1,11 +1,11 @@
 /**
  * Tests for lib/privacy.ts.
  *
- * The module is a set of promises made on a screen, and the promises are about
- * deletion. So the tests are mostly about the awkward half -- what does *not*
- * go -- because that is where a privacy screen lies without meaning to: it is
- * easy to list what you delete and easy to forget that the list is not the
- * whole schema.
+ * The module is a set of promises made at the moment somebody presses a
+ * destructive button, and the promises are about deletion. So the tests are
+ * mostly about the awkward half -- what does *not* go -- because that is where
+ * an erasure lies without meaning to: it is easy to list what you delete and
+ * easy to forget that the list is not the whole schema.
  *
  * The register is checked for totality rather than for content. Its content is
  * prose and will be edited; what must not change is that every category has
@@ -21,6 +21,7 @@ import {
   DATA_CATEGORIES,
   type DataExport,
   type ErasureReceipt,
+  type EvidenceLook,
   exportFileName,
   exportLineLabel,
   exportToText,
@@ -34,6 +35,7 @@ const receipt = (over: Partial<ErasureReceipt> = {}): ErasureReceipt => ({
   reports_deleted: 0,
   availability_windows_deleted: 0,
   private_spots_deleted: 0,
+  parkings_deleted: 0,
   actions_kept_unattributed: 0,
   storage_prefix: "abc/",
   login_and_photos_pending: true,
@@ -49,8 +51,16 @@ const emptyExport = (over: Partial<DataExport> = {}): DataExport => ({
   actions_on_reports: [],
   spots: [],
   availability_windows: [],
+  parkings: [],
   who_opened_my_evidence: [],
   erasure_requests: [],
+  ...over,
+});
+
+const look = (over: Partial<EvidenceLook> = {}): EvidenceLook => ({
+  report_id: "r1",
+  as_role: "resolver",
+  looked_at: "2026-08-10T09:00:00.000Z",
   ...over,
 });
 
@@ -64,14 +74,31 @@ describe("the register", () => {
     }
   });
 
-  test("every category says something in all four columns", () => {
+  test("every category says what erasure does to it", () => {
     for (const category of DATA_CATEGORIES) {
-      for (const field of ["what", "kept", "onErasure"] as const) {
-        assert.ok(
-          category[field].trim().length > 0,
-          `${category.key} says nothing about ${field}`,
-        );
-      }
+      assert.ok(
+        category.onErasure.trim().length > 0,
+        `${category.key} says nothing about erasure`,
+      );
+    }
+  });
+
+  /* These are read as bare bullets in the deletion dialog, with nothing above
+     them to lean on. "Rămân, fără numele tău" was one of them once and is not
+     an answer to anything on its own -- the reader has to guess what "they"
+     are. Length and a full stop are a proxy for "names its own subject", which
+     is not a thing an assertion can check; what they do catch is the edit that
+     shortens one of these back into a fragment. */
+  test("each is a whole sentence, because the dialog gives it no context", () => {
+    for (const category of DATA_CATEGORIES) {
+      assert.ok(
+        category.onErasure.length >= 25,
+        `${category.key} is a fragment: ${category.onErasure}`,
+      );
+      assert.ok(
+        category.onErasure.trim().endsWith("."),
+        `${category.key} does not end in a full stop`,
+      );
     }
   });
 
@@ -153,6 +180,21 @@ describe("the receipt", () => {
     assert.match(withDe[0], /^120 de sesizări șterse\./);
   });
 
+  // The most sensitive table in the schema, so the count is said rather than
+  // folded into a general "s-a sters tot".
+  test("counts the parkings that went", () => {
+    const lines = receiptLines(receipt({ parkings_deleted: 2 }));
+    assert.match(lines[0], /^2 parcări șterse\./);
+  });
+
+  test("parkings are named before the spots and the windows", () => {
+    const lines = receiptLines(
+      receipt({ parkings_deleted: 1, availability_windows_deleted: 1 }),
+    );
+    assert.match(lines[0], /parcare/);
+    assert.match(lines[1], /interval/);
+  });
+
   test("mentions what stays behind unattributed", () => {
     const lines = receiptLines(receipt({ actions_kept_unattributed: 2 }));
     assert.ok(lines.some((l) => /fără numele tău/.test(l)));
@@ -184,9 +226,7 @@ describe("the export", () => {
 
   // The line that is the point of the screen.
   test("tells them their photographs were opened", () => {
-    const lines = summariseExport(
-      emptyExport({ who_opened_my_evidence: [1] } as Partial<DataExport>),
-    );
+    const lines = summariseExport(emptyExport({ who_opened_my_evidence: [look()] }));
     assert.equal(lines.length, 1);
     assert.equal(exportLineLabel(lines[0]), "1 deschidere a pozelor tale");
   });
@@ -198,6 +238,13 @@ describe("the export", () => {
       exportLineLabel({ label: "sesizări", count: 20 }),
       "20 de sesizări",
     );
+  });
+
+  test("counts the parkings, with the noun agreeing", () => {
+    const lines = summariseExport(emptyExport({ parkings: [1, 2, 3] }));
+    assert.deepEqual(lines, [{ label: "parcări", count: 3 }]);
+    assert.equal(exportLineLabel(lines[0]), "3 parcări");
+    assert.equal(exportLineLabel({ label: "parcări", count: 1 }), "1 parcare");
   });
 
   test("survives a payload whose arrays are missing", () => {

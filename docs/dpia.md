@@ -27,6 +27,7 @@ The register lives in the `data_inventory` table and is summarised in
 | Let an institution act on the complaint | The above, disclosed to the sector with jurisdiction | Art. 6(1)(f); Art. 6(1)(e) for the recipient |
 | Hold disclosures to account | Who opened whose evidence, and when | Art. 6(1)(c) with Art. 32 |
 | Run accounts | Display name, trader declaration, roles | Art. 6(1)(b) and (f) |
+| Help a driver find their own car again | Where they said they parked, and when | Art. 6(1)(b) |
 | Show erasure was honoured | That somebody asked, and when | Art. 6(1)(c) with Art. 12(3) |
 
 ### Three data subjects, not one
@@ -120,12 +121,14 @@ them together, not the contents.
 
 **Measures.** Jurisdiction is checked in the database, not the client
 (`0011`). Every disclosure is logged with the role it was made under. The log
-survives the looker closing their account (`0012`), and the reporter can see it
-in their own export — which is the only way they would ever find out.
+survives the looker closing their account (`0012`), and the reporter gets it in
+the export from *Contul meu → Datele mele*, which is the only way they would
+ever find out.
 
-**Residual: medium.** The log is written but nothing reads it: there is no
-alerting and no review. A log nobody looks at deters only those who know it
-exists.
+**Residual: medium.** The subject can obtain the log, but only by exporting a
+document and reading it; nobody else reviews it. There is no alerting and no
+admin who is expected to look, so the deterrent is whatever a driver does about
+a row they had to go looking for.
 
 ### R5 — Anonymous accounts make data subject rights unverifiable
 
@@ -170,6 +173,26 @@ address or the coordinates. Sector granularity is roughly 300,000 people.
 it by date and category; they would be matching it against something they
 already had.
 
+### R8 — A driver's own parking history becomes a movement log
+
+*Likelihood: certain, by design. Severity: high.* `parkings` holds dated
+locations of one person over months, which is where they sleep and where they
+work. It is the most sensitive table in this schema, and unlike a report it was
+never public in any form.
+
+**Measures.** No policy on the table mentions a role, so no grant — resolver,
+admin, or one invented later — widens into reading where somebody else parks;
+select, insert and delete are each scoped to `auth.uid()`. Nothing else in the
+app reads a row: no map colour, no occupancy count, no ranking. The driver can
+delete any entry from the row itself in "Datele mele", and an accidental tap is
+undoable where it was made. `erase_me()` deletes the table outright and says
+how many rows went.
+
+**Residual: medium.** The rows are still readable by the service key (R6) and
+by whoever holds an unlocked phone with the session on it (R5). Nothing here
+expires on a clock: a driver who never prunes keeps the lot, which is their
+choice to make and the reason the bin is one tap away rather than in a menu.
+
 ## 4. Measures, in one list
 
 | | |
@@ -186,6 +209,7 @@ already had.
 | Export of everything, including who read your evidence | `0012` |
 | Erasure, with what survives stated before the button | `0012` |
 | Proof that an erasure was honoured | `0012` |
+| Parking history readable and deletable by its driver alone | `0012`, no role in any policy |
 | Every table has a purpose, basis, retention and deletion rule | `0012`, enforced by `unregistered_tables()` |
 
 ## 5. What is not done
@@ -196,9 +220,12 @@ Stated plainly, because a DPIA that lists only what was built is a brochure.
   them on a schedule. Until something does, every retention period above is a
   policy rather than a fact. See `data-retention.md` for what to schedule.
 - **No moderation.** R2 is unmitigated beyond attribution. Issue #22.
-- **Nobody reads the disclosure log.** R4's deterrent is theoretical.
-- **No privacy notice in the app.** The privacy screen says what is held and
-  for how long; it is not an Article 13 notice and does not name a controller,
+- **Nobody reviews the disclosure log.** The subject can export it; no admin is
+  expected to read it and nothing alerts on a pattern.
+- **No privacy notice in the app.** "Datele mele" lists what a person filed and
+  offers export and erasure; nothing on it states what is held or for how long.
+  That register lives in `data_inventory` and in `data-retention.md`. There is
+  no Article 13 notice anywhere in the app, and none of it names a controller,
   a contact or a supervisory authority.
 - **No processor agreements beyond Supabase's standard DPA.** Data is hosted by
   Supabase; the region should be confirmed as EU before any real launch.
