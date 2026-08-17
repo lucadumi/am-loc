@@ -78,7 +78,7 @@ The photographs are in a private bucket and reach nobody unsigned (`0009`).
 Disclosure to a resolver goes through `evidence_paths()`, which checks that the
 office's jurisdiction covers the report's sector and writes a row saying who
 looked (`0009`, `0011`). Plate and photographs expire at 12 months (`0009`,
-`0012`).
+`0012`), on a nightly schedule rather than on paper (`0013`).
 
 **Residual: medium.** A warden in the right sector sees the plate and the
 photograph, which is the entire point and cannot be designed away. Nothing
@@ -210,15 +210,25 @@ choice to make and the reason the bin is one tap away rather than in a menu.
 | Erasure, with what survives stated before the button | `0012` |
 | Proof that an erasure was honoured | `0012` |
 | Parking history readable and deletable by its driver alone | `0012`, no role in any policy |
+| Retention and the second half of erasure run nightly | `0013`, `supabase/functions/retention` |
+| A report may only name photographs in its own folder | `0013`, trigger and `evidence_past_retention` |
+| The moment a report claims is the moment it arrived | `0013`, trigger |
+| No uploads once an erasure is pending | `0013`, storage policies |
+| Proof of an erasure expires at three years | `0013` |
 | Every table has a purpose, basis, retention and deletion rule | `0012`, enforced by `unregistered_tables()` |
 
 ## 5. What is not done
 
 Stated plainly, because a DPIA that lists only what was built is a brochure.
 
-- **No retention job runs.** The functions exist and are tested. Nothing calls
-  them on a schedule. Until something does, every retention period above is a
-  policy rather than a fact. See `data-retention.md` for what to schedule.
+- **Nothing has watched the retention jobs run in production.** `0013`
+  schedules them and the pure half is tested, but no project has yet been left
+  alone for a night with real data in it. The schedule is a fact; that it does
+  the right thing at four in the morning is still an assertion. `cron.job_run_details`
+  and the function's log are where it would be checked.
+- **Nothing alerts when a run fails.** The job reports what it could not delete
+  and then it is a line in a log. A week of failures looks exactly like a week
+  of quiet nights to anybody not reading them.
 - **No moderation.** R2 is unmitigated beyond attribution. Issue #22.
 - **Nobody reviews the disclosure log.** The subject can export it; no admin is
   expected to read it and nothing alerts on a pattern.
@@ -235,9 +245,10 @@ Stated plainly, because a DPIA that lists only what was built is a brochure.
 ## 6. Conclusion
 
 The residual risks are acceptable for a pre-launch project with no public
-users. **Two must be closed before real drivers use it:** a retention schedule
-that actually runs (§5, first item), and an Article 13 privacy notice naming a
-controller. R2 and R6 should be reassessed at launch.
+users. **One must be closed before real drivers use it:** an Article 13 privacy
+notice naming a controller. The retention schedule that §5 used to head this
+list is in `0013`; what remains of it is that nobody has watched it work. R2
+and R6 should be reassessed at launch.
 
 **Review:** on the next change to any table holding personal data, or when the
 app is first published, whichever comes first.

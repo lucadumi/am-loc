@@ -58,32 +58,86 @@ which is recoverable; the other order loses the pointer to the bytes and leaves
 them forever. This is the same shape as the evidence retention pair in
 `0009_evidence_is_private.sql`, for the same reason.
 
-**Nothing runs this yet.** The functions exist and are tested; no schedule
-calls them. Until one does, the retention periods in the table above are
-policy, not fact — and that is the honest state of it rather than a gap
-somebody forgot to mention.
+**`0013_retention_jobs.sql` runs this.** The functions had existed and been
+tested for a while with nothing calling them, which made every retention period
+in the table above a policy rather than a fact. Four cron jobs and one Deno
+function later, they are facts — as far as anything asserted by a schedule
+nobody has watched run in production can be.
 
-## Scheduling what can be scheduled
+Scheduling it also closed three holes that had cost nothing while nothing ran,
+and all three are in `0013`: `reports.photos` accepted any string, so a driver
+could name somebody else's photograph and have the nightly job delete it;
+`created_at` was insertable, so a report could arrive already older than its
+own retention period, or dated to outlive it; and the bucket accepted uploads
+from an account whose erasure was halfway done.
 
-Two of the retention rules are pure SQL and can run inside the database. If
-`pg_cron` is enabled on the project:
+## What runs, and when
+
+| Job | When | What it is |
+| --- | --- | --- |
+| `forget-old-plates` | 03:00 daily | `forget_report_plates()`, in Postgres |
+| `expire-evidence-log` | 03:30 daily | `forget_old_evidence_access()`, in Postgres |
+| `expire-erasure-proof` | 03:45 daily | `forget_old_erasure_requests()`, in Postgres |
+| `retention-worker` | 04:00 daily | `net.http_post` to the `retention` function |
+
+The first three are pure SQL and run inside the database on `pg_cron`, which is
+the whole of what they need.
+
+The photographs cannot be done that way. `evidence_past_retention()` says what
+is due, the storage API deletes the files, and `forget_evidence_paths()` clears
+exactly those paths afterwards — and the middle step is an HTTP call with the
+service key on it, as is the `auth.users` delete that finishes an erasure. So
+the fourth job is `supabase/functions/retention`, a Deno function on Supabase's
+own machines, where the key is an injected environment variable rather than a
+secret copied into somebody else's CI.
+
+`supabase/functions/_shared/retention.ts` holds the half of it that decides
+things, so `node --test` covers the rules that would otherwise be checked only
+by a night that went wrong:
+
+- The expired list is read a page at a time, and each page is deleted and
+  cleared before the next is asked for. Clearing is **by path**, not by report:
+  a page boundary or a concurrent edit must not be able to blank a name whose
+  file is still in the bucket. That is why `0013` adds
+  `forget_evidence_paths()` beside `0009`'s `forget_evidence()`.
+- A login is deleted only when a **fresh listing** of its prefix comes back
+  empty — not when the deletes returned no error. A file uploaded during the
+  sweep would not be in the first answer, and a listing that failed counts as
+  "something is there".
+
+### Setting it up on a project
+
+The cron job reads the URL and the key out of Vault at the moment it runs, so
+neither is in this repository. Once per project:
 
 ```sql
-select cron.schedule(
-  'forget-old-plates', '0 3 * * *',
-  $$select public.forget_report_plates()$$
-);
-select cron.schedule(
-  'expire-evidence-log', '30 3 * * *',
-  $$select public.forget_old_evidence_access()$$
-);
+select vault.create_secret('https://<ref>.supabase.co', 'project_url');
+select vault.create_secret('<the service role key>', 'service_role_key');
 ```
 
-The photographs cannot be done this way. `evidence_past_retention()` says what
-is due, the storage API deletes the files, and `forget_evidence()` clears the
-paths afterwards — and the middle step is an HTTP call, so it needs a job
-outside Postgres holding the service key. The same is true of the second half
-of an erasure.
+It has to be the `service_role` key itself — the one the platform injects into
+the function as `SUPABASE_SERVICE_ROLE_KEY`, which the function compares what
+arrives against. A project that has moved to the newer `sb_secret_…` keys needs
+`verify_jwt` turned off for this function and that comparison pointed at
+whichever secret it does send.
+
+```bash
+supabase functions deploy retention --project-ref <ref>
+```
+
+Until the secrets exist the http job selects no rows and makes no call — no
+error, no half-authenticated request. The three SQL jobs run regardless.
+
+To see whether any of it happened:
+
+```sql
+select jobid, jobname, schedule, active from cron.job;
+select jobname, status, return_message, start_time
+  from cron.job_run_details order by start_time desc limit 20;
+```
+
+and the function's log for the third, which prints what it removed and, more
+usefully, what it could not.
 
 ## Data subject requests
 
