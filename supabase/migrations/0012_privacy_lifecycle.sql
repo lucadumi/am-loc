@@ -372,6 +372,74 @@ comment on table public.erasure_requests is
   'That somebody asked to be forgotten, and when each half of it was done.';
 
 -- ---------------------------------------------------------------------------
+-- Where somebody parked
+-- ---------------------------------------------------------------------------
+--
+-- The one table here that is not about privacy machinery, and it is in this
+-- migration rather than a new one because 0012 is still the head and every
+-- statement in it is idempotent -- but it belongs in this file for a second
+-- reason too. A log of where a person leaves their car, dated, is the most
+-- sensitive thing this project has ever stored: reports say where somebody
+-- was once, this says where they sleep and where they work, over months. It
+-- has to be registered, exported and erased with everything else, and putting
+-- it beside the register is what makes forgetting that hard.
+--
+-- WHY THERE IS NO FOREIGN KEY TO `spots`. Most of the map is bundled in the
+-- client -- OpenStreetMap and CMPB car parks in `constants/`, which exist as
+-- rows only where `scripts/import-parking.mjs` has been run. A driver parks in
+-- one of those, and a reference would refuse the insert. A history that could
+-- record only the places this project happens to have imported is not that
+-- driver's history, so the id is kept as text and the label is snapshotted.
+--
+-- WHO MAY READ IT. The driver. Not a resolver, not an admin, nobody with a
+-- grant: there is no lawful reason for this project to let one person read
+-- where another person parks, and the way that stays true is that no policy
+-- here mentions a role.
+
+create table if not exists public.parkings (
+  id bigint generated always as identity primary key,
+  driver uuid not null references auth.users (id) on delete cascade,
+  -- Not a reference; see above.
+  spot_id text not null,
+  -- What the place was called when they tapped. The row it names may not exist
+  -- here and its title may change; this is what they actually saw.
+  spot_title text,
+  parked_at timestamptz not null default now()
+);
+
+create index if not exists parkings_driver_idx
+  on public.parkings (driver, parked_at desc);
+
+comment on table public.parkings is
+  'Where a driver said they parked. Readable by that driver and nobody else.';
+
+alter table public.parkings enable row level security;
+
+drop policy if exists "A driver reads their own parkings" on public.parkings;
+create policy "A driver reads their own parkings"
+  on public.parkings for select
+  to authenticated
+  using (driver = (select auth.uid()));
+
+drop policy if exists "A driver records where they parked" on public.parkings;
+create policy "A driver records where they parked"
+  on public.parkings for insert
+  to authenticated
+  with check (driver = (select auth.uid()));
+
+-- Deletable, unlike a report. A complaint is evidence somebody else relies on;
+-- a note of where the car is is nobody's business but the driver's, and a
+-- history you cannot prune is a history you learn not to write.
+drop policy if exists "A driver forgets where they parked" on public.parkings;
+create policy "A driver forgets where they parked"
+  on public.parkings for delete
+  to authenticated
+  using (driver = (select auth.uid()));
+
+revoke all on table public.parkings from public, anon;
+grant select, insert, delete on table public.parkings to authenticated;
+
+-- ---------------------------------------------------------------------------
 -- Article 15 and 20: what do you have about me
 -- ---------------------------------------------------------------------------
 
@@ -442,6 +510,11 @@ begin
       from public.availability_windows w where w.owner_id = me
     ), '[]'::jsonb),
 
+    'parkings', coalesce((
+      select jsonb_agg(to_jsonb(p) order by p.parked_at)
+      from public.parkings p where p.driver = me
+    ), '[]'::jsonb),
+
     'who_opened_my_evidence', coalesce((
       select jsonb_agg(
         jsonb_build_object(
@@ -497,6 +570,7 @@ declare
   reports_gone integer;
   spots_gone integer;
   windows_gone integer;
+  parkings_gone integer;
   actions_severed integer;
 begin
   if me is null then
@@ -520,6 +594,13 @@ begin
     delete from public.availability_windows where owner_id = me returning 1
   )
   select count(*) into windows_gone from removed;
+
+  -- Where they parked, and this one goes first among equals in the honest
+  -- reading of it: it is the record whose survival would be worst.
+  with removed as (
+    delete from public.parkings where driver = me returning 1
+  )
+  select count(*) into parkings_gone from removed;
 
   with removed as (
     delete from public.spots
@@ -556,6 +637,7 @@ begin
     'reports_deleted', reports_gone,
     'availability_windows_deleted', windows_gone,
     'private_spots_deleted', spots_gone,
+    'parkings_deleted', parkings_gone,
     'actions_kept_unattributed', actions_severed,
     'storage_prefix', me::text || '/',
     -- Said in the return value because the client shows it: the account is not
@@ -864,6 +946,16 @@ values
     '3 years, as the proof that Article 12(3) was met.',
     'Not deleted by the erasure it records; it is what demonstrates the erasure happened.',
     'Deliberately has no foreign key to auth.users, or honouring a request would destroy the evidence that it was honoured.'
+  ),
+  (
+    'parkings',
+    'Where a driver says they parked, so they can find the car again and see their own history.',
+    'The driver who parked. Nobody else appears in a row.',
+    true,
+    'contract',
+    'Until the driver deletes the row, or the account goes.',
+    'Deleted outright on erasure, and cascaded by the deletion of the account.',
+    'The most sensitive table in this schema: dated locations of one person over time. No policy on it mentions a role, so no grant can ever widen it into a way of reading where somebody else leaves their car.'
   ),
   (
     'data_inventory',

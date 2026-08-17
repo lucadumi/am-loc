@@ -16,11 +16,13 @@
 import type {
   AvailabilityWindow,
   BlockerReport,
+  Parking,
   ParkingSpot,
   SpotStatus,
 } from "@/types";
 import type {
   AvailabilityWindowRow,
+  ParkingRow,
   ReportEventRow,
   ReportRow,
   ReportUpdate,
@@ -43,6 +45,9 @@ import {
   toWindowInsert,
   toBlockerReport,
   toBlockerReports,
+  toParking,
+  toParkingInsert,
+  toParkings,
   toParkingSpot,
   toParkingSpots,
   toReportInsert,
@@ -484,4 +489,48 @@ export async function fetchSpotById(id: string): Promise<ParkingSpot | undefined
     .maybeSingle();
   if (error) throw new SupabaseError("Could not read spot", error);
   return data ? toParkingSpot(data) : undefined;
+}
+
+// ---------------------------------------------------------------------------
+// Parkings
+// ---------------------------------------------------------------------------
+
+/**
+ * Where this driver has parked, newest first.
+ *
+ * No filter on the driver, and that is not a missing `eq`. The select policy
+ * scopes the statement to the caller's own rows, so this returns theirs and
+ * nothing else -- and a client-side filter would be a second, weaker copy of a
+ * rule Postgres already enforces, which is the pattern the rest of this file
+ * follows for exactly the same reason.
+ */
+export async function fetchParkings(): Promise<Parking[]> {
+  const { data, error } = await client()
+    .from("parkings")
+    .select("*")
+    .order("parked_at", { ascending: false })
+    .returns<ParkingRow[]>();
+  if (error) throw new SupabaseError("Nu am putut încărca parcările", error);
+  return toParkings(data ?? []);
+}
+
+/** Write down that the car is here. The driver comes from the session. */
+export async function insertParking(parking: Parking): Promise<Parking> {
+  const driver = await currentReporterId();
+  const { data, error } = await client()
+    .from("parkings")
+    .insert(toParkingInsert(parking, driver))
+    .select()
+    .returns<ParkingRow[]>();
+  if (error) throw new SupabaseError("Nu am putut salva parcarea", error);
+  /* The row back rather than the one sent: `id` and `parked_at` are the
+     database's to decide, and a list keyed on a locally invented id would
+     duplicate the entry the moment it reloaded. */
+  return data?.[0] ? toParking(data[0]) : parking;
+}
+
+/** Forget one. Scoped to the caller by the delete policy, as above. */
+export async function deleteParking(id: string): Promise<void> {
+  const { error } = await client().from("parkings").delete().eq("id", id);
+  if (error) throw new SupabaseError("Nu am putut șterge parcarea", error);
 }

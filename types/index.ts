@@ -114,6 +114,15 @@ export interface ParkingSpot {
   ownerId?: string;
   /** What to call the owner on screen. */
   ownerName?: string;
+  /**
+   * Who put this place on the map, which is not the same as who owns it.
+   *
+   * Absent for every imported car park -- OpenStreetMap and CMPB are not
+   * people -- and absent again once that person is erased, which severs the
+   * column rather than deleting the place. A public kerb belongs to the
+   * street; the contribution is what belonged to them.
+   */
+  createdBy?: string;
 }
 
 /**
@@ -147,6 +156,30 @@ export interface AvailabilityWindow {
   pricePerHour?: number;
   /** Anything the driver needs to know: gate code, which bay, how to get in. */
   note?: string;
+}
+
+/**
+ * Where a driver said they left the car, and when.
+ *
+ * Not a reservation and not a claim about the place: nothing else in the app
+ * reads it, no map colour turns on it, and nobody but its author can see it.
+ * It is a note to self with a date on it, which is exactly why it is the most
+ * sensitive thing this app stores -- a list of them is where somebody sleeps
+ * and where they work, over months. See `parkings` in `0012`.
+ */
+export interface Parking {
+  id: string;
+  spotId: string;
+  /**
+   * What the place was called when they tapped.
+   *
+   * Snapshotted rather than looked up. Half the map is bundled in the app and
+   * exists as no row anywhere, so a history that resolved its titles at read
+   * time would come back blank for the car parks people actually use.
+   */
+  spotTitle?: string;
+  /** ISO instant. */
+  at: string;
 }
 
 /**

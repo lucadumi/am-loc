@@ -13,10 +13,17 @@
 
 import { sectorOf } from "./jurisdiction.ts";
 import { toSpotAccess } from "./spot-rights.ts";
-import type { AvailabilityWindow, BlockerReport, ParkingSpot } from "@/types";
+import type {
+  AvailabilityWindow,
+  BlockerReport,
+  Parking,
+  ParkingSpot,
+} from "@/types";
 import type {
   AvailabilityWindowInsert,
   AvailabilityWindowRow,
+  ParkingInsert,
+  ParkingRow,
   ReportEventRow,
   ReportInsert,
   ReportRow,
@@ -56,6 +63,7 @@ export function toParkingSpot(row: SpotRow): ParkingSpot {
     longitude: row.longitude,
     ownerId: optional(row.owner_id),
     ownerName: optional(row.owner_name),
+    createdBy: optional(row.created_by),
     totalCount: optional(row.total_count),
     pricePerHour: optional(row.price_per_hour),
     /* Carried rather than derived from `price_per_hour`. A car park that
@@ -234,5 +242,44 @@ export function toReportInsert(
     note: report.note ?? null,
     photos: report.photos ?? [],
     created_by: createdBy,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Parkings
+// ---------------------------------------------------------------------------
+
+/**
+ * A parking row, as the `Parking` the screens read.
+ *
+ * The id becomes a string: it is an identity `bigint` in Postgres and a React
+ * key everywhere else, and the app's other ids are all text. Nothing here does
+ * arithmetic on it.
+ */
+export function toParking(row: ParkingRow): Parking {
+  return {
+    id: String(row.id),
+    spotId: row.spot_id,
+    spotTitle: optional(row.spot_title),
+    at: row.parked_at,
+  };
+}
+
+export function toParkings(rows: ParkingRow[]): Parking[] {
+  return rows.map(toParking);
+}
+
+/**
+ * What an insert supplies.
+ *
+ * The driver is passed in from the session rather than taken from the parking,
+ * for the same reason a window's owner is: it is not the caller's to choose,
+ * and row level security would refuse anything else anyway.
+ */
+export function toParkingInsert(parking: Parking, driver: string): ParkingInsert {
+  return {
+    driver,
+    spot_id: parking.spotId,
+    spot_title: parking.spotTitle ?? null,
   };
 }
