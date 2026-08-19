@@ -187,4 +187,17 @@ describe("what the run says afterwards", () => {
       "1 erasure left open: the pictures are still there, so the login stays.",
     ]);
   });
+
+  test("a photograph that arrived after the end is said apart", () => {
+    // Not folded into `photos_removed`, and this is the whole reason it is a
+    // separate number: an upload authorised before an erasure cannot be
+    // refused afterwards, only found later, and finding one means somebody was
+    // told their photographs were gone while one of them was still arriving.
+    // A total that a quiet night can also produce would hide it.
+    const lines = runLines({ ...emptyRun(), photos_removed: 2, photos_after_the_end: 1 });
+
+    assert.equal(lines.length, 2);
+    assert.equal(lines[0], "2 photographs removed.");
+    assert.match(lines[1], /^1 photograph arrived after an erasure was closed/);
+  });
 });

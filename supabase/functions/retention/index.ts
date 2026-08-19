@@ -2,16 +2,24 @@
  * The third of every retention rule that Postgres cannot do itself.
  *
  * Deployed with `supabase functions deploy retention` and called once a night
- * by `0013_retention_jobs.sql`. Two jobs, each the same three steps, each in
- * an order that only works one way round:
+ * by `0013_retention_jobs.sql`. Two jobs and a look back, each step in an order
+ * that only works one way round:
  *
  *   1. EXPIRED EVIDENCE. `evidence_past_retention()` names the photographs of
  *      reports older than twelve months, the storage API deletes the files,
  *      and `forget_evidence_paths` clears exactly those paths afterwards.
  *   2. UNFINISHED ERASURES. `pending_erasures()` names the people whose rows
- *      are gone and whose pictures and login are not. The bucket under their
- *      prefix is emptied, the `auth.users` row goes through the admin API, and
- *      `finish_erasure` closes the request.
+ *      are gone and whose pictures and login are not. `forget_everything` is
+ *      run again over each of them, the bucket under their prefix is emptied,
+ *      the `auth.users` row goes through the admin API, and `finish_erasure`
+ *      closes the request. The repeat is not belt and braces: see the second
+ *      pass in `0014` for the millisecond it exists to cover, and for why a
+ *      spot that survives it stops the login from ever being deleted.
+ *   3. ERASURES ALREADY FINISHED. `finished_erasures()` names the ones whose
+ *      prefix has not yet been quiet for three nights, and lists them again,
+ *      because an upload is authorised when it starts and no policy can refuse
+ *      one that was permitted before the request. Anything found is deleted and
+ *      counted on its own, since it means a promise was briefly untrue.
  *
  * WHY IT RUNS HERE. It needs the service key -- deleting bytes and deleting a
  * login are both privileged HTTP -- and the key is the one credential in this
@@ -34,10 +42,12 @@
  * first thing that went wrong, because a night where one report's photographs
  * refuse to delete is not a night to leave every erasure unfinished.
  *
- * WHAT IT NEVER DOES. It does not delete a report, a spot or a parking, and it
- * has no path that takes an id from the caller. Everything it touches was
- * named by a function in the schema, so the worst a stolen call can do is
- * hurry along work the database had already decided was due.
+ * WHAT IT NEVER DOES. It has no path that takes an id from the caller. It does
+ * delete reports, spots and parkings, but only through `forget_everything`, and
+ * only for a uuid that `pending_erasures()` handed it -- that is, for somebody
+ * who asked. Everything else it touches was named by a function in the schema,
+ * so the worst a stolen call can do is hurry along work the database had
+ * already decided was due.
  */
 
 import { createClient, type SupabaseClient } from "jsr:@supabase/supabase-js@2";
@@ -81,6 +91,7 @@ Deno.serve(async (request: Request) => {
 
   await expireEvidence(supabase, run, failures);
   await finishErasures(supabase, run, failures);
+  await recheckFinishedErasures(supabase, run, failures);
 
   const lines = runLines(run);
   for (const line of lines) console.log(line);
@@ -185,6 +196,25 @@ async function finishErasures(
   }[];
 
   for (const request of pending) {
+    /* The second pass. `erase_me` deleted these rows hours ago; anything here
+       now arrived in the window between the request being written and it
+       becoming visible to the policies that refuse writes -- see the header of
+       `0014`. Rows before files, because a report deleted here leaves its
+       photographs to the sweep below, and before the login for a harder
+       reason: a `private_property` spot that outlived `erase_me` makes the
+       `auth.users` delete violate `spots_property_has_an_owner`, and the
+       erasure would then fail every night for good. */
+    const { error: leftovers } = await supabase.rpc("forget_everything", {
+      who: request.user_id,
+    });
+    if (leftovers) {
+      failures.push(
+        `Could not re-run the deletions for ${request.user_id}: ${leftovers.message}`,
+      );
+      run.erasures_incomplete += 1;
+      continue;
+    }
+
     const prefix = request.storage_prefix ?? `${request.user_id}/`;
     const swept = await emptyPrefix(supabase, prefix, failures);
     run.photos_removed += swept.removed;
@@ -213,6 +243,73 @@ async function finishErasures(
       continue;
     }
     run.erasures_finished += 1;
+  }
+}
+
+/**
+ * Look again at the prefixes of erasures that are already closed.
+ *
+ * The last line of the argument that runs through `0014`. A storage request is
+ * authorised when it starts, so an upload begun a minute before its token
+ * expired can still be arriving while the sweep above is listing, and land
+ * after the request was closed. Three hours makes that need a deliberate
+ * hour-long upload rather than an accident; it cannot make it impossible,
+ * because nothing here can refuse a permission that was already given.
+ *
+ * What it can do is look again the next night, and the one after. Anything
+ * found is deleted and counted apart from the ordinary sweep: `erase_me` has
+ * already told somebody their photographs were gone, and a file under that
+ * prefix means the sentence was wrong for a while. `runLines` says so in as
+ * many words rather than folding it into a total.
+ *
+ * The watch ends by counting quiet nights rather than by a date, and
+ * `finished_erasures` in `0014` gives the argument: a window of time is only a
+ * window if the job runs, and an outage longer than it would let everything
+ * closed beforehand age out unlooked-at. So a night that finds nothing is
+ * recorded and a night that finds something starts the count again -- and a
+ * night that could not look is neither, which is why the recording is skipped
+ * rather than guessed when the listing failed.
+ *
+ * Failures here are not counted against the erasure. It is finished; this is a
+ * check on whether it stayed finished, and a storage API refusing to list
+ * tonight is a reason to look again tomorrow, not a reason to reopen a
+ * request that was honoured.
+ */
+async function recheckFinishedErasures(
+  supabase: SupabaseClient,
+  run: RetentionRun,
+  failures: string[],
+): Promise<void> {
+  const { data, error } = await supabase.rpc("finished_erasures");
+  if (error) {
+    failures.push(`Could not read the finished erasures: ${error.message}`);
+    return;
+  }
+
+  const finished = (data ?? []) as {
+    user_id: string;
+    storage_prefix: string | null;
+  }[];
+
+  for (const request of finished) {
+    const prefix = request.storage_prefix ?? `${request.user_id}/`;
+    const late = await emptyPrefix(supabase, prefix, failures);
+    run.photos_after_the_end += late.removed;
+    run.photos_left += late.left;
+
+    /* `left` is what a fresh listing found, and a listing that failed answers
+       "something" -- see `emptyPrefix`. So this is exactly the case where the
+       night can be called quiet, and every other case leaves the count alone
+       for a night that can answer properly. */
+    if (late.left > 0) continue;
+
+    const { error: noted } = await supabase.rpc("record_a_recheck", {
+      whose: request.user_id,
+      anything_found: late.removed > 0,
+    });
+    if (noted) {
+      failures.push(`Looked at ${prefix} but could not write down that it went: ${noted.message}`);
+    }
   }
 }
 
