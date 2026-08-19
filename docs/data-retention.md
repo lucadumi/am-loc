@@ -48,15 +48,48 @@ Article 12(3) asks the project to be able to show.
 `erase_me()` deletes the rows and writes down what it could not reach. The rest
 needs the service key:
 
-1. Read `pending_erasures()`.
-2. Delete everything under `storage_prefix` through the storage API.
-3. Delete the `auth.users` row through the admin API.
-4. Call `finish_erasure(user_id)`.
+1. Read `pending_erasures()`, which holds a request back for three hours — long
+   enough that nothing authorised before it was made can still be arriving.
+2. Run `forget_everything(user_id)` again, for anything written in the window
+   before the request became visible to the write policies — `0014`.
+3. Delete everything under `storage_prefix` through the storage API.
+4. Delete the `auth.users` row through the admin API.
+5. Call `finish_erasure(user_id)`.
 
-In that order. A crash between 2 and 3 leaves an account with no photographs,
+And then, on the nights afterwards, sweep that prefix again until three of them
+in a row turn up nothing: `finished_erasures()` names the closed requests still
+being watched. Three hours outlives an authorisation given before the request;
+it does not bound one, because a storage request is authorised when it starts
+and not when its body finishes. Nothing can refuse a file that lands after the
+request was closed — there is no row left to check and no login to disable — so
+the job goes back and looks. What it finds is counted as `photos_after_the_end`
+rather than added to the night's total, because it means somebody was told
+their photographs were gone while one of them was still on its way, and finding
+one starts the three nights again.
+
+Nights, counted on the row, rather than a week on the calendar. A window of
+time is only a window if the job runs: an outage longer than it would let every
+erasure closed beforehand fall out of the list having never been looked at, and
+nothing would say so. A count cannot age out — an outage delays the watch and
+does not end it — and it is also what makes the list safe to read unpaged, since
+a night that returns short leaves the rest with their counts intact for the next
+one.
+
+What the count does not do is prove that nothing is still on its way. Three
+quiet nights are three nights of evidence, not a guarantee that no request is
+open, and an upload authorised before the erasure and still streaming days later
+would land after the last look. No interval closes that and no count does
+either; it needs a check at the moment the object is written, which Supabase
+does not offer. It is in `docs/dpia.md` under what is not done, which is the
+honest place for a measure that cannot be finished.
+
+In that order. A crash between 3 and 4 leaves an account with no photographs,
 which is recoverable; the other order loses the pointer to the bytes and leaves
 them forever. This is the same shape as the evidence retention pair in
-`0009_evidence_is_private.sql`, for the same reason.
+`0009_evidence_is_private.sql`, for the same reason. Step 2 comes before 4 for
+a different reason: a `private_property` spot that outlives `erase_me` makes the
+`auth.users` delete violate the check constraint in `0010`, and an erasure that
+fails at step 4 fails there every night.
 
 **`0013_retention_jobs.sql` runs this.** The functions had existed and been
 tested for a while with nothing calling them, which made every retention period
@@ -70,6 +103,58 @@ could name somebody else's photograph and have the nightly job delete it;
 `created_at` was insertable, so a report could arrive already older than its
 own retention period, or dated to outlive it; and the bucket accepted uploads
 from an account whose erasure was halfway done.
+
+**`0014_erasure_is_final.sql` finishes that last one.** Closing the bucket left
+the tables open, and the gap is the same gap: the rows go the moment somebody
+presses the button, the photographs and the login go on the next run of the
+job, and the tokens outlive both — signing out asks for the refresh tokens to
+be revoked, and `abandonErasedSession` does not wait to hear whether the ask
+worked, while an access token already issued is a signed statement with an
+expiry on it that nothing can call back, good for up to an hour on any
+telephone that was signed in. Most tables here cascade off `auth.users`, so what
+was written in the gap goes when the login goes; `spots` does not — `owner_id`
+and `created_by` are `on delete set null`, and `owner_name` is plain text that
+no cascade touches. Rather than
+sort the schema into the tables that cascade and the tables that do not — a
+sorting one new table away from being wrong — every write policy now asks
+`being_erased()` first, and the answer is read as the definer so that narrowing
+the view of `erasure_requests` cannot make the barrier pass by accident.
+Reading and deleting are untouched: both go the way the erasure is already
+going.
+
+A barrier can only refuse a write it can see, though, and `erase_me()` writes
+the request and deletes the rows in one transaction: a statement that began
+before that transaction committed reads a snapshot with no request in it, is
+allowed through, and commits after the deletions have run past it. So the same
+migration does it twice. `erase_me()` keeps its transaction and its receipt, and
+what it deletes now lives in `forget_everything(uuid)` — one definition of what
+an erasure removes, with two callers, because the job runs it again once the
+request is three hours old — `pending_erasures()` holds it back that long, and
+the figure is Supabase's two-hour upload token plus an hour, since an upload is
+authorised when it starts and a signed URL when it is minted, and neither can be
+called back by a policy. By then anything that raced the request has long since
+committed and is plainly visible. The repeat is also what makes deleting the
+login possible at all: `0010` requires a `private_property` spot to have an
+owner and `spots.owner_id` is `on delete set null`, so a private spot that
+outlived `erase_me` would make the `auth.users` delete violate the constraint —
+and an erasure that fails there fails there every night, quietly, for good.
+
+Moving the body also turned up a name that never went. `erase_me()` cleared
+`owner_name` where `owner_id = me`, and `0010` requires a `public_facility` to
+have no owner — so the only spots that rule could reach were the private ones
+the line above it had already deleted, and a kerb somebody added with their name
+on it kept the name, publicly, after `created_by` was severed and there was no
+longer any way to find it. `forget_everything` now clears the name on a spot
+somebody owns, and on an ownerless one they added. Only ownerless: `created_by`
+is the only handle on a kerb and it was editable by whoever owned the row —
+`created_by = created_by` in `0001` is `x = x` and never pinned anything — so
+reading it wider than that would let one person aim another person's erasure at
+their rows. A trigger in `0014` now refuses to repoint an author, and allows
+only the severing of one.
+
+`__tests__/erasure-is-final.test.ts` replays the migrations and fails if any
+policy that can write is missing the barrier, if the deletions grow a second
+definition, or if the job stops running them before it deletes the login.
 
 ## What runs, and when
 

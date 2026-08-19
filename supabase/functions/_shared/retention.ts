@@ -126,6 +126,19 @@ export interface RetentionRun {
   reports_touched: number;
   erasures_finished: number;
   erasures_incomplete: number;
+  /**
+   * Files found under the prefix of an erasure that was already closed.
+   *
+   * Its own count rather than part of `photos_removed`, because it means
+   * something different and worse. An upload is authorised when it starts and
+   * a signed upload URL when it is minted, so nothing this project writes can
+   * refuse one issued before the request; `pending_erasures` waits three hours
+   * to outlive them and the recheck below is what makes the wait an
+   * observation rather than an assumption. Every one of these is a photograph
+   * that was written after somebody's account was reported gone, and a night
+   * that finds any is a night that wants reading.
+   */
+  photos_after_the_end: number;
 }
 
 /** A run that has done nothing yet. */
@@ -136,6 +149,7 @@ export function emptyRun(): RetentionRun {
     reports_touched: 0,
     erasures_finished: 0,
     erasures_incomplete: 0,
+    photos_after_the_end: 0,
   };
 }
 
@@ -268,6 +282,11 @@ export function runLines(run: RetentionRun): string[] {
   if (run.erasures_incomplete > 0) {
     lines.push(
       `${plural(run.erasures_incomplete, "erasure", "erasures")} left open: the pictures are still there, so the login stays.`,
+    );
+  }
+  if (run.photos_after_the_end > 0) {
+    lines.push(
+      `${plural(run.photos_after_the_end, "photograph", "photographs")} arrived after an erasure was closed, and have been removed. Read the note on \`photos_after_the_end\`.`,
     );
   }
   if (!lines.length) lines.push("Nothing was due.");

@@ -186,7 +186,8 @@ select, insert and delete are each scoped to `auth.uid()`. Nothing else in the
 app reads a row: no map colour, no occupancy count, no ranking. The driver can
 delete any entry from the row itself in "Datele mele", and an accidental tap is
 undoable where it was made. `erase_me()` deletes the table outright and says
-how many rows went.
+how many rows went, and `0014` stops a session that outlived the request from
+writing new ones into the gap before the login goes.
 
 **Residual: medium.** The rows are still readable by the service key (R6) and
 by whoever holds an unlocked phone with the session on it (R5). Nothing here
@@ -213,7 +214,11 @@ choice to make and the reason the bin is one tap away rather than in a menu.
 | Retention and the second half of erasure run nightly | `0013`, `supabase/functions/retention` |
 | A report may only name photographs in its own folder | `0013`, trigger and `evidence_past_retention` |
 | The moment a report claims is the moment it arrived | `0013`, trigger |
-| No uploads once an erasure is pending | `0013`, storage policies |
+| No writes at all once an erasure is pending | `0014`, every write policy, through `being_erased()` |
+| The deletions run a second time before the login goes | `0014`, `supabase/functions/retention` |
+| Nothing is finished until what was authorised beforehand has expired | `0014`, the age on `pending_erasures()` |
+| A closed erasure's prefix is swept until three quiet nights | `0014`, `finished_erasures()` |
+| Who added a spot cannot be rewritten | `0014`, trigger |
 | Proof of an erasure expires at three years | `0013` |
 | What is held, why and on whose say-so, said in the app | `lib/privacy-notice.ts`, `app/privacy-notice.tsx` |
 | Every table has a purpose, basis, retention and deletion rule | `0012`, enforced by `unregistered_tables()` |
@@ -242,8 +247,31 @@ Stated plainly, because a DPIA that lists only what was built is a brochure.
   blank. Two lines to fix, and it cannot be published without them.
 - **No processor agreements beyond Supabase's standard DPA.** Data is hosted by
   Supabase; the region should be confirmed as EU before any real launch.
-- **Not tested on a device.** Every measure above is asserted by a test harness
-  against a real Postgres, not by anybody using the app.
+- **An upload authorised before an erasure cannot be refused, only found.** A
+  storage request is authorised when it starts and not when its body finishes,
+  so nothing written here can stop a file that was already permitted.
+  `pending_erasures()` waits three hours, which outlives Supabase's two-hour
+  upload token; the job then lists the prefix again on the nights afterwards
+  until three of them run clean, restarting the count whenever it finds
+  something and reporting it as `photos_after_the_end`. That bounds the
+  plausible case — a photograph that lands late is gone within a night, from a
+  private bucket, with no row pointing at it, and the run says out loud that it
+  happened. It does not bound the implausible one: a single upload authorised
+  before the request and still streaming after the third quiet night would land
+  where nothing looks again. Closing that needs a check at the moment the object
+  is written, and Supabase has no such hook — so it is written here instead. The
+  three hours are a borrowed figure too: if that token life ever changes,
+  nothing in the schema would notice, though the watch that follows it does not
+  depend on the figure.
+- **No test has ever run this SQL.** CI type-checks, lints and runs
+  `node --test`, and there is no Postgres in it — by the same argument `ci.yml`
+  makes about simulators. That covers the TypeScript half and reads the
+  migrations as text: `__tests__/erasure-is-final.test.ts` can say the barrier is
+  written on every policy that can write, not that a database refuses the write.
+  Every row in §4 is a policy or a function that has been read, not one a
+  harness has exercised.
+- **Not tested on a device.** Nobody has used the app against a project with
+  these migrations on it and tried to get past them.
 
 ## 6. Conclusion
 

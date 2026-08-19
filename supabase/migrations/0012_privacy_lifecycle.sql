@@ -656,10 +656,15 @@ comment on function public.erase_me() is
 /**
  * The work a job with the service key still has to do.
  *
- * Two steps, in this order: delete everything under `storage_prefix` through
- * the storage API, then delete the `auth.users` row through the admin API,
- * then call `finish_erasure`. The prefix is deleted first for the same reason
+ * Four steps, in this order: run `forget_everything` over the uuid again --
+ * `0014` explains the millisecond that makes the repeat worth doing, and why a
+ * private spot that survives it stops the login from ever being deletable --
+ * then delete everything under `storage_prefix` through the storage API, then
+ * delete the `auth.users` row through the admin API, then call
+ * `finish_erasure`. The prefix is deleted before the login for the same reason
  * as in `0009` -- losing the pointer before the bytes leaves the bytes forever.
+ * `0014` also gives this function an age, so that the four steps begin only
+ * once nothing authorised before the request can still be arriving.
  */
 create or replace function public.pending_erasures()
 returns table (user_id uuid, requested_at timestamptz, storage_prefix text)
